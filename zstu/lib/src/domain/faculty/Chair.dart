@@ -1,0 +1,3 @@
+class Chair {
+  String name;
+}

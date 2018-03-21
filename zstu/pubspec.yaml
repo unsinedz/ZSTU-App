@@ -1,0 +1,25 @@
+name: zstu
+description: A new Flutter project.
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+
+  sqflite: any
+  connectivity: any
+  path_provider: any
+
+  cupertino_icons: ^0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/FICT.png

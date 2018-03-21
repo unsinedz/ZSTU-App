@@ -1,0 +1,22 @@
+{
+  "name": "zstu_api",
+  "version": "1.0.0",
+  "description": "api for shoaring data from zstu servers",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "zstu",
+    "api",
+    "mysql",
+    "schedule"
+  ],
+  "author": "Denys Zosimovych",
+  "license": "MIT",
+  "dependencies": {
+    "config": "^1.30.0",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0"
+  }
+}

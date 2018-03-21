@@ -1,0 +1,22 @@
+{
+    "app": {
+        "hostname": "localhost",
+        "port": 3000,
+        "runInstancePerCore": true,
+        "renewWorkers": true,
+        "enableLogging": true,
+        "version": "0.1"
+    },
+    "dbConfig": {
+        "connectionLimit": 20,
+        "host": "127.0.0.1",
+        "port": 3336,
+        "user": "denimum",
+        "password": "vy$Nu7?gh@6jgW8r",
+        "database": "zstu_schedule"
+    },
+    "security": {
+        "private_key": "MIICWgIBAAKBgEOCRNVY1V6infFb4vA/BHLjneNBwUxznCb3rJyTcrvyUUcjFv9QLzRqhspZfCDOD8jgUFQl8U7i7NbSrUnA/PH8KYqYLyXInqCg/P08y5AjZQdqC+s+/aQ+EGVYd/k/WT3gK96dPJ4uoRCVJr53I9uC2AjAII9rBJBNIHeyXSHrAgMBAAECgYAxaQQ2Xtl0dXNCd21nR8hayowCDFuNOES/JKHay/S66QViGqW3YpnaNGnJaqt2WzukW8GPhWHTyjVsmjAo/i5jsiELbcm1YFsR8/QJx4KadB6+PLo66NieWFu/0JpUMh8vbVt2ZdZrKmPCXhE5lKI7kQ60SBknmrKU02XkqwkSmQJBAIYcgko5Bh5CEct5Txu4rM1tHZT0qt3PumC/s5GyRwvK7rSSRrW2pqpQecmjKYGR8LAxNjT16/+3rPTOWBT3bUcCQQCA3XSWfvKSot2wKSZpYKCDPxoOFmejYHAbM9zvVom/9bB81yV2IQXU64HsQjizAgUbJeZl+Hz2JDeh5JNpgyg9AkBUVgdFH7kOPCQunbm2yBq7EHxC2N2+oUwmXUdSPxdYfiRAn6Ah05vZjMQZniaS2bDPTBM3mNLxO5NjW4Oeo74vAkAKu2bESdpF4A56Z1Ltn8B+bbjrx23mK1fqzAzwWdKrC/kgzIIwLlvf+aUeWf2C2v413pgrkeBGV4nSj8i/Fs85AkAnqwFkVHAPZ8HCC9PBQakb8eIDVOGwwliyJ7xX06nnzKAEMt+6K/K9OdHMg+XHE4lv91WfbXughuIK5H8XYUM5",
+        "public_key": "MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgEOCRNVY1V6infFb4vA/BHLjneNBwUxznCb3rJyTcrvyUUcjFv9QLzRqhspZfCDOD8jgUFQl8U7i7NbSrUnA/PH8KYqYLyXInqCg/P08y5AjZQdqC+s+/aQ+EGVYd/k/WT3gK96dPJ4uoRCVJr53I9uC2AjAII9rBJBNIHeyXSHrAgMBAAE="
+    }
+}

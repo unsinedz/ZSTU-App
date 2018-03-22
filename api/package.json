@@ -4,7 +4,7 @@
   "description": "api for shoaring data from zstu servers",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "keywords": [
     "zstu",
@@ -18,5 +18,8 @@
     "config": "^1.30.0",
     "express": "^4.16.2",
     "mysql": "^2.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.2"
   }
 }

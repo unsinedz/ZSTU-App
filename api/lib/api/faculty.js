@@ -1,4 +1,4 @@
-var BaseApi = requireLib('./lib/api/common/base_api');
+var BaseApi = require('./common/base_api');
 
 class FacultyApi extends BaseApi {
 
@@ -7,9 +7,9 @@ class FacultyApi extends BaseApi {
         this._maxResponseItems = 100;
     }
 
-    facultyGet(req, res, next) {
+    facultyGet(req, next) {
         const params = this._readFacultyParams(req.query);
-        this._executeSqlAndRespond('faculty.sql', params, res);
+        return this._executeSqlAndRespond('faculty.sql', params);
     }
 
     _readFacultyParams(query) {
@@ -22,9 +22,9 @@ class FacultyApi extends BaseApi {
         ];
     }
 
-    groupGet(req, res, next) {
+    groupGet(req, next) {
         const params = this._readGroupParams(req.query);
-        this._executeSqlAndRespond('group.sql', params, res);
+        return this._executeSqlAndRespond('group.sql', params);
     }
 
     _readGroupParams(query) {
@@ -39,9 +39,9 @@ class FacultyApi extends BaseApi {
         ];
     }
 
-    timetableGet(req, res, next) {
+    timetableGet(req, next) {
         const params = this._readTimetableParams(req.query);
-        this._executeSqlAndRespond('timetable.sql', params, res);
+        return this._executeSqlAndRespond('timetable.sql', params);
     }
 
     _readTimetableParams(query) {

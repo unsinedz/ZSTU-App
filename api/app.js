@@ -1,7 +1,3 @@
-global.requireLib = function (name) {
-    return require(__dirname + '/' + name);
-};
-
 const appSettings = require('config').get('app');
 const cluster = require('cluster');
 

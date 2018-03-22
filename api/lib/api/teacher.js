@@ -1,4 +1,4 @@
-var BaseApi = requireLib('./lib/api/common/base_api');
+var BaseApi = require('./common/base_api');
 
 class TeacherApi extends BaseApi {
     

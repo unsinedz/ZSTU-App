@@ -1,4 +1,4 @@
-var BaseApi = requireLib('./lib/api/common/base_api');
+var BaseApi = require('./common/base_api');
 
 class ScheduleApi extends BaseApi {
 
@@ -7,9 +7,9 @@ class ScheduleApi extends BaseApi {
         this._maxResponseItems = 100;
     }
 
-    scheduleGet(req, res, next) {
+    scheduleGet(req, next) {
         const params = this._readScheduleParams(req.query);
-        this._executeSqlAndRespond('schedule.sql', params, res);
+        return this._executeSqlAndRespond('schedule.sql', params);
     }
 
     _readScheduleParams(query) {

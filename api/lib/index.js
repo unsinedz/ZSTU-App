@@ -2,8 +2,8 @@ const appConfig = require('config').get('app');
 
 class Index {
 
-    indexGet(req, res, next) {
-        res.send(`ZSTU API v${appConfig.version || 0}`);
+    indexGet(req, next) {
+        return new Promise((res, rej) => res(`ZSTU API v${appConfig.version || 0}`));
     }
 }
 

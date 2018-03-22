@@ -49,8 +49,8 @@ class Server {
                 .catch(err => res.send(_makeResponse(err)))
         );
         router.get('/', (req, res, next) =>
-            index.indexGet(req, next).then(result => res.send(_makeResponse(null, result)))
-                .catch(err => res.send(_makeResponse(err)))
+            index.indexGet(req, next).then(result => res.send(result))
+                .catch(err => res.send('An error occurred'))
         );
 
         app.use('/', router);

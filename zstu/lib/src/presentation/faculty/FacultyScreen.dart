@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import '../../App.dart';
 import '../../resources/Colors.dart';
 import '../../resources/sizes.dart';
+import '../common/BaseScreenMixin.dart';
 import '../common/TextLocalizations.dart';
 import 'FacultyScreenViewModel.dart';
 import 'FacultyViewModel.dart';
+import 'group/GroupScreen.dart';
 
 class FacultiesScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _FacultiesState();
 }
 
-class _FacultiesState extends State<FacultiesScreen> with TextLocalizations {
+class _FacultiesState extends State<FacultiesScreen>
+    with TextLocalizations, BaseScreenMixin {
   FacultyScreenViewModel _model;
   ScrollController _gridScrollController;
   StreamSubscription _connectivityChangeListener;
@@ -53,14 +56,13 @@ class _FacultiesState extends State<FacultiesScreen> with TextLocalizations {
   Widget build(BuildContext context) {
     initTexts(context);
 
-    return new Scaffold(
-      appBar: _buildAppBar(),
-      drawer: new Drawer(),
-      body: new FutureBuilder(
-        future: _getModel(),
-        builder: _buildInFuture,
-      ),
-    );
+    return wrapMaterialLayout(
+        new FutureBuilder(
+          future: _getModel(),
+          builder: _buildInFuture,
+        ),
+        buildAppBar(texts.facultiesTitle),
+        drawer: buildNavigationDrawer());
   }
 
   Widget _buildInFuture(
@@ -115,18 +117,17 @@ class _FacultiesState extends State<FacultiesScreen> with TextLocalizations {
     );
   }
 
-  Widget _buildAppBar() {
-    return new AppBar(
-      title: new Text(texts.facultiesTitle),
-    );
-  }
-
   void _handleFacultyTap(BuildContext context, FacultyViewModel item) {
     var scaffoldContext = Scaffold.of(context);
     scaffoldContext.removeCurrentSnackBar();
     scaffoldContext.showSnackBar(new SnackBar(
       content: new Text("${item.abbr} clicked"),
       duration: new Duration(seconds: 2),
+    ));
+    Navigator.of(context).push(new MaterialPageRoute(
+      builder: (context) {
+        return new GroupScreen(item.id);
+      },
     ));
   }
 

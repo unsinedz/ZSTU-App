@@ -15,6 +15,7 @@ class Texts {
 
   String get scheduleTitle => _texts["scheduleTitle"][_locale.languageCode];
   String get facultiesTitle => _texts["facultiesTitle"][_locale.languageCode];
+  String get groupTitle => _texts["groupTitle"][_locale.languageCode];
 
   String get fict => _texts["fict"][_locale.languageCode];
   String get fem => _texts["fem"][_locale.languageCode];
@@ -59,6 +60,11 @@ class Texts {
       "en": "Schedule",
       "ru": "Расписание",
       "uk": "Розклад",
+    },
+    "groupTitle": {
+      "en": "Group",
+      "ru": "Группа",
+      "uk": "Група",
     },
     "mondayShort": {
       "en": "Mon",

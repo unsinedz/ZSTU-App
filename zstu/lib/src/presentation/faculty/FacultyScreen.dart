@@ -48,7 +48,7 @@ class _FacultiesState extends State<FacultiesScreen>
     if (_model != null) return new SynchronousFuture(_model);
 
     var instance = new FacultyScreenViewModel();
-    await instance.loadFaculties();
+    await instance.initialize();
     return _model = instance;
   }
 

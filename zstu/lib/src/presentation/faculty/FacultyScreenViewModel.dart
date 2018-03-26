@@ -6,7 +6,7 @@ import 'FacultyViewModel.dart';
 class FacultyScreenViewModel {
   List<FacultyViewModel> faculties;
 
-  Future loadFaculties() async {
+  Future initialize() async {
     var app = new App();
     faculties = (await app.faculties.getFaculties())
         .map((x) => new FacultyViewModel.fromFaculty(x))

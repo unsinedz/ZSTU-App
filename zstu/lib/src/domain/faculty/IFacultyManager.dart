@@ -3,13 +3,14 @@ import 'Chair.dart';
 import 'Faculty.dart';
 import 'Group.dart';
 import 'GroupLoadOptions.dart';
+import 'Year.dart';
 
 abstract class IFacultyManager {
   Future<List<Faculty>> getFaculties();
 
-  List<Chair> getChairs();
+  Future<List<Chair>> getChairs();
 
-  List<int> getYears();
+  Future<List<Year>> getYears();
 
-  List<Group> getGroups(GroupLoadOptions loadOptions);
+  Future<List<Group>> getGroups(GroupLoadOptions loadOptions);
 }

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../common/BaseScreenMixin.dart';
 import '../../common/TextLocalizations.dart';
+import 'GroupScreenViewModel.dart';
 
 class GroupScreen extends StatefulWidget {
   GroupScreen(this._facultyId);
@@ -14,20 +17,34 @@ class GroupScreen extends StatefulWidget {
   }
 }
 
-class _GroupScreenState extends State<GroupScreen> with TextLocalizations, BaseScreenMixin {
+class _GroupScreenState extends State<GroupScreen>
+    with TextLocalizations, BaseScreenMixin {
   _GroupScreenState(this._facultyId);
 
   String _facultyId;
 
+  GroupScreenViewModel _model;
+
   @override
   Widget build(BuildContext context) {
-    return wrapMaterialLayout(_buildInFuture(context), buildAppBar(texts.groupTitle));
+    return wrapMaterialLayout(
+        _buildContent(context), buildAppBar(texts.groupTitle));
   }
 
-  Widget _buildInFuture(BuildContext context) {
+  Widget _buildContent(BuildContext context) {
     return new FutureBuilder(
-      builder: null,
-      future: null,
+      builder: _buildInFuture,
+      future: _getModel(),
     );
   }
+
+  Future<GroupScreenViewModel> _getModel() async {
+    if (_model != null) return _model;
+
+    var instance = new GroupScreenViewModel();
+    await instance.initialize();
+  }
+
+  Widget _buildInFuture(BuildContext buildContext,
+      AsyncSnapshot<GroupScreenViewModel> snapshot) {}
 }

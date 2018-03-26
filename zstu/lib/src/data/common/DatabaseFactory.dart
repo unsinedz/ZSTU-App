@@ -51,7 +51,26 @@ class DatabaseFactory {
           id varchar(50) PRIMARY KEY,
           abbr varchar(20) NOT NULL,
           name varchar(100) NOT NULL,
-          image text NULL )
+          image text NULL
+          )
+      """);
+
+      db.execute(""" 
+        CREATE TABLE Years (
+          id varchar(50) PRIMARY KEY,
+          name varchar(100) NOT NULL
+          )
+      """);
+
+      db.execute(""" 
+        CREATE TABLE Groups (
+          id varchar(50) PRIMARY KEY,
+          name varchar(100) NOT NULL,
+          yearId varchar(50) NOT NULL,
+          facultyId varchar(50) NOT NULL,
+          FOREIGN KEY(yearId) REFERENCES Years(id),
+          FOREIGN KEY(facultyId) REFERENCES Faculties(id)
+          )
       """);
     });
   }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../resources/Colors.dart';
-import '../../resources/Sizes.dart';
 
 abstract class BaseScreenMixin {
   Widget wrapMaterialLayout(Widget content, AppBar appBar, {Drawer drawer}) {

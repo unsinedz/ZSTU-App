@@ -1,7 +1,8 @@
 import 'Faculty.dart';
+import 'Year.dart';
 
 class GroupLoadOptions {
   Faculty faculty;
 
-  int year;
+  Year year;
 }

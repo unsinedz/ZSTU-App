@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../resources/Colors.dart';
+import '../../resources/Sizes.dart';
+
 abstract class BaseScreenMixin {
   Widget wrapMaterialLayout(Widget content, AppBar appBar, {Drawer drawer}) {
     return new Scaffold(
@@ -11,7 +14,15 @@ abstract class BaseScreenMixin {
 
   Widget buildAppBar(String title) {
     return new AppBar(
-      title: new Text(title),
+      iconTheme: new IconThemeData(
+        color: AppColors.ToolIcon,
+      ),
+      title: new Text(
+        title,
+        style: new TextStyle(
+          color: AppColors.ScreenTitle,
+        ),
+      ),
     );
   }
 

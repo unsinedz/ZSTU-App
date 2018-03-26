@@ -21,8 +21,6 @@ class _GroupScreenState extends State<GroupScreen> with TextLocalizations, BaseS
 
   @override
   Widget build(BuildContext context) {
-    
-
     return wrapMaterialLayout(_buildInFuture(context), buildAppBar(texts.groupTitle));
   }
 

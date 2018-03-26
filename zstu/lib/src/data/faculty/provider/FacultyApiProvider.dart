@@ -1,4 +1,7 @@
 import 'dart:async';
+import '../../../domain/faculty/GroupLoadOptions.dart';
+import '../../../domain/faculty/Group.dart';
+import '../../../domain/faculty/IFacultyProvider.dart';
 import '../../common/provider/IProvider.dart';
 import '../FacultyInfo.dart';
 import '../../Constants.dart';
@@ -6,7 +9,7 @@ import '../../common/provider/ApiProviderBase.dart';
 import '../../common/provider/GeneralNetworkProvider.dart';
 
 class FacultyApiProvider extends ApiProviderBase
-    implements IProvider<FacultyInfo> {
+    implements IProvider<FacultyInfo>, IFacultyProvider {
   FacultyApiProvider(GeneralNetworkProvider _baseProvider)
       : super(Constants.API_URI, _baseProvider);
 
@@ -42,5 +45,15 @@ class FacultyApiProvider extends ApiProviderBase
     }
 
     return result;
+  }
+
+  @override
+  List<Group> getGroups(GroupLoadOptions loadOptions) {
+    throw new UnimplementedError('Not implemented.');
+  }
+
+  @override
+  List<int> getYears() {
+    throw new UnimplementedError('Not implemented.');
   }
 }

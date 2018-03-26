@@ -11,6 +11,7 @@ dependencies:
   sqflite: any
   connectivity: any
   path_provider: any
+  mockito: any
 
   cupertino_icons: ^0.1.0
 
@@ -23,3 +24,7 @@ flutter:
 
   assets:
     - assets/FICT.png
+    - assets/FEM.png
+    - assets/MEF.png
+    - assets/FME.png
+    - assets/FAF.png

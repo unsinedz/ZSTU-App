@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:connectivity/connectivity.dart';
 import '../../resources/Texts.dart';
 import '../Constants.dart';
 import '../common/AssetManager.dart';
@@ -11,19 +10,20 @@ import '../../domain/faculty/Faculty.dart';
 import '../../domain/faculty/Chair.dart';
 import '../../domain/faculty/IFacultyManager.dart';
 
+typedef Future<T> RepeatableFunction<T>();
+
 class FacultyManager implements IFacultyManager {
-  FacultyManager(this._storageProvider, this._networkProvider);
+  FacultyManager(this._storageProvider, this._networkProvider,
+      {AssetManager assetManager}) {
+    _assetManager = assetManager ?? new AssetManager(Constants.ASSET_DIRECTORY);
+  }
 
   IProvider<FacultyInfo> _storageProvider;
   IProvider<FacultyInfo> _networkProvider;
 
-  AssetManager _assetManager = new AssetManager(Constants.ASSET_DIRECTORY);
+  AssetManager _assetManager;
 
-  static const List<String> _supportedImageExtensions = const [
-    ".png",
-    ".jpg",
-    ".jpeg"
-  ];
+  static const int _networkRequestAttemptsCountt = 3;
 
   @override
   List<Chair> getChairs() {
@@ -37,12 +37,12 @@ class FacultyManager implements IFacultyManager {
 
   @override
   Future<List<Faculty>> getFaculties() async {
-    var connection = await (new Connectivity().checkConnectivity());
-    bool connected = connection != ConnectivityResult.none;
-
     var faculties = await _storageProvider.getList();
-    if (connected && faculties.length == 0) {
-      faculties = await _networkProvider.getList();
+    if (faculties.length == 0) {
+      faculties = await _executeWithRepeats(
+              () async => await _networkProvider.getList(),
+              _networkRequestAttemptsCountt) ??
+          <FacultyInfo>[];
       await _storageProvider.insertAll(faculties);
     }
 
@@ -51,11 +51,27 @@ class FacultyManager implements IFacultyManager {
     return faculties.map((x) => x.toFaculty()).toList();
   }
 
+  Future<T> _executeWithRepeats<T>(
+      RepeatableFunction operation, int repeatCount) async {
+    assert(operation != null);
+    assert(repeatCount > 0);
+
+    T result;
+    while (repeatCount-- > 0) {
+      try {
+        result = await operation();
+        break;
+      } catch (e) {}
+    }
+
+    return result;
+  }
+
   Future loadFacultyImages(List<FacultyInfo> faculties) async {
-    if (faculties == null)
-      throw new ArgumentError('Error loading images to null collection.');
+    assert(faculties != null);
+
     await for (FacultyInfo f in new Stream.fromIterable(faculties)) {
-      for (String ext in _supportedImageExtensions) {
+      for (String ext in Constants.SUPPORTED_IMAGE_EXTENSIONS) {
         var translatedAbbr = Texts.getText(f.abbr, "en", defaultValue: f.abbr);
         var name = "$translatedAbbr$ext";
         bool exists = await _assetManager.assetExists(name);

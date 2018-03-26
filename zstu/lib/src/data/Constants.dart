@@ -4,4 +4,9 @@ class Constants {
   static const String API_URI = "unsinedz.fvds.ru";
   static const String ASSET_DIRECTORY = "assets/";
   static const int BATCH_SIZE = 50;
+  static const List<String> SUPPORTED_IMAGE_EXTENSIONS = const [
+    ".png",
+    ".jpg",
+    ".jpeg"
+  ];
 }

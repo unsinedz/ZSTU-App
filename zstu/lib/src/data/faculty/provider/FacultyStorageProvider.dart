@@ -1,9 +1,12 @@
 import 'dart:async';
+import '../../../domain/faculty/GroupLoadOptions.dart';
+import '../../../domain/faculty/Group.dart';
+import '../../../domain/faculty/IFacultyProvider.dart';
 import '../FacultyInfo.dart';
 import '../../common/provider/GeneralStorageProvider.dart';
 import '../../common/provider/IProvider.dart';
 
-class FacultyStorageProvider implements IProvider<FacultyInfo> {
+class FacultyStorageProvider implements IProvider<FacultyInfo>, IFacultyProvider {
   static const String TableName = "Faculties";
 
   FacultyStorageProvider(this._baseProvider);
@@ -44,5 +47,15 @@ class FacultyStorageProvider implements IProvider<FacultyInfo> {
   Future<List<FacultyInfo>> getList() async {
     var data = await _baseProvider.getMapList(TableName);
     return data.map((x) => new FacultyInfo.fromMap(x)).toList();
+  }
+
+  @override
+  List<Group> getGroups(GroupLoadOptions loadOptions) {
+    throw new UnimplementedError('Not implemented.');
+  }
+
+  @override
+  List<int> getYears() {
+    throw new UnimplementedError('Not implemented.');
   }
 }

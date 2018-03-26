@@ -47,9 +47,9 @@ class _FacultiesState extends State<FacultiesScreen>
   Future<FacultyScreenViewModel> _getModel() async {
     if (_model != null) return new SynchronousFuture(_model);
 
-    var faculties = await _app.faculties.getFaculties();
-    return _model = new FacultyScreenViewModel(
-        faculties.map((x) => new FacultyViewModel.fromFaculty(x)).toList());
+    var instance = new FacultyScreenViewModel();
+    await instance.loadFaculties();
+    return _model = instance;
   }
 
   @override

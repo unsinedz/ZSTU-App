@@ -30,11 +30,4 @@ class FacultyInfo {
     name = faculty.name;
     image = faculty.image;
   }
-
-  Faculty toFaculty() {
-    var result = new Faculty(name: name, abbr: abbr);
-    result.id = id;
-    result.image = image;
-    return result;
-  }
 }

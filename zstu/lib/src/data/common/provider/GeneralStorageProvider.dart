@@ -6,7 +6,16 @@ class GeneralStorageProvider {
 
   Database _db;
 
-  Future close() async => await _db.close();
+  Future close() async => _db.close();
+
+  Future<List<Map<String, dynamic>>> executeQuery(
+    String query, {
+    List<dynamic> arguments,
+    DatabaseExecutor executor,
+  }) {
+    executor = executor ?? _db;
+    return executor.rawQuery(query, arguments);
+  }
 
   Future<List<Map<String, dynamic>>> getMapList(
     String table, {
@@ -22,7 +31,7 @@ class GeneralStorageProvider {
     DatabaseExecutor executor,
   }) async {
     executor = executor ?? _db;
-    return await executor.query(
+    return executor.query(
       table,
       columns: columns,
       distinct: distinct,
@@ -49,7 +58,7 @@ class GeneralStorageProvider {
   Future insertMap(String table, Map<String, dynamic> values,
       {DatabaseExecutor executor}) async {
     executor = executor ?? _db;
-    await executor.insert(table, values,
+    return executor.insert(table, values,
         conflictAlgorithm: ConflictAlgorithm.fail);
   }
 
@@ -60,12 +69,12 @@ class GeneralStorageProvider {
   Future deleteMap(String table, String id,
       {String where, List whereArgs, DatabaseExecutor executor}) async {
     executor = executor ?? _db;
-    await executor.delete(table, where: where, whereArgs: whereArgs);
+    return executor.delete(table, where: where, whereArgs: whereArgs);
   }
 
   Future<Transaction> transaction(Future<Transaction> action(Transaction t),
       {bool exclusive}) async {
-    return await _db.transaction(action, exclusive: exclusive);
+    return _db.transaction(action, exclusive: exclusive);
   }
 
   Batch batch() {

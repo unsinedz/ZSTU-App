@@ -1,20 +1,18 @@
 import 'dart:async';
+import '../../domain/faculty/ChairLoadOptions.dart';
+import '../../domain/faculty/IFacultyProvider.dart';
 import '../../domain/faculty/Year.dart';
 import '../../resources/Texts.dart';
+import '../Constants.dart';
+import '../common/AssetManager.dart';
 import '../../domain/faculty/GroupLoadOptions.dart';
 import '../../domain/faculty/Group.dart';
 import '../../domain/faculty/Faculty.dart';
 import '../../domain/faculty/Chair.dart';
 import '../../domain/faculty/IFacultyManager.dart';
-import '../Constants.dart';
-import '../common/AssetManager.dart';
-import 'FacultyInfo.dart';
-import 'provider/IFacultyProvider.dart';
 
 typedef Future<T> RepeatableFunction<T>();
-
-typedef Future<List<T>> EntityLoader<T>();
-typedef Future EntitySaver<T>(List<T> entities);
+typedef Future EntitySaver<T>(T entity);
 
 class FacultyManager implements IFacultyManager {
   FacultyManager(this._storageProvider, this._networkProvider,
@@ -30,27 +28,55 @@ class FacultyManager implements IFacultyManager {
   static const int _networkRequestAttemptsCount = 3;
 
   @override
-  Future<List<Chair>> getChairs() async {
-    throw new UnimplementedError("Not implemented.");
+  Future<List<Chair>> getChairs(ChairLoadOptions loadOptions) async {
+    return _getAndCacheEntities(
+      _storageProvider.getChairs(loadOptions),
+      _networkProvider.getChairs(loadOptions),
+      _storageProvider.insertAllChairs,
+    );
   }
 
   @override
   Future<List<Year>> getYears() async {
-    return (await _getEntities(() => _storageProvider.getYears(),
-            () => _networkProvider.getYears(),
-            toStorageSaver: (x) => _storageProvider.insertAllYears(x)))
-        .map((x) => x.toYear())
-        .toList();
+    return await _getAndCacheEntities(
+      _storageProvider.getYears(),
+      _networkProvider.getYears(),
+      _storageProvider.insertAllYears,
+    );
   }
 
   @override
   Future<List<Faculty>> getFaculties() async {
-    var faculties = await _getEntities(
-        () => _storageProvider.getList(), () => _networkProvider.getList(),
-        toStorageSaver: (x) => _storageProvider.insertAll(x));
+    var faculties = await _getAndCacheEntities(_storageProvider.getList(),
+        _networkProvider.getList(), _storageProvider.insertAll);
     await loadFacultyImages(faculties);
 
-    return faculties.map((x) => x.toFaculty()).toList();
+    return faculties;
+  }
+
+  @override
+  Future<List<Group>> getGroups(GroupLoadOptions loadOptions) async {
+    return await _getAndCacheEntities(
+        _storageProvider.getGroups(loadOptions),
+        _networkProvider.getGroups(loadOptions),
+        _storageProvider.insertAllGroups);
+  }
+
+  Future<List<T>> _getAndCacheEntities<T>(
+      Future<List<T>> fetchFromStorage, Future<List<T>> fetchFromNetwork,
+      [EntitySaver<List<T>> saveToStorage]) async {
+    assert(fetchFromStorage != null);
+    assert(fetchFromNetwork != null);
+
+    var entities = await fetchFromStorage;
+    if (entities.length == 0) {
+      entities = await _executeWithRepeats(() async => await fetchFromNetwork,
+              _networkRequestAttemptsCount) ??
+          <T>[];
+      if (saveToStorage != null) await saveToStorage(entities);
+    }
+
+    return entities;
   }
 
   Future<T> _executeWithRepeats<T>(
@@ -69,10 +95,10 @@ class FacultyManager implements IFacultyManager {
     return result;
   }
 
-  Future loadFacultyImages(List<FacultyInfo> faculties) async {
+  Future loadFacultyImages(List<Faculty> faculties) async {
     assert(faculties != null);
 
-    await for (FacultyInfo f in new Stream.fromIterable(faculties)) {
+    await for (Faculty f in new Stream.fromIterable(faculties)) {
       for (String ext in Constants.SUPPORTED_IMAGE_EXTENSIONS) {
         var translatedAbbr = Texts.getText(f.abbr, "en", defaultValue: f.abbr);
         var name = "$translatedAbbr$ext";
@@ -84,34 +110,4 @@ class FacultyManager implements IFacultyManager {
       }
     }
   }
-
-  @override
-  Future<List<Group>> getGroups(GroupLoadOptions loadOptions) async {
-    assert(loadOptions != null);
-
-    return (await _getEntities(() => _storageProvider.getGroups(loadOptions),
-            () => _networkProvider.getGroups(loadOptions),
-            toStorageSaver: (x) => _storageProvider.insertAllYears(x)))
-        .map((x) => x.toGroup())
-        .toList();
-  }
-
-  Future<List<T>> _getEntities<T>(
-      EntityLoader<T> storageLoader, EntityLoader<T> networkLoader,
-      {EntitySaver<T> toStorageSaver}) async {
-    var entities = await storageLoader();
-    if (entities.length != 0) return entities;
-
-    entities = await _executeWithRepeats(
-            networkLoader, _networkRequestAttemptsCount) ??
-        <T>[];
-
-    if (toStorageSaver != null) {
-      await toStorageSaver(entities);
-    }
-
-    return entities;
-  }
 }
-
-// TODO: Unit tests, also for the providers

@@ -1,20 +1,18 @@
 import '../../domain/faculty/Group.dart';
-import 'FacultyInfo.dart';
-import 'YearInfo.dart';
 
 class GroupInfo {
   String id;
   String name;
-  YearInfo year;
-  FacultyInfo faculty;
+  String yearId;
+  String facultyId;
 
   GroupInfo.fromMap(Map<String, dynamic> map) {
     assert(map != null);
 
     id = map["id"].toString();
     name = map["name"];
-    year = map["year"];
-    faculty = map["faculty"];
+    yearId = map["yearId"];
+    facultyId = map["facultyId"];
   }
 
   GroupInfo.fromGroup(Group group) {
@@ -22,20 +20,16 @@ class GroupInfo {
 
     id = group.id;
     name = group.name;
-    year = new YearInfo.fromYear(group.year);
-    faculty = new FacultyInfo.fromFaculty(group.faculty);
-  }
-
-  Group toGroup() {
-    return new Group(name, year.toYear(), faculty.toFaculty());
+    yearId = group.year.id;
+    facultyId = group.faculty.id;
   }
 
   Map toMap() {
     return {
       "id": id,
       "name": name,
-      "year": year,
-      "faculty": faculty,
+      "yearId": yearId,
+      "facultyId": facultyId,
     };
   }
 }

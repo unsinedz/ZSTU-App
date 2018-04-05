@@ -26,8 +26,4 @@ class YearInfo {
     id = year.id;
     name = year.name;
   }
-
-  Year toYear() {
-    return new Year(id, name);
-  }
 }

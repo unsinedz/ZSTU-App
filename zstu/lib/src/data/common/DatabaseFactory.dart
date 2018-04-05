@@ -63,6 +63,13 @@ class DatabaseFactory {
       """);
 
       db.execute(""" 
+        CREATE TABLE Chairs (
+          id varchar(50) PRIMARY KEY,
+          name varchar(100) NOT NULL
+          )
+      """);
+
+      db.execute(""" 
         CREATE TABLE Groups (
           id varchar(50) PRIMARY KEY,
           name varchar(100) NOT NULL,

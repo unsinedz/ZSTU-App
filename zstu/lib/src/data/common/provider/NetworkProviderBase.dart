@@ -3,8 +3,8 @@ import 'dart:async';
 import '../ApiResponse.dart';
 import 'GeneralNetworkProvider.dart';
 
-abstract class ApiProviderBase {
-  ApiProviderBase(this._uri, this._baseProvider);
+abstract class NetworkProviderBase {
+  NetworkProviderBase(this._uri, this._baseProvider);
 
   GeneralNetworkProvider _baseProvider;
   String _uri;

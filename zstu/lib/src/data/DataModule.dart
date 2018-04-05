@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 import '../domain/common/IAssetManager.dart';
+import '../domain/faculty/Faculty.dart';
 import '../domain/faculty/IFacultyManager.dart';
 import 'Constants.dart';
 import 'common/AssetManager.dart';
@@ -11,7 +12,6 @@ import 'common/DatabaseFactory.dart';
 import 'common/provider/GeneralNetworkProvider.dart';
 import 'common/provider/GeneralStorageProvider.dart';
 import 'common/provider/IProvider.dart';
-import 'faculty/FacultyInfo.dart';
 import 'faculty/FacultyManager.dart';
 import 'faculty/provider/FacultyApiProvider.dart';
 import 'faculty/provider/FacultyStorageProvider.dart';
@@ -37,11 +37,11 @@ class DataModule {
         (_generalNetworkStorage = new GeneralNetworkProvider());
   }
 
-  static IProvider<FacultyInfo> _provideFacultyStorage() {
+  static IProvider<Faculty> _provideFacultyStorage() {
     return new FacultyStorageProvider(_provideLocalStorage());
   }
 
-  static IProvider<FacultyInfo> _provideFacultyNetwork() {
+  static IProvider<Faculty> _provideFacultyNetwork() {
     return new FacultyApiProvider(_provideNetworkStorage());
   }
 

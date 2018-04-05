@@ -1,96 +1,118 @@
 import 'dart:async';
+import '../../../domain/faculty/ChairLoadOptions.dart';
+import '../../../domain/faculty/Chair.dart';
+import '../../../domain/faculty/Faculty.dart';
+import '../../../domain/faculty/Group.dart';
 import '../../../domain/faculty/GroupLoadOptions.dart';
+import '../../../domain/faculty/IFacultyProvider.dart';
+import '../../../domain/faculty/Year.dart';
+import '../ChairInfo.dart';
 import '../FacultyInfo.dart';
 import '../../common/provider/GeneralStorageProvider.dart';
 import '../YearInfo.dart';
 import '../GroupInfo.dart';
-import 'IFacultyProvider.dart';
+import '../../Constants.dart';
+import 'FacultyProviderMixin.dart';
 
 typedef Map MapSelector<T>(T entity);
 
-class FacultyStorageProvider implements IFacultyProvider {
-  static const String FacultyTableName = "Faculties";
-  static const String GroupTableName = "Groups";
-  static const String YearTableName = "Years";
-
+class FacultyStorageProvider extends FacultyProviderMixin
+    implements IFacultyProvider {
   FacultyStorageProvider(this._baseProvider);
 
   GeneralStorageProvider _baseProvider;
 
-  @override
-  Future insert(FacultyInfo obj) async {
-    assert(obj != null);
+  String get FacultyTableName => Constants.FacultyTableName;
+  String get GroupTableName => Constants.GroupTableName;
+  String get YearTableName => Constants.YearTableName;
+  String get ChairTableName => Constants.ChairTableName;
+  String get TeacherTableName => Constants.TeacherTableName;
 
-    await insertAll(<FacultyInfo>[obj]);
+  @override
+  Future insert(Faculty faculty) async {
+    assert(faculty != null);
+
+    await insertAll(<Faculty>[faculty]);
   }
 
   @override
-  Future insertAll(List<FacultyInfo> faculties) async {
-    await _insertAllEntities(
-        FacultyTableName, faculties, (FacultyInfo x) => x.toMap());
+  Future insertAll(List<Faculty> faculties) async {
+    await _insertAllEntities(FacultyTableName, faculties,
+        (Faculty x) => new FacultyInfo.fromFaculty(x).toMap());
   }
 
   @override
-  Future<FacultyInfo> getById(String id) async {
+  Future<Faculty> getById(String id) async {
     assert(id != null && id.isNotEmpty);
 
     var map = await _baseProvider.getEntityMap(FacultyTableName, id);
-    return new FacultyInfo.fromMap(map);
+    return makeFaculty(new FacultyInfo.fromMap(map));
   }
 
   @override
-  Future<List<FacultyInfo>> getList() async {
+  Future<List<Faculty>> getList() async {
     var data = await _baseProvider.getMapList(FacultyTableName);
-    return data.map((x) => new FacultyInfo.fromMap(x)).toList();
+    return data.map((x) => makeFaculty(new FacultyInfo.fromMap(x))).toList();
   }
 
   @override
-  Future<List<GroupInfo>> getGroups(GroupLoadOptions loadOptions) async {
-    var data = await _baseProvider.getMapList(GroupTableName);
-    for (Map<String, dynamic> map in data) {
-      var facultyId = map["facultyId"];
-      if (facultyId == null)
-        throw new Exception(
-            "Database integrity corruption. Group has null faculty id.");
+  Future<List<Group>> getGroups(GroupLoadOptions loadOptions) async {
+    assert(loadOptions != null);
 
-      map.remove('facultyId');
-      var faculty = await getById(facultyId);
-      map["faculty"] = faculty;
-    }
+    var data = await _baseProvider.getMapList(
+      GroupTableName,
+      where: 'facultyId LIKE ? AND yearId LIKE ?',
+      whereArgs: [
+        loadOptions.faculty?.id ?? '%',
+        loadOptions.year?.id ?? '%',
+      ],
+    );
 
-    return data.map((x) => new GroupInfo.fromMap(x));
+    return new Stream.fromIterable(data)
+        .asyncMap((x) => makeGroup(new GroupInfo.fromMap(x), (i) => getById(i)))
+        .toList();
   }
 
   @override
-  Future<List<YearInfo>> getYears() async {
+  Future insertAllGroups(List<Group> groups) async {
+    _insertAllEntities(GroupTableName, groups, (x) => new GroupInfo.fromGroup(x).toMap());
+  }
+
+  @override
+  Future<List<Year>> getYears() async {
     var data = await _baseProvider.getMapList(YearTableName);
-    return data.map((x) => new YearInfo.fromMap(x)).toList();
+    return data.map((x) => makeYear(new YearInfo.fromMap(x))).toList();
   }
 
   @override
-  Future insertAllGroups(List<GroupInfo> groups) async {
-    assert(groups != null);
-
-    if (groups.length == 0) return;
-
-    await _baseProvider.transaction((t) async {
-      for (GroupInfo gi in groups) {
-        var map = gi.toMap();
-        FacultyInfo faculty = map["faculty"];
-        YearInfo year = map["year"];
-        map.remove("year");
-        map.remove("faculty");
-        map["facultyId"] = faculty.id;
-        map["yearId"] = year.id;
-
-        await _baseProvider.insertMap(GroupTableName, map, executor: t);
-      }
-    });
+  Future insertAllYears(List<Year> years) async {
+    await _insertAllEntities(
+        YearTableName, years, (Year x) => new YearInfo.fromYear(x).toMap());
   }
 
   @override
-  Future insertAllYears(List<YearInfo> years) async {
-    await _insertAllEntities(YearTableName, years, (YearInfo x) => x.toMap());
+  Future<List<Chair>> getChairs(ChairLoadOptions loadOptions) async {
+    assert(loadOptions != null);
+
+    var data = await _baseProvider.executeQuery('''
+      SELECT C.id, C.name 
+      FROM ? AS C
+      ${loadOptions.teacher == null ? 'LEFT' : 'INNER'} JOIN ? AS T ON 'T.chairId LIKE C.id'
+      WHERE F.id LIKE ?
+        and T.id like ?
+    ''', arguments: [
+      ChairTableName,
+      TeacherTableName,
+      loadOptions.faculty?.id ?? '%',
+      loadOptions.teacher?.chair?.id ?? '%',
+    ]);
+    return data.map((x) => makeChair(new ChairInfo.fromMap(x))).toList();
+  }
+
+  @override
+  Future insertAllChairs(List<Chair> chairs) async {
+    await _insertAllEntities(ChairTableName, chairs,
+        (Chair x) => new ChairInfo.fromChair(x).toMap());
   }
 
   Future _insertAllEntities<T>(

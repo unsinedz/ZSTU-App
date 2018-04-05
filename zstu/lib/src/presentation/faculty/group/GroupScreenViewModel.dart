@@ -11,6 +11,6 @@ class GroupScreenViewModel {
 
   Future initialize() async {
     var app = new App();
-    years = await app.faculties.getYears();
+    this.years = await app.faculties.getYears();
   }
 }

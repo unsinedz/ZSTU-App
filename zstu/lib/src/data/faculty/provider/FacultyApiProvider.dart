@@ -1,16 +1,25 @@
 import 'dart:async';
+import '../../../domain/faculty/ChairLoadOptions.dart';
+import '../../../domain/faculty/Chair.dart';
+import '../../../domain/faculty/Faculty.dart';
+import '../../../domain/faculty/Group.dart';
 import '../../../domain/faculty/GroupLoadOptions.dart';
+import '../../../domain/faculty/IFacultyProvider.dart';
+import '../../../domain/faculty/Year.dart';
+import '../ChairInfo.dart';
 import '../FacultyInfo.dart';
 import '../../Constants.dart';
-import '../../common/provider/ApiProviderBase.dart';
+import '../../common/provider/NetworkProviderBase.dart';
 import '../../common/provider/GeneralNetworkProvider.dart';
 import '../YearInfo.dart';
 import '../GroupInfo.dart';
-import 'IFacultyProvider.dart';
+import 'FacultyProviderMixin.dart';
 
 typedef T FromMapBuilder<T>(dynamic map);
 
-class FacultyApiProvider extends ApiProviderBase implements IFacultyProvider {
+class FacultyApiProvider extends NetworkProviderBase
+    with FacultyProviderMixin
+    implements IFacultyProvider {
   FacultyApiProvider(GeneralNetworkProvider _baseProvider)
       : super(Constants.API_URI, _baseProvider);
 
@@ -18,69 +27,79 @@ class FacultyApiProvider extends ApiProviderBase implements IFacultyProvider {
     "faculty": "/faculty",
     "group": "/group",
     "year": "/year",
+    "chair": "/chair",
   };
 
   @override
-  Future insert(FacultyInfo obj) {
+  Future insert(Faculty obj) {
     throw new Exception("Api insertions are not supported.");
   }
 
   @override
-  Future insertAll(List<FacultyInfo> objList) {
+  Future insertAll(List<Faculty> objList) {
     throw new Exception("Api insertions are not supported.");
   }
 
   @override
-  Future<FacultyInfo> getById(String id) async {
+  Future<Faculty> getById(String id) async {
     var response = await getJson(_paths["faculty"], params: {"id": id});
     if (response.count == 0) return null;
 
-    return new FacultyInfo.fromMap(response.items[0]);
+    return makeFaculty(new FacultyInfo.fromMap(response.items[0]));
   }
 
   @override
-  Future<List<FacultyInfo>> getList() async {
+  Future<List<Faculty>> getList() async {
     return await _getEntities(
-        _paths["faculty"], {}, (x) => new FacultyInfo.fromMap(x));
+        _paths["faculty"], {}, (x) => makeFaculty(new FacultyInfo.fromMap(x)));
   }
 
   @override
-  Future<List<GroupInfo>> getGroups(GroupLoadOptions loadOptions) async {
+  Future<List<Chair>> getChairs(ChairLoadOptions loadOptions) async {
     assert(loadOptions != null);
 
     var params = {
-      "faculty": loadOptions.faculty.id,
-      "year": loadOptions.year.id,
+      "faculty": loadOptions.faculty?.id,
+      "teacher": loadOptions.teacher?.id,
     };
 
-    var groupMaps = await _getEntities(_paths["group"], params, (x) => x);
-    for (int i = 0; i < groupMaps.length; i++) {
-      var facultyId = groupMaps[i]["faculty"];
-      var yearId = groupMaps[i]["year"];
-      if (facultyId != loadOptions.faculty.id || yearId != loadOptions.year.id) {
-        groupMaps.removeAt(i--);
-        continue;
-      }
-
-      groupMaps[i]["faculty"] = loadOptions.faculty;
-      groupMaps[i]["year"] = loadOptions.year;
-    }
-
-    return groupMaps.map((x) => new GroupInfo.fromMap(x)).toList();
+    return _getEntities(
+        _paths["chair"], params, (x) => makeChair(new ChairInfo.fromMap(x)));
   }
 
   @override
-  Future<List<YearInfo>> getYears() async {
-    return await _getEntities(_paths["year"], {}, (x) => new YearInfo.fromMap(x));
+  Future<List<Group>> getGroups(GroupLoadOptions loadOptions) async {
+    assert(loadOptions != null);
+
+    var params = {
+      "faculty": loadOptions.faculty?.id,
+      "year": loadOptions.year?.id,
+    };
+
+    var data = await _getEntities(_paths["group"], params, (x) => x);
+    return new Stream.fromIterable(data)
+        .asyncMap((x) async => makeGroup(new GroupInfo.fromMap(x), (i) => getById(i)))
+        .toList();
   }
 
   @override
-  Future insertAllGroups(List<GroupInfo> groups) {
+  Future<List<Year>> getYears() async {
+    return await _getEntities(
+        _paths["year"], {}, (x) => makeYear(new YearInfo.fromMap(x)));
+  }
+
+  @override
+  Future insertAllGroups(List<Group> groups) {
     throw new Exception("Api insertions are not supported.");
   }
 
   @override
-  Future insertAllYears(List<YearInfo> years) {
+  Future insertAllYears(List<Year> years) {
+    throw new Exception("Api insertions are not supported.");
+  }
+
+  @override
+  Future insertAllChairs(List<Chair> chairs) {
     throw new Exception("Api insertions are not supported.");
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/BaseScreenMixin.dart';
@@ -27,24 +28,38 @@ class _GroupScreenState extends State<GroupScreen>
 
   @override
   Widget build(BuildContext context) {
+    initTexts(context);
+
     return wrapMaterialLayout(
         _buildContent(context), buildAppBar(texts.groupTitle));
   }
 
   Widget _buildContent(BuildContext context) {
     return new FutureBuilder(
-      builder: _buildInFuture,
       future: _getModel(),
+      builder: _buildInFuture,
     );
   }
 
   Future<GroupScreenViewModel> _getModel() async {
-    if (_model != null) return _model;
+    if (_model != null) return new SynchronousFuture(_model);
 
     var instance = new GroupScreenViewModel();
     await instance.initialize();
+    return _model = instance;
   }
 
-  Widget _buildInFuture(BuildContext buildContext,
-      AsyncSnapshot<GroupScreenViewModel> snapshot) {}
+  Widget _buildInFuture(
+      BuildContext buildContext, AsyncSnapshot<GroupScreenViewModel> snapshot) {
+    if (snapshot.connectionState != ConnectionState.done) {
+      return new Center(
+        child: new CircularProgressIndicator(),
+      );
+    }
+
+    var model = snapshot.data;
+    if (model == null) return new Text("Model is null.");
+
+    return new Text("Model was loaded.");
+  }
 }

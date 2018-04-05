@@ -2,7 +2,7 @@ import 'Faculty.dart';
 import 'Year.dart';
 
 class Group {
-  Group(this.name, this.year, this.faculty);
+  Group(this.id, this.name, this.year, this.faculty);
 
   String id;
   String name;

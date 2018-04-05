@@ -7,6 +7,6 @@ g.group_kurs 'year'
 
 from groups as g
 where g.group_faculty_id = ?
-    and group_kurs like CONCAT(?, '%')
+    and g.group_kurs like CONCAT(?, '%')
 order by g.group_id
 limit ?, ?

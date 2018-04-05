@@ -30,23 +30,25 @@ class Server {
         var facultyApi = new FacultyApi(this.pool, true);
         var index = new Index();
 
-        const _makeResponse = this._makeResponse;
-
         router.get('/group', (req, res, next) =>
-            facultyApi.groupGet(req, next).then(result => res.send(_makeResponse(null, result)))
-                .catch(err => res.send(_makeResponse(err)))
+            facultyApi.groupGet(req, next).then(result => res.send(this._makeResponse(null, result)))
+                .catch(err => res.send(this._makeResponse(err)))
+        );
+        router.get('/year', (req, res, next) =>
+            facultyApi.yearGet(req, next).then(result => res.send(this._makeResponse(null, result)))
+                .catch(err => res.send(this._makeResponse(err)))
         );
         router.get('/faculty', (req, res, next) =>
-            facultyApi.facultyGet(req, next).then(result => res.send(_makeResponse(null, result)))
-                .catch(err => res.send(_makeResponse(err)))
+            facultyApi.facultyGet(req, next).then(result => res.send(this._makeResponse(null, result)))
+                .catch(err => res.send(this._makeResponse(err)))
         );
         router.get('/timetable', (req, res, next) =>
-            facultyApi.timetableGet(req, next).then(result => res.send(_makeResponse(null, result)))
-                .catch(err => res.send(_makeResponse(err)))
+            scheduleApi.timetableGet(req, next).then(result => res.send(this._makeResponse(null, result)))
+                .catch(err => res.send(this._makeResponse(err)))
         );
         router.get('/schedule', (req, res, next) =>
-            scheduleApi.scheduleGet(req, next).then(result => res.send(_makeResponse(null, result)))
-                .catch(err => res.send(_makeResponse(err)))
+            scheduleApi.scheduleGet(req, next).then(result => res.send(this._makeResponse(null, result)))
+                .catch(err => res.send(this._makeResponse(err)))
         );
         router.get('/', (req, res, next) =>
             index.indexGet(req, next).then(result => res.send(result))
@@ -61,8 +63,8 @@ class Server {
     }
 
     _wrapHandler(req, res, next, handler) {
-        handler(req, res, next).then(result => res.send(_makeResponse(null, result)))
-            .catch(err => res.send(_makeResponse(err)));
+        handler(req, res, next).then(result => res.send(this._makeResponse(null, result)))
+            .catch(err => res.send(this._makeResponse(err)));
     }
 
     _makeResponse(err, data, htmlNewlines) {

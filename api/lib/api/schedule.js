@@ -28,6 +28,21 @@ class ScheduleApi extends BaseApi {
             pageSize
         ];
     }
+
+    timetableGet(req, next) {
+        const params = this._readTimetableParams(req.query);
+        return this._executeSqlAndRespond('timetable.sql', params);
+    }
+
+    _readTimetableParams(query) {
+        var page = query.page ? Math.max(this._readQueryNumber(query.page), 0) : 0;
+        var pageSize = query.pageSize ? Math.min(Math.max(this._readQueryNumber(query.pageSize), 0), this._maxResponseItems) : 0;
+
+        return [
+            page * pageSize,
+            pageSize
+        ];
+    }
 }
 
 module.exports = ScheduleApi;

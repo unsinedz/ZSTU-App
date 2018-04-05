@@ -39,12 +39,12 @@ class FacultyApi extends BaseApi {
         ];
     }
 
-    timetableGet(req, next) {
-        const params = this._readTimetableParams(req.query);
-        return this._executeSqlAndRespond('timetable.sql', params);
+    yearGet(req, next) {
+        const params = this._readYearParams(req.query);
+        return this._executeSqlAndRespond('year.sql', params);
     }
 
-    _readTimetableParams(query) {
+    _readYearParams(query) {
         var page = query.page ? Math.max(this._readQueryNumber(query.page), 0) : 0;
         var pageSize = query.pageSize ? Math.min(Math.max(this._readQueryNumber(query.pageSize), 0), this._maxResponseItems) : 0;
 

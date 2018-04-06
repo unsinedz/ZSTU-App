@@ -50,7 +50,7 @@ class GeneralStorageProvider {
     executor = executor ?? _db;
     var data = await executor.query(table, where: "id = ?", whereArgs: [id]);
     if (data.length > 1)
-      throw new DatabaseException("Several entities have id \"$id\"");
+      throw new Exception("Several entities have id \"$id\"");
 
     return data.length == 1 ? data.first : null;
   }

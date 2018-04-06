@@ -30,8 +30,8 @@ class FacultyManager implements IFacultyManager {
   @override
   Future<List<Chair>> getChairs(ChairLoadOptions loadOptions) async {
     return _getAndCacheEntities(
-      _storageProvider.getChairs(loadOptions),
-      _networkProvider.getChairs(loadOptions),
+      () => _storageProvider.getChairs(loadOptions),
+      () => _networkProvider.getChairs(loadOptions),
       _storageProvider.insertAllChairs,
     );
   }
@@ -39,16 +39,19 @@ class FacultyManager implements IFacultyManager {
   @override
   Future<List<Year>> getYears() async {
     return await _getAndCacheEntities(
-      _storageProvider.getYears(),
-      _networkProvider.getYears(),
+      () => _storageProvider.getYears(),
+      () => _networkProvider.getYears(),
       _storageProvider.insertAllYears,
     );
   }
 
   @override
   Future<List<Faculty>> getFaculties() async {
-    var faculties = await _getAndCacheEntities(_storageProvider.getList(),
-        _networkProvider.getList(), _storageProvider.insertAll);
+    var faculties = await _getAndCacheEntities(
+      () => _storageProvider.getList(),
+      () => _networkProvider.getList(),
+      _storageProvider.insertAll,
+    );
     await loadFacultyImages(faculties);
 
     return faculties;
@@ -57,21 +60,22 @@ class FacultyManager implements IFacultyManager {
   @override
   Future<List<Group>> getGroups(GroupLoadOptions loadOptions) async {
     return await _getAndCacheEntities(
-        _storageProvider.getGroups(loadOptions),
-        _networkProvider.getGroups(loadOptions),
+        () => _storageProvider.getGroups(loadOptions),
+        () => _networkProvider.getGroups(loadOptions),
         _storageProvider.insertAllGroups);
   }
 
   Future<List<T>> _getAndCacheEntities<T>(
-      Future<List<T>> fetchFromStorage, Future<List<T>> fetchFromNetwork,
+      RepeatableFunction<List<T>> fetchFromStorage,
+      RepeatableFunction<List<T>> fetchFromNetwork,
       [EntitySaver<List<T>> saveToStorage]) async {
     assert(fetchFromStorage != null);
     assert(fetchFromNetwork != null);
 
-    var entities = await fetchFromStorage;
+    var entities = await fetchFromStorage();
     if (entities.length == 0) {
-      entities = await _executeWithRepeats(() async => await fetchFromNetwork,
-              _networkRequestAttemptsCount) ??
+      entities = await _executeWithRepeats(
+              fetchFromNetwork, _networkRequestAttemptsCount) ??
           <T>[];
       if (saveToStorage != null) await saveToStorage(entities);
     }

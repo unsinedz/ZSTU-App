@@ -124,7 +124,7 @@ class _FacultiesState extends State<FacultiesScreen>
       content: new Text("${item.abbr} clicked"),
       duration: new Duration(seconds: 2),
     ));
-    Navigator.of(context).push(new MaterialPageRoute(
+    Navigator.of(context).pushReplacement(new MaterialPageRoute(
       builder: (context) {
         return new GroupScreen(item.id);
       },

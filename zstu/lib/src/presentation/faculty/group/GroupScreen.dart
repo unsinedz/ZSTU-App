@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../App.dart';
+import '../../../domain/faculty/Year.dart';
 import '../../../resources/Sizes.dart';
 import '../../common/BaseScreenMixin.dart';
 import '../../common/TextLocalizations.dart';
@@ -32,65 +32,83 @@ class _GroupScreenState extends State<GroupScreen>
 
   @override
   void initState() {
+    super.initState();
+
     _app = new App();
     _connectivityChangeListener =
         new Connectivity().onConnectivityChanged.listen((r) {
       if (r != ConnectivityResult.none && (_model?.years?.length ?? -1) == 0) {
+        print('Connectivity callback');
         setState(() => _model = null);
       }
     });
+  }
 
-    super.initState();
+  @override
+  void dispose() {
+    _connectivityChangeListener?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     initTexts(context);
 
+    Future modelLoader = _loadModel();
     return wrapMaterialLayout(
-        new FutureBuilder(
-          future: _getModel(),
-          builder: _buildInFuture,
-        ),
-        buildAppBar(texts.groupTitle));
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return new Center(
-      child: new Column(
-        children: <Widget>[
-          _buildImage(),
-          new DropdownButton(
-            items: <DropdownMenuItem>[],
-            onChanged: _onDropdownChanged,
-          )
-        ],
+      new FutureBuilder(
+        future: modelLoader,
+        builder: _buildInFuture,
       ),
+      buildAppBar(texts.groupTitle),
     );
   }
 
-  void _onDropdownChanged(dynamic value) {
-
+  Widget _buildContent(BuildContext context) {
+    return new Column(
+      children: <Widget>[
+        _buildImage(),
+        new DropdownButton<Year>(
+          items: _buildYearDropdownItems(),
+          onChanged: _onDropdownChanged,
+          value: _model?.selectedYear,
+          hint: new Text("Select year"),
+        )
+      ],
+    );
   }
 
-  Future<GroupScreenViewModel> _getModel() async {
-    if (_model != null) return new SynchronousFuture(_model);
+  List<DropdownMenuItem> _buildYearDropdownItems() {
+    return _model?.years?.map((x) {
+          return new DropdownMenuItem(
+            child: new Text(x.name),
+            value: x,
+          );
+        })?.toList() ??
+        <DropdownMenuItem<Year>>[];
+  }
+
+  void _onDropdownChanged(Year value) {
+    setState(() => _model.selectedYear = value);
+  }
+
+  Future _loadModel() async {
+    if (_model != null) return;
 
     var instance = new GroupScreenViewModel();
     await instance.initialize();
-    return _model = instance;
+    _model = instance;
   }
 
   Widget _buildInFuture(
-      BuildContext buildContext, AsyncSnapshot<GroupScreenViewModel> snapshot) {
-    if (snapshot.connectionState != ConnectionState.done) {
+      BuildContext buildContext, AsyncSnapshot<dynamic> snapshot) {
+    if (_model == null && snapshot.connectionState != ConnectionState.done) {
       return new Center(
         child: new CircularProgressIndicator(),
       );
     }
 
-    var model = snapshot.data;
-    if (model == null) return new Text("Model is null.");
+    if (_model == null) return new Text("Model is null.");
 
     return _buildContent(context);
   }

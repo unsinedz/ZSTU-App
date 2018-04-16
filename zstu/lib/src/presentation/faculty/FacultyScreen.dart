@@ -118,13 +118,7 @@ class _FacultiesState extends State<FacultiesScreen>
   }
 
   void _handleFacultyTap(BuildContext context, FacultyViewModel item) {
-    var scaffoldContext = Scaffold.of(context);
-    scaffoldContext.removeCurrentSnackBar();
-    scaffoldContext.showSnackBar(new SnackBar(
-      content: new Text("${item.abbr} clicked"),
-      duration: new Duration(seconds: 2),
-    ));
-    Navigator.of(context).pushReplacement(new MaterialPageRoute(
+    Navigator.of(context).push(new MaterialPageRoute(
       builder: (context) {
         return new GroupScreen(item.id);
       },

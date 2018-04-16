@@ -26,9 +26,13 @@ class _GroupScreenState extends State<GroupScreen>
   _GroupScreenState(this._facultyId);
 
   String _facultyId;
-  StreamSubscription _connectivityChangeListener;
   App _app;
   GroupScreenViewModel _model;
+
+  StreamSubscription _connectivityChangeListener;
+  TextEditingController _searchController;
+
+  Year selectedYear;
 
   @override
   void initState() {
@@ -42,11 +46,13 @@ class _GroupScreenState extends State<GroupScreen>
         setState(() => _model = null);
       }
     });
+    _searchController = new TextEditingController();
   }
 
   @override
   void dispose() {
     _connectivityChangeListener?.cancel();
+    _searchController?.dispose();
     super.dispose();
   }
 
@@ -65,17 +71,57 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   Widget _buildContent(BuildContext context) {
+    return new Center(
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _buildImage(),
+          _buildHeading(),
+          _buildYearDropdown(),
+          _buildGroupSelector(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeading() {
+    return new Container(
+      margin: new EdgeInsets.symmetric(
+        vertical: Sizes.GroupSelectionHeadingMargin,
+      ),
+      padding: new EdgeInsets.symmetric(
+        horizontal: Sizes.GroupSelectionHeadingPadding,
+      ),
+      child: new Text(
+        texts.selectGroupAndYear,
+        textAlign: TextAlign.center,
+        style: new TextStyle(
+          fontSize: Sizes.GroupSelectionHeadingText,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildYearDropdown() {
     return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        _buildImage(),
-        new DropdownButton<Year>(
-          items: _buildYearDropdownItems(),
-          onChanged: _onDropdownChanged,
-          value: _model?.selectedYear,
-          hint: new Text("Select year"),
-        )
+        new Text(texts.yearSelectorPlaceholder),
+        new Container(
+          child: new DropdownButton<Year>(
+            items: _buildYearDropdownItems(),
+            onChanged: (x) => setState(() => selectedYear = x),
+            value: selectedYear,
+            hint: new Text(texts.yearSelectorPlaceholder),
+          ),
+        ),
       ],
     );
+  }
+
+  Widget _buildGroupSelector() {
+    return new Text('Group selector');
   }
 
   List<DropdownMenuItem> _buildYearDropdownItems() {
@@ -86,10 +132,6 @@ class _GroupScreenState extends State<GroupScreen>
           );
         })?.toList() ??
         <DropdownMenuItem<Year>>[];
-  }
-
-  void _onDropdownChanged(Year value) {
-    setState(() => _model.selectedYear = value);
   }
 
   Future _loadModel() async {
@@ -115,7 +157,7 @@ class _GroupScreenState extends State<GroupScreen>
 
   Widget _buildImage() {
     return new CircleAvatar(
-      radius: Sizes.FacultiesGridImageRadius,
+      radius: Sizes.GroupSelectionImageRadius,
       backgroundColor: Colors.blue[100],
       backgroundImage: new AssetImage(_app.assets.getAssetPath("FICT.png")),
     );

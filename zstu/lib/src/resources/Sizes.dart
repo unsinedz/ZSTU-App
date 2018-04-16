@@ -25,4 +25,8 @@ class Sizes {
   static const double FacultiesGridItemAspectRatio = 1.25;
   static const double FacultiesGridMaxExtent = 300.0;
   static const double FacultyAbsenceMessageTextSize = 16.0;
+  static const double GroupSelectionHeadingText = 22.0;
+  static const double GroupSelectionHeadingPadding = 50.0;
+  static const double GroupSelectionHeadingMargin = 30.0;
+  static const double GroupSelectionImageRadius = 75.0;
 }

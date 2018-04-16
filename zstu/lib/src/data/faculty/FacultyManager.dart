@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../domain/common/IAssetManager.dart';
 import '../../domain/faculty/ChairLoadOptions.dart';
 import '../../domain/faculty/IFacultyProvider.dart';
 import '../../domain/faculty/Year.dart';
@@ -13,6 +14,7 @@ import '../../domain/faculty/IFacultyManager.dart';
 
 typedef Future<T> RepeatableFunction<T>();
 typedef Future EntitySaver<T>(T entity);
+typedef Future EntityPostLoader<T>(T entity);
 
 class FacultyManager implements IFacultyManager {
   FacultyManager(this._storageProvider, this._networkProvider,
@@ -23,7 +25,7 @@ class FacultyManager implements IFacultyManager {
   IFacultyProvider _storageProvider;
   IFacultyProvider _networkProvider;
 
-  AssetManager _assetManager;
+  IAssetManager _assetManager;
 
   static const int _networkRequestAttemptsCount = 3;
 
@@ -32,7 +34,7 @@ class FacultyManager implements IFacultyManager {
     return _getAndCacheEntities(
       () => _storageProvider.getChairs(loadOptions),
       () => _networkProvider.getChairs(loadOptions),
-      _storageProvider.insertAllChairs,
+      saveToStorage: _storageProvider.insertAllChairs,
     );
   }
 
@@ -41,7 +43,8 @@ class FacultyManager implements IFacultyManager {
     return await _getAndCacheEntities(
       () => _storageProvider.getYears(),
       () => _networkProvider.getYears(),
-      _storageProvider.insertAllYears,
+      saveToStorage: _storageProvider.insertAllYears,
+      postLoadEntities: _loadYearNames,
     );
   }
 
@@ -50,7 +53,7 @@ class FacultyManager implements IFacultyManager {
     var faculties = await _getAndCacheEntities(
       () => _storageProvider.getList(),
       () => _networkProvider.getList(),
-      _storageProvider.insertAll,
+      saveToStorage: _storageProvider.insertAll,
     );
     await loadFacultyImages(faculties);
 
@@ -60,15 +63,25 @@ class FacultyManager implements IFacultyManager {
   @override
   Future<List<Group>> getGroups(GroupLoadOptions loadOptions) async {
     return await _getAndCacheEntities(
-        () => _storageProvider.getGroups(loadOptions),
-        () => _networkProvider.getGroups(loadOptions),
-        _storageProvider.insertAllGroups);
+      () => _storageProvider.getGroups(loadOptions),
+      () => _networkProvider.getGroups(loadOptions),
+      saveToStorage: _storageProvider.insertAllGroups,
+    );
+  }
+
+  Future _loadYearNames(List<Year> groups) {
+    assert(groups != null);
+
+    return new Future.sync(
+        () => groups.forEach((x) => x.name = Texts.getLocalizedText(LocalizationKeys.Year + x.name, '${x.name} ${Texts.getLocalizedText("year")}')));
   }
 
   Future<List<T>> _getAndCacheEntities<T>(
-      RepeatableFunction<List<T>> fetchFromStorage,
-      RepeatableFunction<List<T>> fetchFromNetwork,
-      [EntitySaver<List<T>> saveToStorage]) async {
+    RepeatableFunction<List<T>> fetchFromStorage,
+    RepeatableFunction<List<T>> fetchFromNetwork, {
+    EntitySaver<List<T>> saveToStorage,
+    EntityPostLoader<List<T>> postLoadEntities,
+  }) async {
     assert(fetchFromStorage != null);
     assert(fetchFromNetwork != null);
 
@@ -77,8 +90,11 @@ class FacultyManager implements IFacultyManager {
       entities = await _executeWithRepeats(
               fetchFromNetwork, _networkRequestAttemptsCount) ??
           <T>[];
+
       if (saveToStorage != null) await saveToStorage(entities);
     }
+
+    if (postLoadEntities != null) await postLoadEntities(entities);
 
     return entities;
   }
@@ -104,7 +120,7 @@ class FacultyManager implements IFacultyManager {
 
     await for (Faculty f in new Stream.fromIterable(faculties)) {
       for (String ext in Constants.SUPPORTED_IMAGE_EXTENSIONS) {
-        var translatedAbbr = Texts.getText(f.abbr, "en", defaultValue: f.abbr);
+        var translatedAbbr = Texts.getText(f.abbr, "en", f.abbr);
         var name = "$translatedAbbr$ext";
         bool exists = await _assetManager.assetExists(name);
         if (exists) {

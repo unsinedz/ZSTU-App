@@ -15,3 +15,7 @@ class Constants {
   static const String ChairTableName = "Chairs";
   static const String TeacherTableName = "Teachers";
 }
+
+class LocalizationKeys {
+  static const Year = "Year_";
+}

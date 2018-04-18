@@ -23,6 +23,6 @@ class GeneralNetworkProvider {
     var body = await getString(uri, path, params, decoder: decoder);
     if (body == null || body.isEmpty) return null;
 
-    return JSON.decode(body);
+    return json.decode(body);
   }
 }

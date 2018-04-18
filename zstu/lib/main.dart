@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'src/App.dart';
 import 'src/presentation/schedule/ScheduleScreen.dart';
 import 'src/presentation/faculty/FacultyScreen.dart';
 import 'src/resources/texts.dart';
@@ -11,12 +14,12 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: "ZSTU",
       localizationsDelegates: [
+        const InitLocalizationsDelegate(),
         const TextsDelegate(),
       ],
       supportedLocales: [
@@ -33,4 +36,18 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+class InitLocalizationsDelegate extends LocalizationsDelegate {
+  const InitLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => true;
+
+  @override
+  Future load(Locale locale) =>
+      new Future.sync(() => new App().textProcessor.initialize(locale));
+
+  @override
+  bool shouldReload(LocalizationsDelegate old) => true;
 }

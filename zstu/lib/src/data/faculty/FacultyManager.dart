@@ -14,7 +14,6 @@ import '../../domain/faculty/IFacultyManager.dart';
 
 typedef Future<T> RepeatableFunction<T>();
 typedef Future EntitySaver<T>(T entity);
-typedef Future EntityPostLoader<T>(T entity);
 
 class FacultyManager implements IFacultyManager {
   FacultyManager(this._storageProvider, this._networkProvider,
@@ -44,7 +43,6 @@ class FacultyManager implements IFacultyManager {
       () => _storageProvider.getYears(),
       () => _networkProvider.getYears(),
       saveToStorage: _storageProvider.insertAllYears,
-      postLoadEntities: _loadYearNames,
     );
   }
 
@@ -69,18 +67,10 @@ class FacultyManager implements IFacultyManager {
     );
   }
 
-  Future _loadYearNames(List<Year> groups) {
-    assert(groups != null);
-
-    return new Future.sync(
-        () => groups.forEach((x) => x.name = Texts.getLocalizedText(LocalizationKeys.Year + x.name, '${x.name} ${Texts.getLocalizedText("year")}')));
-  }
-
   Future<List<T>> _getAndCacheEntities<T>(
     RepeatableFunction<List<T>> fetchFromStorage,
     RepeatableFunction<List<T>> fetchFromNetwork, {
     EntitySaver<List<T>> saveToStorage,
-    EntityPostLoader<List<T>> postLoadEntities,
   }) async {
     assert(fetchFromStorage != null);
     assert(fetchFromNetwork != null);
@@ -93,8 +83,6 @@ class FacultyManager implements IFacultyManager {
 
       if (saveToStorage != null) await saveToStorage(entities);
     }
-
-    if (postLoadEntities != null) await postLoadEntities(entities);
 
     return entities;
   }

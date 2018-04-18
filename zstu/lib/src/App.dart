@@ -1,5 +1,6 @@
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
+import 'domain/common/text/ITextProcessor.dart';
 import 'domain/faculty/IFacultyManager.dart';
 import 'domain/schedule/IScheduleManager.dart';
 import 'domain/teacher/ITeacherManager.dart';
@@ -17,6 +18,8 @@ class App {
   IScheduleManager get schedule => _IOC.provideSchedule();
 
   IAssetManager get assets => _IOC.provideAsset();
+
+  ITextProcessor get textProcessor => _IOC.provideTextProcessor();
 }
 
 class _IOC {
@@ -35,5 +38,9 @@ class _IOC {
 
   static IAssetManager provideAsset() {
     return DataModule.provideAsset();
+  }
+
+  static provideTextProcessor() {
+    return DataModule.provideTextProcessor();
   }
 }

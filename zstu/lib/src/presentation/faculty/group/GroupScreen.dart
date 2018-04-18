@@ -4,10 +4,10 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 import '../../../App.dart';
-import '../../../domain/faculty/Year.dart';
 import '../../../resources/Sizes.dart';
 import '../../common/BaseScreenMixin.dart';
 import '../../common/TextLocalizations.dart';
+import 'YearViewModel.dart';
 import 'GroupScreenViewModel.dart';
 
 class GroupScreen extends StatefulWidget {
@@ -28,11 +28,9 @@ class _GroupScreenState extends State<GroupScreen>
   String _facultyId;
   App _app;
   GroupScreenViewModel _model;
+  YearViewModel selectedYear;
 
   StreamSubscription _connectivityChangeListener;
-  TextEditingController _searchController;
-
-  Year selectedYear;
 
   @override
   void initState() {
@@ -46,13 +44,11 @@ class _GroupScreenState extends State<GroupScreen>
         setState(() => _model = null);
       }
     });
-    _searchController = new TextEditingController();
   }
 
   @override
   void dispose() {
     _connectivityChangeListener?.cancel();
-    _searchController?.dispose();
     super.dispose();
   }
 
@@ -109,7 +105,7 @@ class _GroupScreenState extends State<GroupScreen>
       children: <Widget>[
         new Text(texts.yearSelectorPlaceholder),
         new Container(
-          child: new DropdownButton<Year>(
+          child: new DropdownButton(
             items: _buildYearDropdownItems(),
             onChanged: (x) => setState(() => selectedYear = x),
             value: selectedYear,
@@ -131,7 +127,7 @@ class _GroupScreenState extends State<GroupScreen>
             value: x,
           );
         })?.toList() ??
-        <DropdownMenuItem<Year>>[];
+        <DropdownMenuItem<YearViewModel>>[];
   }
 
   Future _loadModel() async {

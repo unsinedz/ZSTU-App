@@ -1,6 +1,10 @@
-import '../../domain/faculty/Faculty.dart';
+import 'dart:ui';
 
-class FacultyViewModel {
+import '../../domain/common/text/ITextSensitive.dart';
+import '../../domain/faculty/Faculty.dart';
+import '../../resources/Texts.dart';
+
+class FacultyViewModel implements ITextSensitive {
   FacultyViewModel(this.id, this.abbr, this.image);
 
   FacultyViewModel.fromFaculty(Faculty faculty) {
@@ -16,4 +20,9 @@ class FacultyViewModel {
   String abbr;
 
   String image;
+
+  @override
+  void translateTexts(Locale locale) {
+    abbr = Texts.getText(abbr, locale.languageCode, abbr);
+  }
 }

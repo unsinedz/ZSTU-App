@@ -4,11 +4,13 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 import '../domain/common/IAssetManager.dart';
+import '../domain/common/text/ITextProcessor.dart';
 import '../domain/faculty/Faculty.dart';
 import '../domain/faculty/IFacultyManager.dart';
 import 'Constants.dart';
 import 'common/AssetManager.dart';
 import 'common/DatabaseFactory.dart';
+import 'common/TextProcessor.dart';
 import 'common/provider/GeneralNetworkProvider.dart';
 import 'common/provider/GeneralStorageProvider.dart';
 import 'common/provider/IProvider.dart';
@@ -71,5 +73,10 @@ class DataModule {
     DatabaseFactory.configureTableDelegates();
     await _initDatabase();
     configured = true;
+  }
+
+  static ITextProcessor _textProcessor;
+  static ITextProcessor provideTextProcessor() {
+    return _textProcessor = _textProcessor ?? new TextProcessor();
   }
 }

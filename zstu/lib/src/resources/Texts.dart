@@ -9,13 +9,6 @@ class Texts {
   }
 
   final Locale _locale;
-  static Locale _currentLocale;
-
-  static void setCurrentLocale(Locale locale) {
-    assert(locale != null);
-
-    _currentLocale = locale;
-  }
 
   String get appName => _texts["appName"][_locale.languageCode];
 
@@ -29,7 +22,8 @@ class Texts {
   String get faf => _texts["faf"][_locale.languageCode];
   String get fme => _texts["fme"][_locale.languageCode];
 
-  String get facultiesGridTitle => _texts["facultiesGridTitle"][_locale.languageCode];
+  String get facultiesGridTitle =>
+      _texts["facultiesGridTitle"][_locale.languageCode];
 
   String get mondayShort => _texts["mondayShort"][_locale.languageCode];
   String get tuesdayShort => _texts["tuesdayShort"][_locale.languageCode];
@@ -39,16 +33,22 @@ class Texts {
   String get saturdayShort => _texts["saturdayShort"][_locale.languageCode];
   String get sundayShort => _texts["sundayShort"][_locale.languageCode];
 
-  String get noFacultiesStored => _texts["noFacultiesStored"][_locale.languageCode];
+  String get noFacultiesStored =>
+      _texts["noFacultiesStored"][_locale.languageCode];
 
-  String get selectGroupAndYear => _texts["selectGroupAndYear"][_locale.languageCode];
-  String get yearSelectorPlaceholder => _texts["yearSelectorPlaceholder"][_locale.languageCode];
-  String get groupSelectorPlaceholder => _texts["groupSelectorPlaceholder"][_locale.languageCode];
-  String get groupSelectorLabel => _texts["groupSelectorLabel"][_locale.languageCode];
+  String get selectGroupAndYear =>
+      _texts["selectGroupAndYear"][_locale.languageCode];
+  String get yearSelectorPlaceholder =>
+      _texts["yearSelectorPlaceholder"][_locale.languageCode];
+  String get groupSelectorPlaceholder =>
+      _texts["groupSelectorPlaceholder"][_locale.languageCode];
+  String get groupSelectorLabel =>
+      _texts["groupSelectorLabel"][_locale.languageCode];
 
   String get year => _texts["year"][_locale.languageCode];
 
-  static String getText(String key, String languageCode, [String defaultValue]) {
+  static String getText(String key, String languageCode,
+      [String defaultValue]) {
     assert(key != null);
     assert(languageCode != null);
 
@@ -56,13 +56,6 @@ class Texts {
     if (vals == null) return defaultValue;
 
     return vals[languageCode] ?? defaultValue;
-  }
-
-  static String getLocalizedText(String key, [String defaultValue]) {
-    if (_currentLocale == null)
-      return defaultValue ?? key;
-
-    return getText(key, _currentLocale.languageCode, defaultValue);
   }
 
   static final Map<String, Map<String, String>> _texts = {
@@ -177,9 +170,12 @@ class Texts {
       "uk": "Обери факультет",
     },
     "noFacultiesStored": {
-      "en": "There are no faculties yet. Connect to the Internet in order to load some.",
-      "ru": "Информация о парах отсутствует. Подключитесь к Интернету для синхронизации.",
-      "uk": "Інформація про пари відсутня. Підключіться до Інтернету для синхронізації.",
+      "en":
+          "There are no faculties yet. Connect to the Internet in order to load some.",
+      "ru":
+          "Информация о парах отсутствует. Подключитесь к Интернету для синхронизации.",
+      "uk":
+          "Інформація про пари відсутня. Підключіться до Інтернету для синхронізації.",
     },
     "selectGroupAndYear": {
       "en": "Choose your course and group",
@@ -201,16 +197,16 @@ class Texts {
       "ru": "Группа",
       "uk": "Група",
     },
-    "year": {
-      "en": "year",
-      "ru": "курс",
-      "uk": "рік",
-    },
     "Year_1m": {
       "en": "5 year",
       "ru": "5 курс",
       "uk": "5 курс",
-    }
+    },
+    "year": {
+      "en": "year",
+      "ru": "курс",
+      "uk": "курс",
+    },
   };
 }
 
@@ -225,10 +221,7 @@ class TextsDelegate extends LocalizationsDelegate<Texts> {
 
   @override
   Future<Texts> load(Locale locale) =>
-      new Future<Texts>.sync(() {
-        Texts.setCurrentLocale(locale);
-        return new Texts(locale);
-      });
+      new Future<Texts>.value(new Texts(locale));
 
   @override
   bool shouldReload(LocalizationsDelegate<Texts> old) => false;

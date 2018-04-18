@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'src/App.dart';
+import 'src/presentation/faculty/group/GroupScreen.dart';
 import 'src/presentation/schedule/ScheduleScreen.dart';
 import 'src/presentation/faculty/FacultyScreen.dart';
 import 'src/resources/texts.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       home: new FacultiesScreen(),
       routes: <String, WidgetBuilder>{
+        "/group": (ctx) => new GroupScreen(),
         "/schedule": (ctx) => new ScheduleScreen(),
       },
     );

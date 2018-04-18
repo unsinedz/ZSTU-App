@@ -11,7 +11,7 @@ class GeneralNetworkProvider {
   HttpClient _client;
 
   Future<String> getString(String uri, String path, Map<String, dynamic> params, {Converter<List<int>, String> decoder}) async {
-    decoder = decoder ?? UTF8.decoder;
+    decoder = decoder ?? utf8.decoder;
 
     var url = new Uri.http(uri, path, params);
     var request = await _client.getUrl(url);

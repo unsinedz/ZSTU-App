@@ -10,8 +10,7 @@ class FacultyScreenViewModel extends BaseViewModel implements ITextSensitive {
   List<FacultyViewModel> faculties;
 
   Future initialize() async {
-    var app = new App();
-    faculties = (await app.faculties.getFaculties())
+    faculties = (await new App().faculties.getFaculties())
         .map((x) => new FacultyViewModel.fromFaculty(x))
         .toList();
 

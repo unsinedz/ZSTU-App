@@ -3,6 +3,9 @@ import 'dart:ui';
 
 import '../../../App.dart';
 import '../../../domain/common/text/ITextSensitive.dart';
+import '../../../domain/faculty/Faculty.dart';
+import '../../../domain/faculty/GroupLoadOptions.dart';
+import '../../../domain/faculty/Year.dart';
 import '../../common/BaseViewModel.dart';
 import 'YearViewModel.dart';
 import 'GroupViewModel.dart';
@@ -14,12 +17,19 @@ class GroupScreenViewModel extends BaseViewModel implements ITextSensitive {
 
   @override
   Future initialize() async {
-    var app = new App();
-    this.years = (await app.faculties.getYears())
+    this.years = (await new App().faculties.getYears())
         .map((x) => new YearViewModel.fromYear(x))
         .toList();
 
     await super.initialize();
+  }
+
+  Future loadGroups(Faculty faculty, Year year) async {
+    groups = (await new App()
+            .faculties
+            .getGroups(new GroupLoadOptions(faculty, year)))
+        .map((x) => new GroupViewModel.fromGroup(x))
+        .toList();
   }
 
   @override

@@ -40,6 +40,8 @@ class Texts {
       _texts["selectGroupAndYear"][_locale.languageCode];
   String get yearSelectorPlaceholder =>
       _texts["yearSelectorPlaceholder"][_locale.languageCode];
+  String get yearSelectorLabel =>
+      _texts["yearSelectorPlaceholder"][_locale.languageCode];
   String get groupSelectorPlaceholder =>
       _texts["groupSelectorPlaceholder"][_locale.languageCode];
   String get groupSelectorLabel =>

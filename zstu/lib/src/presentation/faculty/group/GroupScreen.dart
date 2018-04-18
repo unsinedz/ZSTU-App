@@ -4,33 +4,40 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 import '../../../App.dart';
+import '../../../domain/common/process/IStep.dart';
+import '../../../domain/schedule/ScheduleSelectionProcess.dart';
 import '../../../resources/Sizes.dart';
 import '../../common/BaseScreenMixin.dart';
 import '../../common/TextLocalizations.dart';
+import 'GroupViewModel.dart';
 import 'YearViewModel.dart';
 import 'GroupScreenViewModel.dart';
 
-class GroupScreen extends StatefulWidget {
-  GroupScreen(this._facultyId);
-
-  final String _facultyId;
-
+class GroupScreen extends StatefulWidget
+    implements IStep<ScheduleSelectionProcess> {
   @override
   State<StatefulWidget> createState() {
-    return new _GroupScreenState(_facultyId);
+    return new _GroupScreenState();
+  }
+
+  @override
+  bool canBeExecuted(ScheduleSelectionProcess process) {
+    return (process?.faculty != null) ?? false;
   }
 }
 
 class _GroupScreenState extends State<GroupScreen>
     with TextLocalizations, BaseScreenMixin {
-  _GroupScreenState(this._facultyId);
-
-  String _facultyId;
   App _app;
+
+  ScheduleSelectionProcess _scheduleSelectionProcess;
+
   GroupScreenViewModel _model;
   YearViewModel selectedYear;
 
   StreamSubscription _connectivityChangeListener;
+
+  bool loadInProgress = false;
 
   @override
   void initState() {
@@ -44,6 +51,9 @@ class _GroupScreenState extends State<GroupScreen>
         setState(() => _model = null);
       }
     });
+    _scheduleSelectionProcess = _app.processes.scheduleSelection;
+    if (!_scheduleSelectionProcess.canExecuteStep(widget))
+      throw new StateError("Step can not be executed.");
   }
 
   @override
@@ -74,7 +84,7 @@ class _GroupScreenState extends State<GroupScreen>
           _buildImage(),
           _buildHeading(),
           _buildYearDropdown(),
-          _buildGroupSelector(),
+          _buildGroupDropdown(),
         ],
       ),
     );
@@ -103,21 +113,22 @@ class _GroupScreenState extends State<GroupScreen>
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new Text(texts.yearSelectorPlaceholder),
+        new Text(texts.yearSelectorLabel),
         new Container(
-          child: new DropdownButton(
+          child: new DropdownButton<YearViewModel>(
             items: _buildYearDropdownItems(),
-            onChanged: (x) => setState(() => selectedYear = x),
+            onChanged: (x) {
+              setState(() {
+                selectedYear = x;
+                loadInProgress = true;
+              });
+            },
             value: selectedYear,
             hint: new Text(texts.yearSelectorPlaceholder),
           ),
         ),
       ],
     );
-  }
-
-  Widget _buildGroupSelector() {
-    return new Text('Group selector');
   }
 
   List<DropdownMenuItem> _buildYearDropdownItems() {
@@ -130,23 +141,62 @@ class _GroupScreenState extends State<GroupScreen>
         <DropdownMenuItem<YearViewModel>>[];
   }
 
+  Widget _buildGroupDropdown() {
+    var dd = new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        new Text(texts.groupSelectorLabel),
+        new Container(
+          child: new DropdownButton<GroupViewModel>(
+            items: _buildGroupDropdownItems(),
+            onChanged: (x) => setState(() {}),
+            hint: new Text(texts.groupSelectorPlaceholder),
+          ),
+        ),
+      ],
+    );
+
+    return new IgnorePointer(
+      ignoring: false,
+      child: dd,
+    );
+  }
+
+  List<DropdownMenuItem> _buildGroupDropdownItems() {
+    return _model?.groups?.map((x) {
+          return new DropdownMenuItem<GroupViewModel>(
+            child: new Text(x.name),
+            value: x,
+          );
+        })?.toList() ??
+        <DropdownMenuItem<GroupViewModel>>[];
+  }
+
   Future _loadModel() async {
     if (_model != null) return;
 
     var instance = new GroupScreenViewModel();
     await instance.initialize();
+    if (selectedYear != null) {
+      await _model.loadGroups(
+          _scheduleSelectionProcess.faculty, selectedYear.toYear());
+
+      loadInProgress = false;
+    }
+
     _model = instance;
   }
 
   Widget _buildInFuture(
       BuildContext buildContext, AsyncSnapshot<dynamic> snapshot) {
-    if (_model == null && snapshot.connectionState != ConnectionState.done) {
+    if (loadInProgress ||
+        (_model == null && snapshot.connectionState != ConnectionState.done)) {
       return new Center(
         child: new CircularProgressIndicator(),
       );
     }
 
-    if (_model == null) return new Text("Model is null.");
+    if (_model == null) return new Text("Model was not loaded.");
 
     return _buildContent(context);
   }

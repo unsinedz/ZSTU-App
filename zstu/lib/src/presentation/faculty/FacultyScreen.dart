@@ -3,17 +3,24 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../App.dart';
+import '../../domain/common/process/IStep.dart';
+import '../../domain/schedule/ScheduleSelectionProcess.dart';
 import '../../resources/Colors.dart';
 import '../../resources/sizes.dart';
 import '../common/BaseScreenMixin.dart';
 import '../common/TextLocalizations.dart';
 import 'FacultyScreenViewModel.dart';
 import 'FacultyViewModel.dart';
-import 'group/GroupScreen.dart';
 
-class FacultiesScreen extends StatefulWidget {
+class FacultiesScreen extends StatefulWidget
+    implements IStep<ScheduleSelectionProcess> {
   @override
   State<StatefulWidget> createState() => new _FacultiesState();
+
+  @override
+  bool canBeExecuted(ScheduleSelectionProcess process) {
+    return true;
+  }
 }
 
 class _FacultiesState extends State<FacultiesScreen>
@@ -21,6 +28,7 @@ class _FacultiesState extends State<FacultiesScreen>
   FacultyScreenViewModel _model;
   ScrollController _gridScrollController;
   StreamSubscription _connectivityChangeListener;
+  ScheduleSelectionProcess _scheduleSelectionProcess;
   App _app;
 
   @override
@@ -32,6 +40,10 @@ class _FacultiesState extends State<FacultiesScreen>
       if (r != ConnectivityResult.none &&
           (_model?.faculties?.length ?? -1) == 0) setState(() => _model = null);
     });
+    
+    _scheduleSelectionProcess = _app.processes.scheduleSelection;
+    if (!_scheduleSelectionProcess.canExecuteStep(widget))
+      throw new StateError("Step can not be executed.");
 
     super.initState();
   }
@@ -44,12 +56,12 @@ class _FacultiesState extends State<FacultiesScreen>
     super.dispose();
   }
 
-  Future<FacultyScreenViewModel> _getModel() async {
+  Future _loadModel() async {
     if (_model != null) return new SynchronousFuture(_model);
 
     var instance = new FacultyScreenViewModel();
     await instance.initialize();
-    return _model = instance;
+    _model = instance;
   }
 
   @override
@@ -58,7 +70,7 @@ class _FacultiesState extends State<FacultiesScreen>
 
     return wrapMaterialLayout(
         new FutureBuilder(
-          future: _getModel(),
+          future: _loadModel(),
           builder: _buildInFuture,
         ),
         buildAppBar(texts.facultiesTitle),
@@ -66,15 +78,14 @@ class _FacultiesState extends State<FacultiesScreen>
   }
 
   Widget _buildInFuture(
-      BuildContext context, AsyncSnapshot<FacultyScreenViewModel> snapshot) {
-    if (snapshot.connectionState != ConnectionState.done) {
+      BuildContext context, AsyncSnapshot snapshot) {
+    if (_model == null && snapshot.connectionState != ConnectionState.done) {
       return new Center(
         child: new CircularProgressIndicator(),
       );
     }
 
-    var model = snapshot.data;
-    if (model == null || model.faculties.length == 0) {
+    if (_model == null || _model.faculties.length == 0) {
       return new Center(
         child: new Text(
           texts.noFacultiesStored,
@@ -108,7 +119,7 @@ class _FacultiesState extends State<FacultiesScreen>
               childAspectRatio: Sizes.FacultiesGridItemAspectRatio,
               mainAxisSpacing: Sizes.FacultiesGridSpacing,
             ),
-            itemCount: model.faculties.length,
+            itemCount: _model.faculties.length,
             itemBuilder: _buildFaculty,
             controller: _gridScrollController,
           ),
@@ -118,11 +129,8 @@ class _FacultiesState extends State<FacultiesScreen>
   }
 
   void _handleFacultyTap(BuildContext context, FacultyViewModel item) {
-    Navigator.of(context).push(new MaterialPageRoute(
-      builder: (context) {
-        return new GroupScreen(item.id);
-      },
-    ));
+    _scheduleSelectionProcess.faculty = item.toFaculty();
+    Navigator.of(context).pushNamed("/group");
   }
 
   Widget _buildFaculty(BuildContext context, int index) {

@@ -9,19 +9,27 @@ class YearViewModel extends BaseViewModel implements ITextSensitive {
   YearViewModel.fromYear(Year year) {
     assert(year != null);
 
-    id = year.id;
-    name = year.name;
+    _year = year;
   }
 
   static const String _YearLocalizationKeyPrefix = "Year_";
 
-  String id;
+  Year _year;
 
-  String name;
+  String get id => _year.id;
+
+  String _name;
+  String get name => _name = _name ?? _year.name;
+  set name(String newName) => this._name = newName;
+
+  Year toYear() {
+    return _year;
+  }
 
   @override
   void translateTexts(Locale locale) {
-    name = Texts.getText(_getTextKey(name), locale.languageCode, '$name ${Texts.getText("year", locale.languageCode)}');
+    name = Texts.getText(_getTextKey(name), locale.languageCode,
+        '$name ${Texts.getText("year", locale.languageCode)}');
   }
 
   String _getTextKey(String simpleText) {

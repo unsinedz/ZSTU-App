@@ -11,6 +11,8 @@ class GroupViewModel extends ITextSensitive {
     name = group.name;
   }
 
+  GroupViewModel.empty();
+
   String id;
 
   String name;

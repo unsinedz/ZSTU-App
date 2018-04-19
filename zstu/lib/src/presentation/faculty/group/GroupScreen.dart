@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../App.dart';
 import '../../../domain/common/process/IStep.dart';
+import '../../../domain/faculty/Group.dart';
 import '../../../domain/schedule/ScheduleSelectionProcess.dart';
 import '../../../resources/Sizes.dart';
 import '../../common/BaseScreenMixin.dart';
@@ -34,7 +35,8 @@ class _GroupScreenState extends State<GroupScreen>
   ScrollController _scrollController;
 
   GroupScreenViewModel _model;
-  YearViewModel selectedYear;
+  YearViewModel _selectedYear;
+  GroupViewModel _selectedGroup;
 
   StreamSubscription _connectivityChangeListener;
 
@@ -80,14 +82,19 @@ class _GroupScreenState extends State<GroupScreen>
 
   Widget _buildContent(BuildContext context) {
     return new Center(
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _buildImage(),
-          _buildHeading(),
-          _buildYearDropdown(),
-          _buildGroupDropdown(),
-        ],
+      child: new Padding(
+        padding: new EdgeInsets.symmetric(
+          horizontal: Sizes.GroupSelectionHeadingPadding,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildImage(),
+            _buildHeading(),
+            _buildYearDropdown(),
+            _buildGroupDropdown(),
+          ],
+        ),
       ),
     );
   }
@@ -97,9 +104,9 @@ class _GroupScreenState extends State<GroupScreen>
       margin: new EdgeInsets.symmetric(
         vertical: Sizes.GroupSelectionHeadingMargin,
       ),
-      padding: new EdgeInsets.symmetric(
-        horizontal: Sizes.GroupSelectionHeadingPadding,
-      ),
+      // padding: new EdgeInsets.symmetric(
+      //   horizontal: Sizes.GroupSelectionHeadingPadding,
+      // ),
       child: new Text(
         texts.selectGroupAndYear,
         textAlign: TextAlign.center,
@@ -115,13 +122,19 @@ class _GroupScreenState extends State<GroupScreen>
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new Text(texts.yearSelectorLabel),
+        // new Text(texts.yearSelectorLabel),
         new Container(
+          width: double.infinity,
+          alignment: new Alignment(0.0, 0.0),
           child: new DropdownButton<YearViewModel>(
+            isDense: true,
             items: _buildYearDropdownItems(),
             onChanged: _handleYearSelected,
-            value: selectedYear,
-            hint: new Text(texts.yearSelectorPlaceholder),
+            value: _selectedYear,
+            hint: new Text(
+              texts.yearSelectorPlaceholder,
+              overflow: TextOverflow.fade,
+            ),
           ),
         ),
       ],
@@ -132,7 +145,7 @@ class _GroupScreenState extends State<GroupScreen>
     assert(selectedYear != null);
 
     setState(() {
-      this.selectedYear = selectedYear;
+      _selectedYear = selectedYear;
       loadInProgress = true;
     });
   }
@@ -148,24 +161,24 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   Widget _buildGroupDropdown() {
-    var items = _buildGroupDropdownItems();
-    var dd = new DropdownButton<GroupViewModel>(
-      items: items,
-      onChanged: (x) => setState(() {}),
-      hint: new Text(texts.groupSelectorPlaceholder),
-    );
-    return new Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        new Text(texts.groupSelectorLabel),
-        new Container(
-          child: items.length == 0
-              ? new DropdownButtonHideUnderline(
-                  child: dd,
-                )
-              : dd,
-        ),
-      ],
+    return new Container(
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          // new Text(
+          //   texts.groupSelectorLabel,
+          //   textAlign: TextAlign.center,
+          // ),
+          new Container(
+            child: new DropdownButton<GroupViewModel>(
+              items: _buildGroupDropdownItems(),
+              onChanged: (x) => setState(() {}),
+              value: _selectedGroup,
+              hint: new Text(texts.groupSelectorPlaceholder),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -176,7 +189,12 @@ class _GroupScreenState extends State<GroupScreen>
             value: x,
           );
         })?.toList() ??
-        <DropdownMenuItem<GroupViewModel>>[];
+        <DropdownMenuItem<GroupViewModel>>[
+          new DropdownMenuItem(
+            child: new Text(''),
+            value: new GroupViewModel.empty(),
+          ),
+        ];
   }
 
   Future _loadModel() async {
@@ -184,9 +202,9 @@ class _GroupScreenState extends State<GroupScreen>
 
     var instance = new GroupScreenViewModel();
     await instance.initialize();
-    if (selectedYear != null) {
+    if (_selectedYear != null) {
       await _model.loadGroups(
-          _scheduleSelectionProcess.faculty, selectedYear.toYear());
+          _scheduleSelectionProcess.faculty, _selectedYear.toYear());
 
       loadInProgress = false;
     }

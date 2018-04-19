@@ -31,6 +31,7 @@ class _GroupScreenState extends State<GroupScreen>
   App _app;
 
   ScheduleSelectionProcess _scheduleSelectionProcess;
+  ScrollController _scrollController;
 
   GroupScreenViewModel _model;
   YearViewModel selectedYear;
@@ -47,10 +48,10 @@ class _GroupScreenState extends State<GroupScreen>
     _connectivityChangeListener =
         new Connectivity().onConnectivityChanged.listen((r) {
       if (r != ConnectivityResult.none && (_model?.years?.length ?? -1) == 0) {
-        print('Connectivity callback');
         setState(() => _model = null);
       }
     });
+    _scrollController = new ScrollController();
     _scheduleSelectionProcess = _app.processes.scheduleSelection;
     if (!_scheduleSelectionProcess.canExecuteStep(widget))
       throw new StateError("Step can not be executed.");
@@ -59,6 +60,7 @@ class _GroupScreenState extends State<GroupScreen>
   @override
   void dispose() {
     _connectivityChangeListener?.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -117,18 +119,22 @@ class _GroupScreenState extends State<GroupScreen>
         new Container(
           child: new DropdownButton<YearViewModel>(
             items: _buildYearDropdownItems(),
-            onChanged: (x) {
-              setState(() {
-                selectedYear = x;
-                loadInProgress = true;
-              });
-            },
+            onChanged: _handleYearSelected,
             value: selectedYear,
             hint: new Text(texts.yearSelectorPlaceholder),
           ),
         ),
       ],
     );
+  }
+
+  void _handleYearSelected(YearViewModel selectedYear) {
+    assert(selectedYear != null);
+
+    setState(() {
+      this.selectedYear = selectedYear;
+      loadInProgress = true;
+    });
   }
 
   List<DropdownMenuItem> _buildYearDropdownItems() {
@@ -142,23 +148,24 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   Widget _buildGroupDropdown() {
-    var dd = new Column(
+    var items = _buildGroupDropdownItems();
+    var dd = new DropdownButton<GroupViewModel>(
+      items: items,
+      onChanged: (x) => setState(() {}),
+      hint: new Text(texts.groupSelectorPlaceholder),
+    );
+    return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         new Text(texts.groupSelectorLabel),
         new Container(
-          child: new DropdownButton<GroupViewModel>(
-            items: _buildGroupDropdownItems(),
-            onChanged: (x) => setState(() {}),
-            hint: new Text(texts.groupSelectorPlaceholder),
-          ),
+          child: items.length == 0
+              ? new DropdownButtonHideUnderline(
+                  child: dd,
+                )
+              : dd,
         ),
       ],
-    );
-
-    return new IgnorePointer(
-      ignoring: false,
-      child: dd,
     );
   }
 

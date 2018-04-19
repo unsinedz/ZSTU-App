@@ -1,6 +1,7 @@
 import '../../domain/faculty/Group.dart';
+import '../common/IPersistableEntity.dart';
 
-class GroupInfo {
+class GroupInfo implements IPersistableEntity {
   String id;
   String name;
   String yearId;
@@ -24,7 +25,7 @@ class GroupInfo {
     facultyId = group.faculty.id;
   }
 
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "name": name,

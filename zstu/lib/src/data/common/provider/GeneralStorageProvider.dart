@@ -29,7 +29,7 @@ class GeneralStorageProvider {
     int limit,
     int offset,
     DatabaseExecutor executor,
-  }) async {
+  }) {
     executor = executor ?? _db;
     return executor.query(
       table,
@@ -56,7 +56,7 @@ class GeneralStorageProvider {
   }
 
   Future insertMap(String table, Map<String, dynamic> values,
-      {DatabaseExecutor executor}) async {
+      {DatabaseExecutor executor}) {
     executor = executor ?? _db;
     return executor.insert(table, values,
         conflictAlgorithm: ConflictAlgorithm.fail);
@@ -67,13 +67,13 @@ class GeneralStorageProvider {
   }
 
   Future deleteMap(String table, String id,
-      {String where, List whereArgs, DatabaseExecutor executor}) async {
+      {String where, List whereArgs, DatabaseExecutor executor}) {
     executor = executor ?? _db;
     return executor.delete(table, where: where, whereArgs: whereArgs);
   }
 
   Future<Transaction> transaction(Future<Transaction> action(Transaction t),
-      {bool exclusive}) async {
+      {bool exclusive}) {
     return _db.transaction(action, exclusive: exclusive);
   }
 

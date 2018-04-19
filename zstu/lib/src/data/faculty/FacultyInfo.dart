@@ -1,12 +1,13 @@
 import '../../domain/faculty/Faculty.dart';
+import '../common/IPersistableEntity.dart';
 
-class FacultyInfo {
+class FacultyInfo implements IPersistableEntity {
   String id;
   String name;
   String abbr;
   String image;
 
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "name": name,

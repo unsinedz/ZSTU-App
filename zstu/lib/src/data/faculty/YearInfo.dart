@@ -1,12 +1,13 @@
 import '../../domain/faculty/Year.dart';
+import '../common/IPersistableEntity.dart';
 
-class YearInfo {
+class YearInfo implements IPersistableEntity {
   YearInfo(this.id, this.name);
 
   String id;
   String name;
 
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "name": name,

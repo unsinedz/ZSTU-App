@@ -14,7 +14,7 @@ import '../GroupInfo.dart';
 import '../../Constants.dart';
 import 'FacultyProviderMixin.dart';
 
-typedef Map MapSelector<T>(T entity);
+typedef Map<String, dynamic> MapSelector<T>(T entity);
 
 class FacultyStorageProvider extends FacultyProviderMixin
     implements IFacultyProvider {
@@ -75,7 +75,8 @@ class FacultyStorageProvider extends FacultyProviderMixin
 
   @override
   Future insertAllGroups(List<Group> groups) async {
-    _insertAllEntities(GroupTableName, groups, (x) => new GroupInfo.fromGroup(x).toMap());
+    _insertAllEntities(
+        GroupTableName, groups, (x) => new GroupInfo.fromGroup(x).toMap());
   }
 
   @override
@@ -124,10 +125,12 @@ class FacultyStorageProvider extends FacultyProviderMixin
     if (entities.length == 0) return;
 
     await _baseProvider.transaction((t) async {
+      var tasks = <Future>[];
       for (T entity in entities) {
-        await _baseProvider.insertMap(tableName, mapSelector(entity),
-            executor: t);
+        tasks.add(_baseProvider.insertMap(tableName, mapSelector(entity),
+            executor: t));
       }
+      await Future.wait(tasks);
     });
   }
 }

@@ -56,6 +56,7 @@ class BaseApi {
         const sqlQuery = await this._readSqlFile(sqlName);
         const connection = await this._getConnectionFromPool();
         return new Promise((res, rej) => connection.query(sqlQuery, params, (err, result, fields) => {
+            connection.release();
             if (err) {
                 rej(err);
             } else {

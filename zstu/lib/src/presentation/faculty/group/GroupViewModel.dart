@@ -5,7 +5,8 @@ import '../../../domain/faculty/Group.dart';
 
 class GroupViewModel extends ITextSensitive {
   GroupViewModel.fromGroup(Group group) {
-    assert(group != null);
+    if (group == null)
+      throw new ArgumentError("Group is null.");
 
     id = group.id;
     name = group.name;

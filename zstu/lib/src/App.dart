@@ -1,3 +1,4 @@
+import 'Settings.dart';
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
 import 'domain/common/process/IProcess.dart';
@@ -12,6 +13,8 @@ class App {
   factory App() => _instance ?? (_instance = new App._());
 
   App._();
+
+  Settings get settings => new Settings();
 
   IFacultyManager get faculties => _IOC.provideFaculty();
 
@@ -36,7 +39,8 @@ class Processes {
   ScheduleSelectionProcess get scheduleSelection => _getOrAdd(new ScheduleSelectionProcess());
 
   T _getOrAdd<T extends IProcess>(T instanceToAdd) {
-    assert(instanceToAdd != null);
+    if (instanceToAdd == null)
+      throw new ArgumentError("Instance is null.");
 
     var processes = _processes.where((dynamic x) => (x as T) != null);
     if (processes.length == 0) {

@@ -15,14 +15,16 @@ class YearInfo implements IPersistableEntity {
   }
 
   YearInfo.fromMap(Map<String, dynamic> map) {
-    assert(map != null);
+    if (map == null)
+      throw new ArgumentError("Map is null.");
 
     id = map["id"].toString();
     name = map["name"];
   }
 
   YearInfo.fromYear(Year year) {
-    assert(year != null);
+    if (year == null)
+      throw new ArgumentError("Year is null.");
 
     id = year.id;
     name = year.name;

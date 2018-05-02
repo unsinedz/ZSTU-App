@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../../../App.dart';
 import '../../../domain/common/process/IStep.dart';
-import '../../../domain/faculty/Group.dart';
 import '../../../domain/schedule/ScheduleSelectionProcess.dart';
 import '../../../resources/Sizes.dart';
 import '../../common/BaseScreenMixin.dart';
@@ -40,8 +39,6 @@ class _GroupScreenState extends State<GroupScreen>
 
   StreamSubscription _connectivityChangeListener;
 
-  bool loadInProgress = false;
-
   @override
   void initState() {
     super.initState();
@@ -70,7 +67,16 @@ class _GroupScreenState extends State<GroupScreen>
   Widget build(BuildContext context) {
     initTexts(context);
 
-    Future modelLoader = _loadModel();
+    print(_scheduleSelectionProcess?.faculty?.id);
+    print(_scheduleSelectionProcess?.faculty?.abbr);
+    print(_selectedYear?.toYear()?.name);
+    Future modelLoader = _model == null
+        ? _loadModel()
+        : _selectedYear == null
+            ? Future.value(null)
+            : _model.loadGroups(
+                _scheduleSelectionProcess.faculty, _selectedYear.toYear());
+
     return wrapMaterialLayout(
       new FutureBuilder(
         future: modelLoader,
@@ -146,7 +152,6 @@ class _GroupScreenState extends State<GroupScreen>
 
     setState(() {
       _selectedYear = selectedYear;
-      loadInProgress = true;
     });
   }
 
@@ -202,20 +207,12 @@ class _GroupScreenState extends State<GroupScreen>
 
     var instance = new GroupScreenViewModel();
     await instance.initialize();
-    if (_selectedYear != null) {
-      await _model.loadGroups(
-          _scheduleSelectionProcess.faculty, _selectedYear.toYear());
-
-      loadInProgress = false;
-    }
-
     _model = instance;
   }
 
   Widget _buildInFuture(
       BuildContext buildContext, AsyncSnapshot<dynamic> snapshot) {
-    if (loadInProgress ||
-        (_model == null && snapshot.connectionState != ConnectionState.done)) {
+    if (_model == null && snapshot.connectionState != ConnectionState.done) {
       return new Center(
         child: new CircularProgressIndicator(),
       );

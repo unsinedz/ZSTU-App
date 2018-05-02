@@ -9,7 +9,8 @@ class AssetManager implements IAssetManager {
   String _assetPath;
 
   Future<bool> assetExists(String subPath) async {
-    assert(subPath != null);
+    if (subPath == null)
+      throw new ArgumentError("Subpath is null.");
 
     try {
       await rootBundle.load(getAssetPath(subPath));
@@ -21,7 +22,8 @@ class AssetManager implements IAssetManager {
   }
 
   String getAssetPath(String name) {
-    assert(name != null);
+    if (name == null)
+      throw new ArgumentError("Name is null.");
 
     return path.join(_assetPath, name);
   }

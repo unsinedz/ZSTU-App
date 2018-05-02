@@ -9,7 +9,8 @@ class DatabaseFactory {
   static final List<OnUpgrade> _onUpgradeActions = <OnUpgrade>[];
 
   static void registerCreate(OnCreate action) {
-    assert(action != null);
+    if (action == null)
+      throw new ArgumentError("Action is null.");
 
     if (_onCreateActions.contains(action))
       throw new Exception("Action was already added.");
@@ -18,7 +19,8 @@ class DatabaseFactory {
   }
 
   static void registerUpgrade(OnUpgrade action) {
-    assert(action != null);
+    if (action == null)
+      throw new ArgumentError("Action is null.");
 
     if (_onUpgradeActions.contains(action))
       throw new Exception("Action was already added.");

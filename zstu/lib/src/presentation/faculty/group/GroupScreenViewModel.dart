@@ -25,11 +25,10 @@ class GroupScreenViewModel extends BaseViewModel implements ITextSensitive {
   }
 
   Future loadGroups(Faculty faculty, Year year) async {
-    groups = (await new App()
-            .faculties
-            .getGroups(new GroupLoadOptions(faculty, year)))
-        .map((x) => new GroupViewModel.fromGroup(x))
-        .toList();
+    var entities = await new App()
+        .faculties
+        .getGroups(new GroupLoadOptions(faculty, year));
+    groups = entities.map((x) => new GroupViewModel.fromGroup(x)).toList();
   }
 
   @override

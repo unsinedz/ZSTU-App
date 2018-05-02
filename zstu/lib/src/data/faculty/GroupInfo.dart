@@ -8,16 +8,18 @@ class GroupInfo implements IPersistableEntity {
   String facultyId;
 
   GroupInfo.fromMap(Map<String, dynamic> map) {
-    assert(map != null);
+    if (map == null)
+      throw new ArgumentError("Map is null.");
 
     id = map["id"].toString();
     name = map["name"];
-    yearId = map["yearId"];
-    facultyId = map["facultyId"];
+    yearId = map["yearId"].toString();
+    facultyId = map["facultyId"].toString();
   }
 
   GroupInfo.fromGroup(Group group) {
-    assert(group != null);
+    if (group == null)
+      throw new ArgumentError("Group is null.");
 
     id = group.id;
     name = group.name;

@@ -36,8 +36,8 @@ class FacultyStorageProvider extends FacultyProviderMixin
   }
 
   @override
-  Future insertAll(List<Faculty> faculties) async {
-    await _insertAllEntities(FacultyTableName, faculties,
+  Future insertAll(List<Faculty> faculties) {
+    return _insertAllEntities(FacultyTableName, faculties,
         (Faculty x) => new FacultyInfo.fromFaculty(x).toMap());
   }
 
@@ -74,8 +74,8 @@ class FacultyStorageProvider extends FacultyProviderMixin
   }
 
   @override
-  Future insertAllGroups(List<Group> groups) async {
-    _insertAllEntities(
+  Future insertAllGroups(List<Group> groups) {
+    return _insertAllEntities(
         GroupTableName, groups, (x) => new GroupInfo.fromGroup(x).toMap());
   }
 
@@ -86,8 +86,8 @@ class FacultyStorageProvider extends FacultyProviderMixin
   }
 
   @override
-  Future insertAllYears(List<Year> years) async {
-    await _insertAllEntities(
+  Future insertAllYears(List<Year> years) {
+    return _insertAllEntities(
         YearTableName, years, (Year x) => new YearInfo.fromYear(x).toMap());
   }
 
@@ -111,8 +111,8 @@ class FacultyStorageProvider extends FacultyProviderMixin
   }
 
   @override
-  Future insertAllChairs(List<Chair> chairs) async {
-    await _insertAllEntities(ChairTableName, chairs,
+  Future insertAllChairs(List<Chair> chairs) {
+    return _insertAllEntities(ChairTableName, chairs,
         (Chair x) => new ChairInfo.fromChair(x).toMap());
   }
 

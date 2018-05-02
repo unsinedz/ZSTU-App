@@ -10,7 +10,7 @@ abstract class NetworkProviderBase {
   String _uri;
 
   Future<ApiResponse> getJson(String path,
-      {Map<String, dynamic> params}) async {
+      {Map<String, String> params}) async {
     var map = await _baseProvider.getJson(_uri, path, params);
     return new ApiResponse.fromMap(map);
   }

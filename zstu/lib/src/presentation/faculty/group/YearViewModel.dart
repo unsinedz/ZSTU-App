@@ -7,7 +7,8 @@ import '../../common/BaseViewModel.dart';
 
 class YearViewModel extends BaseViewModel implements ITextSensitive {
   YearViewModel.fromYear(Year year) {
-    assert(year != null);
+    if (year == null)
+      throw new ArgumentError("Year is null.");
 
     _year = year;
   }

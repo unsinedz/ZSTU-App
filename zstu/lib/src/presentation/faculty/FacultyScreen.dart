@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
@@ -57,7 +56,7 @@ class _FacultiesState extends State<FacultiesScreen>
   }
 
   Future _loadModel() async {
-    if (_model != null) return new SynchronousFuture(_model);
+    if (_model != null) return _model;
 
     var instance = new FacultyScreenViewModel();
     await instance.initialize();

@@ -24,7 +24,8 @@ class FacultyInfo implements IPersistableEntity {
   }
 
   FacultyInfo.fromFaculty(Faculty faculty) {
-    assert(faculty != null);
+    if (faculty == null)
+      throw new ArgumentError("Faculty is null.");
 
     id = faculty.id;
     abbr = faculty.abbr;

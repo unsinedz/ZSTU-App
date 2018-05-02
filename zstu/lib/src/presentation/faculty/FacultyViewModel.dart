@@ -6,7 +6,8 @@ import '../../resources/Texts.dart';
 
 class FacultyViewModel implements ITextSensitive {
   FacultyViewModel.fromFaculty(Faculty faculty) {
-    assert(faculty != null);
+    if (faculty == null)
+      throw new ArgumentError("Faculty is null.");
 
     this._faculty = faculty;
   }

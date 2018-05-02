@@ -109,11 +109,8 @@ class FacultyApiProvider extends NetworkProviderBase
     assert(params != null);
     assert(fromMapBuilder != null);
 
-    var pageSize = params["pageSize"];
-    if (pageSize == null) {
-      pageSize = Constants.BATCH_SIZE.toString();
-      params["pageSize"] = pageSize;
-    }
+    if (params["pageSize"] == null)
+      params["pageSize"] = Constants.BATCH_SIZE.toString();
 
     var page = 0;
     params["page"] = page.toString();

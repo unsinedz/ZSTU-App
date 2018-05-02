@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../../App.dart';
 import '../../domain/common/IAssetManager.dart';
 import '../../domain/faculty/ChairLoadOptions.dart';
 import '../../domain/faculty/IFacultyProvider.dart';
@@ -33,7 +34,7 @@ class FacultyManager implements IFacultyManager {
     return _getAndCacheEntities(
       () => _storageProvider.getChairs(loadOptions),
       () => _networkProvider.getChairs(loadOptions),
-      saveToStorage: _storageProvider.insertAllChairs,
+      saveToStorage: (x) => _storageProvider.insertAllChairs(x),
     );
   }
 
@@ -42,7 +43,7 @@ class FacultyManager implements IFacultyManager {
     return await _getAndCacheEntities(
       () => _storageProvider.getYears(),
       () => _networkProvider.getYears(),
-      saveToStorage: _storageProvider.insertAllYears,
+      saveToStorage: (x) => _storageProvider.insertAllYears(x),
     );
   }
 
@@ -51,7 +52,7 @@ class FacultyManager implements IFacultyManager {
     var faculties = await _getAndCacheEntities(
       () => _storageProvider.getList(),
       () => _networkProvider.getList(),
-      saveToStorage: _storageProvider.insertAll,
+      saveToStorage: (x) => _storageProvider.insertAll(x),
     );
     await loadFacultyImages(faculties);
 
@@ -59,11 +60,11 @@ class FacultyManager implements IFacultyManager {
   }
 
   @override
-  Future<List<Group>> getGroups(GroupLoadOptions loadOptions) async {
-    return await _getAndCacheEntities(
+  Future<List<Group>> getGroups(GroupLoadOptions loadOptions) {
+    return _getAndCacheEntities(
       () => _storageProvider.getGroups(loadOptions),
       () => _networkProvider.getGroups(loadOptions),
-      saveToStorage: _storageProvider.insertAllGroups,
+      saveToStorage: (x) => _storageProvider.insertAllGroups(x),
     );
   }
 
@@ -97,16 +98,18 @@ class FacultyManager implements IFacultyManager {
       try {
         result = await operation();
         break;
-      } catch (e) {}
+      } catch (e) {
+        if (new App().settings.enableLogging) print(e.toString());
+      }
     }
 
     return result;
   }
 
   Future loadFacultyImages(List<Faculty> faculties) async {
-    assert(faculties != null);
+    if (faculties == null) throw new ArgumentError("Faculties are null.");
 
-    await for (Faculty f in new Stream.fromIterable(faculties)) {
+    for (Faculty f in faculties) {
       for (String ext in Constants.SUPPORTED_IMAGE_EXTENSIONS) {
         var translatedAbbr = Texts.getText(f.abbr, "en", f.abbr);
         var name = "$translatedAbbr$ext";

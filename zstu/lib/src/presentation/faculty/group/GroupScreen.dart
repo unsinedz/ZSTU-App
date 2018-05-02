@@ -35,7 +35,6 @@ class _GroupScreenState extends State<GroupScreen>
 
   GroupScreenViewModel _model;
   YearViewModel _selectedYear;
-  GroupViewModel _selectedGroup;
 
   StreamSubscription _connectivityChangeListener;
 
@@ -67,9 +66,6 @@ class _GroupScreenState extends State<GroupScreen>
   Widget build(BuildContext context) {
     initTexts(context);
 
-    print(_scheduleSelectionProcess?.faculty?.id);
-    print(_scheduleSelectionProcess?.faculty?.abbr);
-    print(_selectedYear?.toYear()?.name);
     Future modelLoader = _model == null
         ? _loadModel()
         : _selectedYear == null
@@ -151,6 +147,11 @@ class _GroupScreenState extends State<GroupScreen>
     assert(selectedYear != null);
 
     setState(() {
+      if (selectedYear != _selectedYear) {
+        _model.groups?.clear();
+        _model.groups = null;
+      }
+
       _selectedYear = selectedYear;
     });
   }
@@ -177,14 +178,29 @@ class _GroupScreenState extends State<GroupScreen>
           new Container(
             child: new DropdownButton<GroupViewModel>(
               items: _buildGroupDropdownItems(),
-              onChanged: (x) => setState(() {}),
-              value: _selectedGroup,
+              onChanged: _handleGroupSelected,
+              value: _getSelectedGroup(),
               hint: new Text(texts.groupSelectorPlaceholder),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _handleGroupSelected(GroupViewModel value) {
+    setState(() => _scheduleSelectionProcess.group = value.toGroup());
+  }
+
+  GroupViewModel _getSelectedGroup() {
+    if (_model == null ||
+        _model.groups == null ||
+        _scheduleSelectionProcess.group == null) return null;
+
+    var selectedGroup = _model.groups.where((x) => x.id == _scheduleSelectionProcess.group.id);
+    if (selectedGroup.length == 0) return null;
+
+    return selectedGroup.first;
   }
 
   List<DropdownMenuItem> _buildGroupDropdownItems() {
@@ -196,7 +212,7 @@ class _GroupScreenState extends State<GroupScreen>
         })?.toList() ??
         <DropdownMenuItem<GroupViewModel>>[
           new DropdownMenuItem(
-            child: new Text(''),
+            child: new Text('Select year first'),
             value: new GroupViewModel.empty(),
           ),
         ];

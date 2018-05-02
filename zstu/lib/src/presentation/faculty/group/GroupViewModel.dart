@@ -8,15 +8,20 @@ class GroupViewModel extends ITextSensitive {
     if (group == null)
       throw new ArgumentError("Group is null.");
 
-    id = group.id;
-    name = group.name;
+      _group = group;
   }
 
   GroupViewModel.empty();
 
-  String id;
+  Group _group;
 
-  String name;
+  String get id => _group?.id;
+
+  String get name => _group?.name;
+
+  Group toGroup() {
+    return _group;
+  }
 
   @override
   void translateTexts(Locale locale) {

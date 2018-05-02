@@ -19,7 +19,6 @@ abstract class FacultyProviderMixin {
 
     var faculty = await facultyLoader(groupInfo.facultyId);
     var year = new Year(groupInfo.yearId, groupInfo.yearId);
-    print('Faculty: ${faculty?.abbr}');
     return new Group(groupInfo.id, groupInfo.name, year, faculty);
   }
 

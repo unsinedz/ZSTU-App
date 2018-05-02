@@ -13,10 +13,20 @@ class FacultyApi extends BaseApi {
     }
 
     _readFacultyParams(query) {
+        var id = query.id;
+        if (id && id != '') {
+            return [
+                id,
+                0,
+                1
+            ];
+        }
+
         var page = query.page ? Math.max(this._readQueryNumber(query.page), 0) : 0;
         var pageSize = query.pageSize ? Math.min(Math.max(this._readQueryNumber(query.pageSize), 0), this._maxResponseItems) : 0;
 
         return [
+            '%',
             page * pageSize,
             pageSize
         ];

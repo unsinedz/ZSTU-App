@@ -2,8 +2,8 @@ select
 
 g.group_id 'id',
 g.group_name 'name',
-g.group_faculty_id 'faculty',
-g.group_kurs 'year'
+g.group_faculty_id 'facultyId',
+g.group_kurs 'yearId'
 
 from groups as g
 where g.group_faculty_id = ?

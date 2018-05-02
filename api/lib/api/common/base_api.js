@@ -40,7 +40,6 @@ class BaseApi {
             fs.readFile(`./lib/api/queries/${sqlName}`, 'utf8', (err, data) => {
                 if (err) {
                     rej(err);
-                    return;
                 } else {
                     res(data);
                 }
@@ -49,9 +48,8 @@ class BaseApi {
     }
 
     async _executeSqlAndRespond(sqlName, params) {
-        if (!sqlName) {
-            throw new Error('sql name is undefined')
-        }
+        if (!sqlName)
+            throw new Error('SQL name is undefined')
 
         const sqlQuery = await this._readSqlFile(sqlName);
         const connection = await this._getConnectionFromPool();
@@ -64,7 +62,6 @@ class BaseApi {
             }
         }));
     }
-
 }
 
 module.exports = BaseApi;

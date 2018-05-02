@@ -5,5 +5,6 @@ f.faculty_abbr 'abbr',
 f.faculty_name 'name'
 
 from faculties as f
+where f.faculty_id like ?
 order by f.faculty_id
 limit ?, ?

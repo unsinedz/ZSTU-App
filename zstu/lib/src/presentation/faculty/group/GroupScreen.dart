@@ -106,9 +106,6 @@ class _GroupScreenState extends State<GroupScreen>
       margin: new EdgeInsets.symmetric(
         vertical: Sizes.GroupSelectionHeadingMargin,
       ),
-      // padding: new EdgeInsets.symmetric(
-      //   horizontal: Sizes.GroupSelectionHeadingPadding,
-      // ),
       child: new Text(
         texts.selectGroupAndYear,
         textAlign: TextAlign.center,
@@ -124,19 +121,14 @@ class _GroupScreenState extends State<GroupScreen>
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        // new Text(texts.yearSelectorLabel),
         new Container(
           width: double.infinity,
           alignment: new Alignment(0.0, 0.0),
-          child: new DropdownButton<YearViewModel>(
-            isDense: true,
-            items: _buildYearDropdownItems(),
-            onChanged: _handleYearSelected,
-            value: _selectedYear,
-            hint: new Text(
-              texts.yearSelectorPlaceholder,
-              overflow: TextOverflow.fade,
-            ),
+          child: _buildGroupScreenDropdown<YearViewModel>(
+            _buildYearDropdownItems(),
+            _handleYearSelected,
+            _selectedYear,
+            new Text(texts.yearSelectorPlaceholder),
           ),
         ),
       ],
@@ -171,19 +163,28 @@ class _GroupScreenState extends State<GroupScreen>
       child: new Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // new Text(
-          //   texts.groupSelectorLabel,
-          //   textAlign: TextAlign.center,
-          // ),
           new Container(
-            child: new DropdownButton<GroupViewModel>(
-              items: _buildGroupDropdownItems(),
-              onChanged: _handleGroupSelected,
-              value: _getSelectedGroup(),
-              hint: new Text(texts.groupSelectorPlaceholder),
-            ),
+            child: _buildGroupScreenDropdown<GroupViewModel>(
+                _buildGroupDropdownItems(),
+                _handleGroupSelected,
+                _getSelectedGroup(),
+                new Text(texts.groupSelectorPlaceholder)),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildGroupScreenDropdown<T>(List<DropdownMenuItem<T>> items,
+      ValueChanged<T> onChanged, T value, Widget hint) {
+    return new DropdownButton<T>(
+      items: items,
+      onChanged: onChanged,
+      value: value,
+      hint: hint,
+      style: new TextStyle(
+        fontSize: Sizes.GroupSelectionDropdownTextSize,
+        color: Colors.black,
       ),
     );
   }
@@ -197,7 +198,8 @@ class _GroupScreenState extends State<GroupScreen>
         _model.groups == null ||
         _scheduleSelectionProcess.group == null) return null;
 
-    var selectedGroup = _model.groups.where((x) => x.id == _scheduleSelectionProcess.group.id);
+    var selectedGroup =
+        _model.groups.where((x) => x.id == _scheduleSelectionProcess.group.id);
     if (selectedGroup.length == 0) return null;
 
     return selectedGroup.first;

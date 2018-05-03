@@ -29,4 +29,5 @@ class Sizes {
   static const double GroupSelectionHeadingPadding = 50.0;
   static const double GroupSelectionHeadingMargin = 30.0;
   static const double GroupSelectionImageRadius = 75.0;
+  static const double GroupSelectionDropdownTextSize = 20.0;
 }

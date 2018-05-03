@@ -99,7 +99,7 @@ class FacultyManager implements IFacultyManager {
         result = await operation();
         break;
       } catch (e) {
-        if (new App().settings.enableLogging) print(e.toString());
+        if (new App().settings.enableLogging) print('Faculty manager: $e');
       }
     }
 

@@ -13,10 +13,12 @@ import '../YearInfo.dart';
 import '../GroupInfo.dart';
 import '../../Constants.dart';
 import 'FacultyProviderMixin.dart';
+import 'MemoryCacheMixin.dart';
 
 typedef Map<String, dynamic> MapSelector<T>(T entity);
 
 class FacultyStorageProvider extends FacultyProviderMixin
+    with MemoryCacheMixin
     implements IFacultyProvider {
   FacultyStorageProvider(this._baseProvider);
 
@@ -69,7 +71,10 @@ class FacultyStorageProvider extends FacultyProviderMixin
     );
 
     return new Stream.fromIterable(data)
-        .asyncMap((x) => makeGroup(new GroupInfo.fromMap(x), (i) => getById(i)))
+        .asyncMap((x) => makeGroup(
+              new GroupInfo.fromMap(x),
+              (id) => getAndCacheFaculty(id, getById),
+            ))
         .toList();
   }
 
@@ -125,12 +130,12 @@ class FacultyStorageProvider extends FacultyProviderMixin
     if (entities.length == 0) return;
 
     await _baseProvider.transaction((t) async {
-      var tasks = <Future>[];
-      for (T entity in entities) {
-        tasks.add(_baseProvider.insertMap(tableName, mapSelector(entity),
-            executor: t));
-      }
-      await Future.wait(tasks);
+      var batch = _baseProvider.batch();
+      for (T entity in entities)
+        _baseProvider.batchInsertMap(tableName, batch, mapSelector(entity));
+
+      await t.applyBatch(batch, noResult: true);
+      return t;
     });
   }
 }

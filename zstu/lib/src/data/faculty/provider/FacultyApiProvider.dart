@@ -14,11 +14,12 @@ import '../../common/provider/GeneralNetworkProvider.dart';
 import '../YearInfo.dart';
 import '../GroupInfo.dart';
 import 'FacultyProviderMixin.dart';
+import 'MemoryCacheMixin.dart';
 
 typedef T FromMapBuilder<T>(dynamic map);
 
 class FacultyApiProvider extends NetworkProviderBase
-    with FacultyProviderMixin
+    with FacultyProviderMixin, MemoryCacheMixin
     implements IFacultyProvider {
   FacultyApiProvider(GeneralNetworkProvider _baseProvider)
       : super(Constants.API_URI, _baseProvider);
@@ -78,7 +79,10 @@ class FacultyApiProvider extends NetworkProviderBase
 
     var data = await _getEntities(_paths["group"], params, (x) => x);
     return new Stream.fromIterable(data)
-        .asyncMap((x) async => makeGroup(new GroupInfo.fromMap(x), (i) => getById(i)))
+        .asyncMap((x) async => makeGroup(
+              new GroupInfo.fromMap(x),
+              (id) => getAndCacheFaculty(id, getById),
+            ))
         .toList();
   }
 

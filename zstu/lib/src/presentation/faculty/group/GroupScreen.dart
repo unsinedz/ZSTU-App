@@ -273,7 +273,7 @@ class _GroupScreenState extends State<GroupScreen>
     return new CircleAvatar(
       radius: Sizes.GroupSelectionImageRadius,
       backgroundColor: Colors.blue[100],
-      backgroundImage: new AssetImage(_app.assets.getAssetPath("FICT.png")),
+      backgroundImage: new AssetImage(_app.assets.getAssetPath(_scheduleSelectionProcess.faculty.image)),
     );
   }
 }

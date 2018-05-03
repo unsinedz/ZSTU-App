@@ -9,6 +9,7 @@ import '../../../domain/schedule/ScheduleSelectionProcess.dart';
 import '../../../resources/Sizes.dart';
 import '../../common/BaseScreenMixin.dart';
 import '../../common/TextLocalizations.dart';
+import '../../schedule/ScheduleScreen.dart';
 import 'GroupViewModel.dart';
 import 'YearViewModel.dart';
 import 'GroupScreenViewModel.dart';
@@ -95,10 +96,37 @@ class _GroupScreenState extends State<GroupScreen>
             _buildHeading(),
             _buildYearDropdown(),
             _buildGroupDropdown(),
+            _buildSubmitButton(),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildSubmitButton() {
+    return new Container(
+      margin: new EdgeInsets.symmetric(
+        vertical: Sizes.GroupSelectionButtonMargin,
+      ),
+      child: new Builder(
+        builder: (ctx) => new RaisedButton.icon(
+              icon: new Icon(Icons.search),
+              label: new Text(
+                texts.findSchedule,
+                style:
+                    new TextStyle(fontSize: Sizes.GroupSelectionButtonTextSize),
+              ),
+              color: Colors.yellow,
+              onPressed: () => _handleSubmitPressed(ctx),
+            ),
+      ),
+    );
+  }
+
+  void _handleSubmitPressed(BuildContext context) {
+    Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (ctx) => new ScheduleScreen(),
+        ));
   }
 
   Widget _buildHeading() {
@@ -230,7 +258,7 @@ class _GroupScreenState extends State<GroupScreen>
 
   Widget _buildInFuture(
       BuildContext buildContext, AsyncSnapshot<dynamic> snapshot) {
-    if (_model == null && snapshot.connectionState != ConnectionState.done) {
+    if (snapshot.connectionState != ConnectionState.done) {
       return new Center(
         child: new CircularProgressIndicator(),
       );

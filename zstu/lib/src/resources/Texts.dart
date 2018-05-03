@@ -49,6 +49,8 @@ class Texts {
 
   String get year => _texts["year"][_locale.languageCode];
 
+  String get findSchedule => _texts["findSchedule"][_locale.languageCode];
+
   static String getText(String key, String languageCode,
       [String defaultValue]) {
     assert(key != null);
@@ -208,6 +210,11 @@ class Texts {
       "en": "year",
       "ru": "курс",
       "uk": "курс",
+    },
+    "findSchedule": {
+      "en": "Find schedule",
+      "ru": "Поиск пар",
+      "uk": "Пошук пар",
     },
   };
 }

@@ -37,9 +37,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
     _weekSelectionAlphaAnimation = new CurveTween(
       curve: Curves.easeOut,
-    )
-        .animate(_weekChangeAnimationController)
-          ..addListener(() => this.setState(() {}));
+    ).animate(_weekChangeAnimationController)
+      ..addListener(() => this.setState(() {}));
 
     _weekChangeAnimationController.forward();
   }
@@ -64,6 +63,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   @override
   Widget build(BuildContext context) {
+    initTexts(context);
     return new Scaffold(
       appBar: _buildAppBar(),
       body: new TabBarView(

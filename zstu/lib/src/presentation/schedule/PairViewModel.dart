@@ -1,35 +1,23 @@
-class PairViewModel {
-  PairViewModel(
-    this.id,
-    this.number,
-    this.name,
-    this.teacher,
-    this.room,
-    this.type,
-    this.time, {
-    this.isAdded: false,
-    this.isRemoved: false,
-    this.hasReplacement: false,
-    this.specificDate,
-  }) : assert(id != null),
-       assert(name != null),
-       assert(teacher != null),
-       assert(room != null),
-       assert(type != null);
+import '../../domain/schedule/Pair.dart';
 
-  String id;
+class PairViewModel {
+  PairViewModel.fromPair(this._pair) : assert(_pair != null);
+
+  Pair _pair;
+
+  String get id => _pair.id;
 
   int number;
 
-  String name;
+  String get name => _pair.name;
 
-  String teacher;
+  String get teacher => _pair.teacher;
 
-  String room;
+  String get room => _pair.room;
 
-  String type;
+  String get type => _pair.type;
 
-  String time;
+  String get time => _pair.time;
 
   bool isAdded;
 

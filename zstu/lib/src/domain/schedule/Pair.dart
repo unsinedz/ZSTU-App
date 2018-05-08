@@ -1,20 +1,30 @@
 import 'package:zstu/src/domain/faculty/Group.dart';
-import '../teacher/Teacher.dart';
-import 'PairType.dart';
-import 'Timetable.dart';
 
 class Pair {
+  Pair({
+    this.id,
+    this.name,
+    this.teacher,
+    this.groups,
+    this.room,
+    this.type,
+    this.day,
+    this.time,
+  });
+
+  String id;
+
   String name;
 
-  Teacher teacher;
+  String teacher;
 
   List<Group> groups;
 
   String room;
 
-  PairType type;
+  String type;
 
-  Timetable time;
+  String day;
 
-  DateTime customDate;
+  String time;
 }

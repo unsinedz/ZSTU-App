@@ -23,7 +23,7 @@ class GroupScreen extends StatefulWidget
 
   @override
   bool canBeExecuted(ScheduleSelectionProcess process) {
-    return (process?.faculty != null) ?? false;
+    return process?.faculty != null;
   }
 }
 
@@ -273,7 +273,8 @@ class _GroupScreenState extends State<GroupScreen>
     return new CircleAvatar(
       radius: Sizes.GroupSelectionImageRadius,
       backgroundColor: Colors.blue[100],
-      backgroundImage: new AssetImage(_app.assets.getAssetPath(_scheduleSelectionProcess.faculty.image)),
+      backgroundImage: new AssetImage(
+          _app.assets.getAssetPath(_scheduleSelectionProcess.faculty.image)),
     );
   }
 }

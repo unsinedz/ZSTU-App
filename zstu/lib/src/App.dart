@@ -62,7 +62,7 @@ class _IOC {
   }
 
   static IScheduleManager provideSchedule() {
-    throw new UnimplementedError("Not implemented.");
+    return DataModule.provideSchedule();
   }
 
   static IAssetManager provideAsset() {

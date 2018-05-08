@@ -1,3 +1,0 @@
-class PairType {
-  String name;
-}

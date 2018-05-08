@@ -33,3 +33,5 @@ class FacultyInfo implements IPersistableEntity {
     image = faculty.image;
   }
 }
+
+// TODO: info entities' properties accessors similarly to view-model

@@ -1,23 +1,43 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import '../../App.dart';
+import '../../domain/common/process/IStep.dart';
+import '../../domain/schedule/PerWeekScheduleLoadOptions.dart';
+import '../../domain/schedule/ScheduleSelectionProcess.dart';
 import '../../resources/colors.dart';
 import '../../resources/sizes.dart';
 import '../../resources/values.dart';
+import '../common/BaseScreenMixin.dart';
 import '../common/TextLocalizations.dart';
-import 'PairViewModel.dart';
 import 'PairList.dart';
+import 'ScheduleViewModel.dart';
 
-class ScheduleScreen extends StatefulWidget {
+class ScheduleScreen extends StatefulWidget
+    implements IStep<ScheduleSelectionProcess> {
   @override
   _ScheduleScreenState createState() => new _ScheduleScreenState();
+
+  @override
+  bool canBeExecuted(ScheduleSelectionProcess process) {
+    return process?.faculty != null && process?.group != null;
+  }
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen>
-    with TickerProviderStateMixin, TextLocalizations {
+    with TickerProviderStateMixin, BaseScreenMixin, TextLocalizations {
   TabController _tabController;
 
-  static const TabsCount = 6;
+  static const List<int> PairDays = [
+    DateTime.monday,
+    DateTime.tuesday,
+    DateTime.wednesday,
+    DateTime.thursday,
+    DateTime.friday,
+    DateTime.saturday,
+    DateTime.monday,
+  ];
+  static get TabsCount => PairDays.length;
 
   int _selectedWeek = 1;
   bool animateWeekDeselection = false;
@@ -25,10 +45,15 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   AnimationController _weekChangeAnimationController;
   Animation<double> _weekSelectionAlphaAnimation;
 
+  ScheduleSelectionProcess _scheduleSelectionProcess;
+
+  ScheduleViewModel _model;
+
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: TabsCount);
+    _model = new ScheduleViewModel();
 
     _weekChangeAnimationController = new AnimationController(
         duration:
@@ -41,6 +66,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       ..addListener(() => this.setState(() {}));
 
     _weekChangeAnimationController.forward();
+    _scheduleSelectionProcess = new App().processes.scheduleSelection;
+    if (!_scheduleSelectionProcess.canExecuteStep(this.widget))
+      throw new StateError("Step can not be executed.");
   }
 
   @override
@@ -64,8 +92,27 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   @override
   Widget build(BuildContext context) {
     initTexts(context);
+    return new FutureBuilder(
+      future: _model.loadSchedule(new PerWeekScheduleLoadOptions(
+        group: _scheduleSelectionProcess.group,
+        weekNo: _selectedWeek,
+      )),
+      builder: _buildInFuture,
+    );
+  }
+
+  Widget _buildInFuture(BuildContext context, AsyncSnapshot snapshot) {
+    if (snapshot.connectionState != ConnectionState.done) {
+      return new Scaffold(
+        appBar: buildAppBar(texts.scheduleTitle),
+        body: new Center(
+          child: new CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return new Scaffold(
-      appBar: _buildAppBar(),
+      appBar: _buildScheduleAppBar(),
       body: new TabBarView(
         controller: _tabController,
         children: _getTabBodies(),
@@ -74,64 +121,12 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   }
 
   List<Widget> _getTabBodies() {
-    return <Widget>[
-      new PairList(_getMondayPairs()),
-      new Center(child: new Text("Tuesday tab")),
-      new Center(child: new Text("Wednesday tab")),
-      new Center(child: new Text("Thursday tab")),
-      new Center(child: new Text("Friday tab")),
-      new Center(child: new Text("Saturday tab")),
-    ];
+    return PairDays.map((x) => new PairList(_model.getPairs(x))).toList();
   }
 
-  List<PairViewModel> _getMondayPairs() {
-    return <PairViewModel>[
-      new PairViewModel(
-        "Oideeshneek pervoi pary",
-        1,
-        "Програмування - 1. Основи програмування",
-        "Крамар Ю. М.",
-        "432",
-        "лекція",
-        "8:30-9:50",
-      ),
-      new PairViewModel(
-        "Oideeshneek wtoroi pary",
-        2,
-        "Іноземна мова - 1. Вступ до загальнотехнічної іноземної мови",
-        "Соколова Л. Ф.",
-        "411",
-        "практика",
-        "10:00-11:20",
-      ),
-      new PairViewModel("Oideeshneek tretyei pary", 3, "Фізика",
-          "Якуніна Н. О.", "312", "практика", "11:40-13:00",
-          isAdded: true, specificDate: "March, 03"),
-      new PairViewModel(
-        "Oideeshneek tchetviortoi pary",
-        3,
-        "Фізика",
-        "Якуніна Н. О.",
-        "312",
-        "практика",
-        "13:30-14:50",
-        isRemoved: true,
-        hasReplacement: true,
-      ),
-    ];
-  }
-
-  Widget _buildAppBar() {
-    return new AppBar(
-      iconTheme: new IconThemeData(
-        color: AppColors.ToolIcon,
-      ),
-      title: new Text(
-        texts.scheduleTitle,
-        style: new TextStyle(
-          color: AppColors.ScreenTitle,
-        ),
-      ),
+  Widget _buildScheduleAppBar() {
+    return buildAppBar(
+      texts.scheduleTitle,
       actions: <Widget>[
         new Container(
           margin: new EdgeInsets.only(
@@ -169,7 +164,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           new Tab(
             text: texts.saturdayShort,
           ),
-        ],
+        ].take(TabsCount).toList(),
       ),
     );
   }
@@ -217,3 +212,5 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     );
   }
 }
+
+// TODO: week selector in seperate class

@@ -51,7 +51,7 @@ class FacultyApiProvider extends NetworkProviderBase
 
   @override
   Future<List<Faculty>> getList() async {
-    return await _getEntities(
+    return await getEntities(
         _paths["faculty"], {}, (x) => makeFaculty(new FacultyInfo.fromMap(x)));
   }
 
@@ -64,7 +64,7 @@ class FacultyApiProvider extends NetworkProviderBase
       "teacher": loadOptions.teacher?.id,
     };
 
-    return _getEntities(
+    return getEntities(
         _paths["chair"], params, (x) => makeChair(new ChairInfo.fromMap(x)));
   }
 
@@ -77,7 +77,7 @@ class FacultyApiProvider extends NetworkProviderBase
       "year": loadOptions.year?.id,
     };
 
-    var data = await _getEntities(_paths["group"], params, (x) => x);
+    var data = await getEntities(_paths["group"], params, (x) => x);
     return new Stream.fromIterable(data)
         .asyncMap((x) async => makeGroup(
               new GroupInfo.fromMap(x),
@@ -88,7 +88,7 @@ class FacultyApiProvider extends NetworkProviderBase
 
   @override
   Future<List<Year>> getYears() async {
-    return await _getEntities(
+    return await getEntities(
         _paths["year"], {}, (x) => makeYear(new YearInfo.fromMap(x)));
   }
 
@@ -105,28 +105,5 @@ class FacultyApiProvider extends NetworkProviderBase
   @override
   Future insertAllChairs(List<Chair> chairs) {
     throw new Exception("Api insertions are not supported.");
-  }
-
-  Future<List<T>> _getEntities<T>(String apiPath, Map<String, String> params,
-      FromMapBuilder<T> fromMapBuilder) async {
-    assert(apiPath != null);
-    assert(params != null);
-    assert(fromMapBuilder != null);
-
-    if (params["pageSize"] == null)
-      params["pageSize"] = Constants.BATCH_SIZE.toString();
-
-    var page = 0;
-    params["page"] = page.toString();
-
-    var result = new List<T>();
-    var response = await getJson(apiPath, params: params);
-    while (response.count > 0) {
-      result.addAll(response.items.map(fromMapBuilder).toList());
-      params["page"] = (++page).toString();
-      response = await getJson(apiPath, params: params);
-    }
-
-    return result;
   }
 }

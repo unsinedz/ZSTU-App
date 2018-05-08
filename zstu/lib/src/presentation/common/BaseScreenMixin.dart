@@ -10,7 +10,7 @@ abstract class BaseScreenMixin {
     );
   }
 
-  Widget buildAppBar(String title) {
+  Widget buildAppBar(String title, {List<Widget> actions, PreferredSizeWidget bottom}) {
     return new AppBar(
       iconTheme: new IconThemeData(
         color: AppColors.ToolIcon,
@@ -21,6 +21,8 @@ abstract class BaseScreenMixin {
           color: AppColors.ScreenTitle,
         ),
       ),
+      actions: actions,
+      bottom: bottom,
     );
   }
 

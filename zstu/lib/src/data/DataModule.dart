@@ -7,16 +7,21 @@ import '../domain/common/IAssetManager.dart';
 import '../domain/common/text/ITextProcessor.dart';
 import '../domain/faculty/Faculty.dart';
 import '../domain/faculty/IFacultyManager.dart';
+import '../domain/faculty/IFacultyProvider.dart';
+import '../domain/schedule/IScheduleManager.dart';
+import '../domain/schedule/IScheduleProvider.dart';
 import 'Constants.dart';
 import 'common/AssetManager.dart';
 import 'common/DatabaseFactory.dart';
 import 'common/TextProcessor.dart';
 import 'common/provider/GeneralNetworkProvider.dart';
 import 'common/provider/GeneralStorageProvider.dart';
-import 'common/provider/IProvider.dart';
 import 'faculty/FacultyManager.dart';
 import 'faculty/provider/FacultyApiProvider.dart';
 import 'faculty/provider/FacultyStorageProvider.dart';
+import 'schedule/ScheduleManager.dart';
+import 'schedule/provider/ScheduleApiProvider.dart';
+import 'schedule/provider/ScheduleStorageProvider.dart';
 
 class DataModule {
   static Database _database;
@@ -39,11 +44,11 @@ class DataModule {
         (_generalNetworkStorage = new GeneralNetworkProvider());
   }
 
-  static IProvider<Faculty> _provideFacultyStorage() {
+  static IFacultyProvider _provideFacultyStorage() {
     return new FacultyStorageProvider(_provideLocalStorage());
   }
 
-  static IProvider<Faculty> _provideFacultyNetwork() {
+  static IFacultyProvider _provideFacultyNetwork() {
     return new FacultyApiProvider(_provideNetworkStorage());
   }
 
@@ -68,15 +73,34 @@ class DataModule {
         (_assetManager = new AssetManager(Constants.ASSET_DIRECTORY));
   }
 
-  static bool configured = false;
-  static Future configure() async {
-    DatabaseFactory.configureTableDelegates();
-    await _initDatabase();
-    configured = true;
+  static IScheduleProvider _provideScheduleStorage() {
+    return new ScheduleStorageProvider(_provideLocalStorage());
+  }
+
+  static IScheduleProvider _provideScheduleNetwork() {
+    return new ScheduleApiProvider(_provideNetworkStorage());
+  }
+
+  static IScheduleManager _scheduleManager;
+  static IScheduleManager provideSchedule() {
+    if (!configured)
+      throw new StateError(
+          "Database was not configured. Please, call the configure() first.");
+
+    return _scheduleManager = _scheduleManager ??
+        new ScheduleManager(
+            _provideScheduleStorage(), _provideScheduleNetwork());
   }
 
   static ITextProcessor _textProcessor;
   static ITextProcessor provideTextProcessor() {
     return _textProcessor = _textProcessor ?? new TextProcessor();
+  }
+
+  static bool configured = false;
+  static Future configure() async {
+    DatabaseFactory.configureTableDelegates();
+    await _initDatabase();
+    configured = true;
   }
 }

@@ -17,9 +17,9 @@ class ScheduleApi extends BaseApi {
         var pageSize = query.pageSize ? Math.min(Math.max(this._readQueryNumber(query.pageSize), 0), this._maxResponseItems) : 0;
         
         return [
-            this._readQueryFilter(query.faculty, true),
+            this._readQueryFilter(query.faculty),
             this._readQueryFilter(query.group, true),
-            this._readQueryFilter(query.week, false, true),
+            this._readQueryFilter(query.week, false),
             this._readQueryFilter(query.teacher),
             this._readQueryFilter(query.pairType),
             this._readQueryFilter(query.room),

@@ -3,6 +3,8 @@ class Constants {
   static const int DB_VERSION = 1;
   static const String API_URI = "185.246.66.85";
   static const String ASSET_DIRECTORY = "assets/";
+  static const String FACULTY_ASSETS = "faculties/";
+  static const String NAVBAR_ASSETS = "nav/";
   static const int BATCH_SIZE = 50;
   static const List<String> SUPPORTED_IMAGE_EXTENSIONS = const [
     ".png",

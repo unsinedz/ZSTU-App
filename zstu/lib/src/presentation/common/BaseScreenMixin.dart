@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../resources/Colors.dart';
+import '../Navbar.dart';
 
 abstract class BaseScreenMixin {
-  Widget wrapMaterialLayout(Widget content, AppBar appBar, {Drawer drawer}) {
+  Widget wrapMaterialLayout(Widget content, AppBar appBar, {Widget drawer}) {
     return new Scaffold(
       appBar: appBar,
       drawer: drawer,
@@ -27,6 +28,6 @@ abstract class BaseScreenMixin {
   }
 
   Widget buildNavigationDrawer() {
-    return new Drawer();
+    return new Navbar();
   }
 }

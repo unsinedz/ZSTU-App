@@ -112,7 +112,7 @@ class FacultyManager implements IFacultyManager {
     for (Faculty f in faculties) {
       for (String ext in Constants.SUPPORTED_IMAGE_EXTENSIONS) {
         var translatedAbbr = Texts.getText(f.abbr, "en", f.abbr);
-        var name = "$translatedAbbr$ext";
+        var name = "${Constants.FACULTY_ASSETS}$translatedAbbr$ext";
         bool exists = await _assetManager.assetExists(name);
         if (exists) {
           f.image = name;

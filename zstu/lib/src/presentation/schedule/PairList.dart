@@ -21,9 +21,10 @@ class _PairListState extends State<PairList> with TextLocalizations {
 
   @override
   Widget build(BuildContext context) {
+    initTexts(context);
     if (_pairs?.length == 0 ?? true) {
       return new Center(
-        child: new Text("Today is free. You may rest."),
+        child: new Text(texts.scheduleDayOff),
       );
     }
 

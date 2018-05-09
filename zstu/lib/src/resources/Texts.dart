@@ -12,62 +12,17 @@ class Texts {
 
   String get appName => _texts["appName"][_locale.languageCode];
 
-  String get scheduleTitle => _texts["scheduleTitle"][_locale.languageCode];
-  String get facultiesTitle => _texts["facultiesTitle"][_locale.languageCode];
-  String get groupTitle => _texts["groupTitle"][_locale.languageCode];
+  String get scheduleTitle => _screens["scheduleTitle"][_locale.languageCode];
+  String get myScheduleTitle => _screens["myScheduleTitle"][_locale.languageCode];
+  String get facultiesTitle => _screens["facultiesTitle"][_locale.languageCode];
+  String get groupTitle => _screens["groupTitle"][_locale.languageCode];
+  String get teachersTitle => _screens["teachersTitle"][_locale.languageCode];
+  String get newsTitle => _screens["newsTitle"][_locale.languageCode];
+  String get learnPortalTitle => _screens["learnPortalTitle"][_locale.languageCode];
+  String get settingsTitle => _screens["settingsTitle"][_locale.languageCode];
+  String get aboutTitle => _screens["aboutTitle"][_locale.languageCode];
 
-  String get fict => _texts["fict"][_locale.languageCode];
-  String get fem => _texts["fem"][_locale.languageCode];
-  String get mef => _texts["mef"][_locale.languageCode];
-  String get faf => _texts["faf"][_locale.languageCode];
-  String get fme => _texts["fme"][_locale.languageCode];
-
-  String get facultiesGridTitle =>
-      _texts["facultiesGridTitle"][_locale.languageCode];
-
-  String get mondayShort => _texts["mondayShort"][_locale.languageCode];
-  String get tuesdayShort => _texts["tuesdayShort"][_locale.languageCode];
-  String get wednesdayShort => _texts["wednesdayShort"][_locale.languageCode];
-  String get thursdayShort => _texts["thursdayShort"][_locale.languageCode];
-  String get fridayShort => _texts["fridayShort"][_locale.languageCode];
-  String get saturdayShort => _texts["saturdayShort"][_locale.languageCode];
-  String get sundayShort => _texts["sundayShort"][_locale.languageCode];
-
-  String get noFacultiesStored =>
-      _texts["noFacultiesStored"][_locale.languageCode];
-
-  String get selectGroupAndYear =>
-      _texts["selectGroupAndYear"][_locale.languageCode];
-  String get yearSelectorPlaceholder =>
-      _texts["yearSelectorPlaceholder"][_locale.languageCode];
-  String get yearSelectorLabel =>
-      _texts["yearSelectorPlaceholder"][_locale.languageCode];
-  String get groupSelectorPlaceholder =>
-      _texts["groupSelectorPlaceholder"][_locale.languageCode];
-  String get groupSelectorLabel =>
-      _texts["groupSelectorLabel"][_locale.languageCode];
-
-  String get year => _texts["year"][_locale.languageCode];
-
-  String get findSchedule => _texts["findSchedule"][_locale.languageCode];
-
-  static String getText(String key, String languageCode,
-      [String defaultValue]) {
-    assert(key != null);
-    assert(languageCode != null);
-
-    var vals = _texts[key];
-    if (vals == null) return defaultValue;
-
-    return vals[languageCode] ?? defaultValue;
-  }
-
-  static final Map<String, Map<String, String>> _texts = {
-    "appName": {
-      "en": "ZSTU",
-      "ru": "ЖГТУ",
-      "uk": "ЖДТУ",
-    },
+  static final Map<String, Map<String, String>> _screens = {
     "facultiesTitle": {
       "en": "Faculties",
       "ru": "Факультеты",
@@ -78,46 +33,50 @@ class Texts {
       "ru": "Расписание",
       "uk": "Розклад",
     },
+    "myScheduleTitle": {
+      "en": "My schedule",
+      "ru": "Мое расписание",
+      "uk": "Мій розклад",
+    },
     "groupTitle": {
       "en": "Group",
       "ru": "Группа",
       "uk": "Група",
     },
-    "mondayShort": {
-      "en": "Mon",
-      "ru": "Пн",
-      "uk": "Пн",
+    "teachersTitle": {
+      "en": "Teachers",
+      "ru": "Преподаватели",
+      "uk": "Викладачі",
     },
-    "tuesdayShort": {
-      "en": "Tue",
-      "ru": "Вт",
-      "uk": "Вт",
+    "newsTitle": {
+      "en": "News",
+      "ru": "Новости",
+      "uk": "Новини",
     },
-    "wednesdayShort": {
-      "en": "Wed",
-      "ru": "Ср",
-      "uk": "Ср",
+    "learnPortalTitle": {
+      "en": "Learn portal",
+      "ru": "Образовательный портал",
+      "uk": "Освітній портал",
     },
-    "thursdayShort": {
-      "en": "Thu",
-      "ru": "Чт",
-      "uk": "Чт",
+    "settingsTitle": {
+      "en": "Settings",
+      "ru": "Настройки",
+      "uk": "Налаштування",
     },
-    "fridayShort": {
-      "en": "Fri",
-      "ru": "Пт",
-      "uk": "Пт",
+    "aboutTitle": {
+      "en": "About",
+      "ru": "О программе",
+      "uk": "Про програму",
     },
-    "saturdayShort": {
-      "en": "Sat",
-      "ru": "Сб",
-      "uk": "Сб",
-    },
-    "sundayShort": {
-      "en": "Sun",
-      "ru": "Вс",
-      "uk": "Нд",
-    },
+  };
+
+  String get fict => _faculties["fict"][_locale.languageCode];
+  String get fem => _faculties["fem"][_locale.languageCode];
+  String get mef => _faculties["mef"][_locale.languageCode];
+  String get faf => _faculties["faf"][_locale.languageCode];
+  String get fme => _faculties["fme"][_locale.languageCode];
+
+  static final Map<String, Map<String, String>> _faculties = {
     "ФІКТ": {
       "en": "FICT",
       "ru": "ФИКТ",
@@ -168,6 +127,76 @@ class Texts {
       "ru": "ФИМ",
       "uk": "ФІМ",
     },
+  };
+
+  String get facultiesGridTitle => _texts["facultiesGridTitle"][_locale.languageCode];
+
+  String get mondayShort => _texts["mondayShort"][_locale.languageCode];
+  String get tuesdayShort => _texts["tuesdayShort"][_locale.languageCode];
+  String get wednesdayShort => _texts["wednesdayShort"][_locale.languageCode];
+  String get thursdayShort => _texts["thursdayShort"][_locale.languageCode];
+  String get fridayShort => _texts["fridayShort"][_locale.languageCode];
+  String get saturdayShort => _texts["saturdayShort"][_locale.languageCode];
+  String get sundayShort => _texts["sundayShort"][_locale.languageCode];
+
+  String get noFacultiesStored => _texts["noFacultiesStored"][_locale.languageCode];
+
+  String get selectGroupAndYear => _texts["selectGroupAndYear"][_locale.languageCode];
+  String get yearSelectorPlaceholder => _texts["yearSelectorPlaceholder"][_locale.languageCode];
+  String get yearSelectorLabel => _texts["yearSelectorPlaceholder"][_locale.languageCode];
+  String get groupSelectorPlaceholder => _texts["groupSelectorPlaceholder"][_locale.languageCode];
+  String get groupSelectorLabel => _texts["groupSelectorLabel"][_locale.languageCode];
+  String get selectYearFirst => _texts["selectYearFirst"][_locale.languageCode];
+
+  String get year => _texts["year"][_locale.languageCode];
+
+  String get findSchedule => _texts["findSchedule"][_locale.languageCode];
+  
+  String get scheduleDayOff => _texts["scheduleDayOff"][_locale.languageCode];
+  
+  String get featureNotAvailable => _texts["featureNotAvailable"][_locale.languageCode];
+
+  static final Map<String, Map<String, String>> _texts = {
+    "appName": {
+      "en": "ZSTU",
+      "ru": "ЖГТУ",
+      "uk": "ЖДТУ",
+    },
+    "mondayShort": {
+      "en": "Mon",
+      "ru": "Пн",
+      "uk": "Пн",
+    },
+    "tuesdayShort": {
+      "en": "Tue",
+      "ru": "Вт",
+      "uk": "Вт",
+    },
+    "wednesdayShort": {
+      "en": "Wed",
+      "ru": "Ср",
+      "uk": "Ср",
+    },
+    "thursdayShort": {
+      "en": "Thu",
+      "ru": "Чт",
+      "uk": "Чт",
+    },
+    "fridayShort": {
+      "en": "Fri",
+      "ru": "Пт",
+      "uk": "Пт",
+    },
+    "saturdayShort": {
+      "en": "Sat",
+      "ru": "Сб",
+      "uk": "Сб",
+    },
+    "sundayShort": {
+      "en": "Sun",
+      "ru": "Вс",
+      "uk": "Нд",
+    },
     "facultiesGridTitle": {
       "en": "Choose a faculty",
       "ru": "Выберите факультет",
@@ -201,6 +230,11 @@ class Texts {
       "ru": "Группа",
       "uk": "Група",
     },
+    "selectYearFirst": {
+      "en": "Select year first",
+      "ru": "Сначала выбирите курс",
+      "uk": "Спочатку оберіть курс",
+    },
     "Year_1m": {
       "en": "5 year",
       "ru": "5 курс",
@@ -216,7 +250,28 @@ class Texts {
       "ru": "Поиск пар",
       "uk": "Пошук пар",
     },
+    "scheduleDayOff": {
+      "en": "There are no pairs today. You may rest.",
+      "ru": "Сегодня пар нет. Можете отдохнуть.",
+      "uk": "Сьогодні пар немає. Можете відпочити.",
+    },
+    "featureNotAvailable": {
+      "en": "Feature is in development",
+      "ru": "В разработке",
+      "uk": "В розробці",
+    },
   };
+
+  static String getText(String key, String languageCode,
+      [String defaultValue]) {
+    assert(key != null);
+    assert(languageCode != null);
+
+    var vals = _screens[key] ?? _faculties[key] ?? _texts[key];
+    if (vals == null) return defaultValue;
+
+    return vals[languageCode] ?? defaultValue;
+  }
 }
 
 class TextsDelegate extends LocalizationsDelegate<Texts> {

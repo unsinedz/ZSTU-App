@@ -242,7 +242,7 @@ class _GroupScreenState extends State<GroupScreen>
         })?.toList() ??
         <DropdownMenuItem<GroupViewModel>>[
           new DropdownMenuItem(
-            child: new Text('Select year first'),
+            child: new Text(texts.selectYearFirst),
             value: new GroupViewModel.empty(),
           ),
         ];

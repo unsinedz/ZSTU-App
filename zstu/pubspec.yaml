@@ -23,8 +23,17 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/FICT.png
-    - assets/FEM.png
-    - assets/MEF.png
-    - assets/FME.png
-    - assets/FAF.png
+    - assets/faculties/FICT.png
+    - assets/faculties/FEM.png
+    - assets/faculties/MEF.png
+    - assets/faculties/FME.png
+    - assets/faculties/FAF.png
+    - assets/nav/about.png
+    - assets/nav/faculties.png
+    - assets/nav/learnPortal.png
+    - assets/nav/mySchedule.png
+    - assets/nav/news.png
+    - assets/nav/schedule.png
+    - assets/nav/settings.png
+    - assets/nav/teachers.png
+    - assets/nav/header.png

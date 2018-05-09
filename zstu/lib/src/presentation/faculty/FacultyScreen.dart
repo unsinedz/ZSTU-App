@@ -39,7 +39,7 @@ class _FacultiesState extends State<FacultiesScreen>
       if (r != ConnectivityResult.none &&
           (_model?.faculties?.length ?? -1) == 0) setState(() => _model = null);
     });
-    
+
     _scheduleSelectionProcess = _app.processes.scheduleSelection;
     if (!_scheduleSelectionProcess.canExecuteStep(widget))
       throw new StateError("Step can not be executed.");
@@ -68,18 +68,17 @@ class _FacultiesState extends State<FacultiesScreen>
     initTexts(context);
 
     return wrapMaterialLayout(
-        new FutureBuilder(
-          future: _loadModel(),
-          builder: _buildInFuture,
-        ),
-        buildAppBar(texts.facultiesTitle),
-        drawer: buildNavigationDrawer());
+      new FutureBuilder(
+        future: _loadModel(),
+        builder: _buildInFuture,
+      ),
+      buildAppBar(texts.facultiesTitle),
+      drawer: buildNavigationDrawer(),
+    );
   }
 
-  Widget _buildInFuture(
-      BuildContext context, AsyncSnapshot snapshot) {
-    if (snapshot.hasError)
-      print(snapshot.error);
+  Widget _buildInFuture(BuildContext context, AsyncSnapshot snapshot) {
+    if (snapshot.hasError) print(snapshot.error);
 
     if (_model == null && snapshot.connectionState != ConnectionState.done) {
       return new Center(

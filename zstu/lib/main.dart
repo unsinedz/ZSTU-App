@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'src/App.dart';
 import 'src/presentation/faculty/group/GroupScreen.dart';
 import 'src/presentation/schedule/ScheduleScreen.dart';
@@ -22,11 +23,11 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: [
         const InitLocalizationsDelegate(),
         const TextsDelegate(),
-      ],
+      ]..addAll(GlobalMaterialLocalizations.delegates),
       supportedLocales: [
-        const Locale("en"),
-        const Locale("ru"),
-        const Locale("uk"),
+        const Locale("en", ""),
+        const Locale("ru", ""),
+        const Locale("uk", ""),
       ],
       theme: new ThemeData(
         primaryColor: AppColors.Primary,

@@ -218,8 +218,8 @@ class Texts {
     },
     "yearSelectorPlaceholder": {
       "en": "Year",
-      "ru": "Год",
-      "uk": "Рік",
+      "ru": "Курс",
+      "uk": "Курс",
     },
     "groupSelectorPlaceholder": {
       "en": "Group",
@@ -233,8 +233,8 @@ class Texts {
     },
     "selectYearFirst": {
       "en": "Select year first",
-      "ru": "Сначала выбирите курс",
-      "uk": "Спочатку оберіть курс",
+      "ru": "Выбирите курс",
+      "uk": "Оберіть курс",
     },
     "Year_1m": {
       "en": "5 year",

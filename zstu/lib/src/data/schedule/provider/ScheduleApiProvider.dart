@@ -32,7 +32,6 @@ class ScheduleApiProvider extends NetworkProviderBase
         _paths["schedule"],
         loadOptions.toMap(),
         (x) => new PairInfo.fromMap(x).toPair())).distinct((x, y) {
-      print('distinct');
       return x.day == y.day &&
           x.name == y.name &&
           x.teacher == y.teacher &&

@@ -56,7 +56,7 @@ class _FacultiesState extends State<FacultiesScreen>
   }
 
   Future _loadModel() async {
-    if (_model != null) return _model;
+    if (_model != null) return null;
 
     var instance = new FacultyScreenViewModel();
     await instance.initialize();
@@ -78,6 +78,9 @@ class _FacultiesState extends State<FacultiesScreen>
 
   Widget _buildInFuture(
       BuildContext context, AsyncSnapshot snapshot) {
+    if (snapshot.hasError)
+      print(snapshot.error);
+
     if (_model == null && snapshot.connectionState != ConnectionState.done) {
       return new Center(
         child: new CircularProgressIndicator(),

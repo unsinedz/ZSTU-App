@@ -7,7 +7,7 @@ class PairViewModel {
 
   String get id => _pair.id;
 
-  int number;
+  int get number => _pair.number;
 
   String get name => _pair.name;
 
@@ -19,11 +19,11 @@ class PairViewModel {
 
   String get time => _pair.time;
 
-  bool isAdded;
+  bool get isAdded => false;
 
-  bool isRemoved;
+  bool get isRemoved => false;
 
-  bool hasReplacement;
+  bool get hasReplacement => false;
 
   String specificDate;
 }

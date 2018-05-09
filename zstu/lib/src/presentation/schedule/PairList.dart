@@ -15,12 +15,18 @@ class PairList extends StatefulWidget {
 }
 
 class _PairListState extends State<PairList> with TextLocalizations {
-  _PairListState(this._pairs) : assert(_pairs != null);
+  _PairListState(this._pairs);
 
   List<PairViewModel> _pairs;
 
   @override
   Widget build(BuildContext context) {
+    if (_pairs?.length == 0 ?? true) {
+      return new Center(
+        child: new Text("Today is free. You may rest."),
+      );
+    }
+
     return new AnimatedList(
       itemBuilder: _buildItem,
       initialItemCount: _pairs.length,

@@ -10,6 +10,7 @@ class Pair {
     this.type,
     this.day,
     this.time,
+    this.number,
   });
 
   String id;
@@ -27,4 +28,6 @@ class Pair {
   String day;
 
   String time;
+
+  int number;
 }

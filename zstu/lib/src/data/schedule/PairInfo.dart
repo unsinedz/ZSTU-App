@@ -6,12 +6,14 @@ class PairInfo implements IPersistableEntity {
 
   PairInfo.fromMap(Map<String, dynamic> map) {
     _pair = new Pair(
-      id: map["id"],
-      name: map["name"],
-      teacher: map["teacher"],
-      room: map["room"],
-      type: map["type"],
-      time: map["time"],
+      id: map["id"].toString(),
+      name: map["subject"].toString(),
+      teacher: map["teacher"].toString(),
+      room: map["room"].toString(),
+      type: map["type"].toString(),
+      day: map["day"].toString(),
+      time: map["time"].toString(),
+      number: map["number"],
     );
   }
 
@@ -29,6 +31,8 @@ class PairInfo implements IPersistableEntity {
 
   String get time => _pair.time;
 
+  int get number => _pair.number;
+
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -38,6 +42,7 @@ class PairInfo implements IPersistableEntity {
       "room": room,
       "type": type,
       "time": time,
+      "number": number,
     };
   }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     DateTime.thursday,
     DateTime.friday,
     DateTime.saturday,
-    DateTime.monday,
+    DateTime.sunday,
   ];
   static get TabsCount => PairDays.length;
 
@@ -53,7 +54,6 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: TabsCount);
-    _model = new ScheduleViewModel();
 
     _weekChangeAnimationController = new AnimationController(
         duration:
@@ -86,6 +86,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       _weekChangeAnimationController.reset();
       _selectedWeek = weekNo;
       _weekChangeAnimationController.forward();
+      _model = null;
     });
   }
 
@@ -93,12 +94,22 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   Widget build(BuildContext context) {
     initTexts(context);
     return new FutureBuilder(
-      future: _model.loadSchedule(new PerWeekScheduleLoadOptions(
-        group: _scheduleSelectionProcess.group,
-        weekNo: _selectedWeek,
-      )),
+      future: _loadModel(),
       builder: _buildInFuture,
     );
+  }
+
+  Future _loadModel() async {
+    if (_model != null) return null;
+
+    var instance = new ScheduleViewModel();
+    await instance
+        .loadSchedule(new PerWeekScheduleLoadOptions(
+          group: _scheduleSelectionProcess.group,
+          weekNo: _selectedWeek,
+        ))
+        .catchError((e) => print('Error: $e'))
+        .whenComplete(() => _model = instance);
   }
 
   Widget _buildInFuture(BuildContext context, AsyncSnapshot snapshot) {
@@ -163,6 +174,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           ),
           new Tab(
             text: texts.saturdayShort,
+          ),
+          new Tab(
+            text: texts.sundayShort,
           ),
         ].take(TabsCount).toList(),
       ),

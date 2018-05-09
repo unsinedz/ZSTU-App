@@ -12,7 +12,7 @@ class PerWeekScheduleLoadOptions extends ScheduleLoadOptions {
   @override
   Map<String, String> toMap() {
     var map = super.toMap();
-    map["weekNo"] = weekNo.toString();
+    map["week"] = weekNo.toString();
     return map;
   }
 }

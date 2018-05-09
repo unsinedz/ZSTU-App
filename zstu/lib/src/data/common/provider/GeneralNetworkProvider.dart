@@ -21,7 +21,11 @@ class GeneralNetworkProvider {
 
     var request = await _client.getUrl(url);
     var response = await request.close();
-    return await response.transform(decoder).join();
+    var result = await response.transform(decoder).join();
+    if (new App().settings.enableLogging)
+      print('Response: $result');
+
+    return result;
   }
 
   Future<Map<String, dynamic>> getJson(String uri, String path, Map<String, String> params, {Converter<List<int>, String> decoder}) async {

@@ -117,7 +117,9 @@ class _GroupScreenState extends State<GroupScreen>
                     new TextStyle(fontSize: Sizes.GroupSelectionButtonTextSize),
               ),
               color: Colors.yellow,
-              onPressed: () => _handleSubmitPressed(ctx),
+              onPressed: _scheduleSelectionProcess.canBeExecuted()
+                  ? () => _handleSubmitPressed(ctx)
+                  : null,
             ),
       ),
     );

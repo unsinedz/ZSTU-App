@@ -52,10 +52,19 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   ScheduleViewModel _model;
 
+  static const int PreselectedWeekdayHourThreshold = 18;
+
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: TabsCount);
+    var currentDate = new DateTime.now();
+    _tabController = new TabController(
+      vsync: this,
+      length: TabsCount,
+      initialIndex: currentDate.hour >= PreselectedWeekdayHourThreshold
+          ? currentDate.add(new Duration(days: 1)).weekday - 1
+          : currentDate.weekday - 1,
+    );
 
     _weekChangeAnimationController = new AnimationController(
         duration:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../resources/Colors.dart';
+import '../../resources/Sizes.dart';
 import '../Navbar.dart';
 
 abstract class BaseScreenMixin {
@@ -11,7 +12,8 @@ abstract class BaseScreenMixin {
     );
   }
 
-  Widget buildAppBar(String title, {List<Widget> actions, PreferredSizeWidget bottom}) {
+  Widget buildAppBar(String title,
+      {List<Widget> actions, PreferredSizeWidget bottom}) {
     return new AppBar(
       iconTheme: new IconThemeData(
         color: AppColors.ToolIcon,
@@ -29,5 +31,18 @@ abstract class BaseScreenMixin {
 
   Widget buildNavigationDrawer() {
     return new Navbar();
+  }
+
+  Widget noConnection(String text) {
+    return new Center(
+      child: new Text(
+        text,
+        textAlign: TextAlign.center,
+        style: new TextStyle(
+          fontSize: Sizes.FacultyAbsenceMessageTextSize,
+          color: AppColors.FacultyAbsenceMessageText,
+        ),
+      ),
+    );
   }
 }

@@ -15,6 +15,8 @@ class ScheduleViewModel extends BaseViewModel {
 
   int get weekNo => _schedule.weekNo;
 
+  bool get hasData => (_schedule?.weekPairs?.values?.length ?? 0) > 0;
+
   List<PairViewModel> getPairs(int day) {
     return (_schedule.weekPairs[day] ?? <Pair>[])
         .map((x) => new PairViewModel.fromPair(x))

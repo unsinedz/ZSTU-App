@@ -78,26 +78,14 @@ class _FacultiesState extends State<FacultiesScreen>
   }
 
   Widget _buildInFuture(BuildContext context, AsyncSnapshot snapshot) {
-    if (snapshot.hasError) print(snapshot.error);
-
-    if (_model == null && snapshot.connectionState != ConnectionState.done) {
+    if (snapshot.connectionState != ConnectionState.done) {
       return new Center(
         child: new CircularProgressIndicator(),
       );
     }
 
-    if (_model == null || _model.faculties.length == 0) {
-      return new Center(
-        child: new Text(
-          texts.noFacultiesStored,
-          textAlign: TextAlign.center,
-          style: new TextStyle(
-            fontSize: Sizes.FacultyAbsenceMessageTextSize,
-            color: AppColors.FacultyAbsenceMessageText,
-          ),
-        ),
-      );
-    }
+    if (_model?.faculties?.length == 0 ?? true)
+      return noConnection(texts.dataLoadError);
 
     return new Column(
       children: <Widget>[

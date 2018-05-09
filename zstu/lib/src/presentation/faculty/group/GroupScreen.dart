@@ -170,6 +170,7 @@ class _GroupScreenState extends State<GroupScreen>
       if (selectedYear != _selectedYear) {
         _model.groups?.clear();
         _model.groups = null;
+        _scheduleSelectionProcess.group = null;
       }
 
       _selectedYear = selectedYear;
@@ -264,7 +265,9 @@ class _GroupScreenState extends State<GroupScreen>
       );
     }
 
-    if (_model == null) return new Text("Model was not loaded.");
+    if ((_model?.years?.length ?? 0) == 0 ||
+        (_selectedYear != null && (_model?.groups?.length ?? 0) == 0))
+      return noConnection(texts.dataLoadError);
 
     return _buildContent(context);
   }

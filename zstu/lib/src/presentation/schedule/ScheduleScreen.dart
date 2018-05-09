@@ -40,6 +40,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   ];
   static get TabsCount => PairDays.length;
 
+  String get title => texts?.scheduleTitle;
+
   int _selectedWeek = 1;
   bool animateWeekDeselection = false;
 
@@ -115,10 +117,17 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   Widget _buildInFuture(BuildContext context, AsyncSnapshot snapshot) {
     if (snapshot.connectionState != ConnectionState.done) {
       return new Scaffold(
-        appBar: buildAppBar(texts.scheduleTitle),
+        appBar: buildAppBar(title),
         body: new Center(
           child: new CircularProgressIndicator(),
         ),
+      );
+    }
+
+    if (!(_model?.hasData ?? false)) {
+      return new Scaffold(
+        appBar: buildAppBar(title),
+        body: noConnection(texts.dataLoadError),
       );
     }
 

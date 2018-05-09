@@ -139,8 +139,6 @@ class Texts {
   String get saturdayShort => _texts["saturdayShort"][_locale.languageCode];
   String get sundayShort => _texts["sundayShort"][_locale.languageCode];
 
-  String get noFacultiesStored => _texts["noFacultiesStored"][_locale.languageCode];
-
   String get selectGroupAndYear => _texts["selectGroupAndYear"][_locale.languageCode];
   String get yearSelectorPlaceholder => _texts["yearSelectorPlaceholder"][_locale.languageCode];
   String get yearSelectorLabel => _texts["yearSelectorPlaceholder"][_locale.languageCode];
@@ -155,6 +153,9 @@ class Texts {
   String get scheduleDayOff => _texts["scheduleDayOff"][_locale.languageCode];
   
   String get featureNotAvailable => _texts["featureNotAvailable"][_locale.languageCode];
+  String get noConnection => _texts["noConnection"][_locale.languageCode];
+  
+  String get dataLoadError => _texts["dataLoadError"][_locale.languageCode];
 
   static final Map<String, Map<String, String>> _texts = {
     "appName": {
@@ -202,13 +203,13 @@ class Texts {
       "ru": "Выберите факультет",
       "uk": "Обери факультет",
     },
-    "noFacultiesStored": {
+    "dataLoadError": {
       "en":
-          "There are no faculties yet. Connect to the Internet in order to load some.",
+          "Data was not loaded. Are you sure you have an active Internet connection?",
       "ru":
-          "Информация о парах отсутствует. Подключитесь к Интернету для синхронизации.",
+          "Данные не были получены. Вы точно подключены к Интернету?",
       "uk":
-          "Інформація про пари відсутня. Підключіться до Інтернету для синхронізації.",
+          "Дані не будо отримано. Ви точно підключені до Інтернету?",
     },
     "selectGroupAndYear": {
       "en": "Choose your course and group",
@@ -259,6 +260,11 @@ class Texts {
       "en": "Feature is in development",
       "ru": "В разработке",
       "uk": "В розробці",
+    },
+    "noConnection": {
+      "en": "No network connection",
+      "ru": "Отсутствует подключение к сети",
+      "uk": "Відсутнє підключення до мережі",
     },
   };
 

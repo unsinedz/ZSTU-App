@@ -10,7 +10,8 @@ s.subject_name 'subject',
 sg.subgroup_name 'subgroup',
 t.teacher_name 'teacher',
 g.group_name 'group',
-f.faculty_abbr 'faculty'
+f.faculty_abbr 'faculty',
+h.hour_id 'number'
 
 from activities as a
 inner join days as d on a.activity_day_id = d.day_id
@@ -23,8 +24,8 @@ inner join teachers as t on a.activity_teacher_id = t.teacher_id
 inner join groups as g on sg.subgroup_name like CONCAT(g.group_name, '%')
 inner join faculties as f on g.group_faculty_id = f.faculty_id
 
-where f.faculty_id = ?
-    and g.group_id = ?
+where f.faculty_id like ?
+    and g.group_id like ?
     and d.day_name like ?
     and t.teacher_name like ?
     and tag.activity_tag_name like ?

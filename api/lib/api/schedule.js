@@ -19,7 +19,7 @@ class ScheduleApi extends BaseApi {
         return [
             this._readQueryFilter(query.faculty),
             this._readQueryFilter(query.group, true),
-            this._readQueryFilter(query.week, false),
+            this._readQueryFilter(query.week, false, true),
             this._readQueryFilter(query.teacher),
             this._readQueryFilter(query.pairType),
             this._readQueryFilter(query.room),

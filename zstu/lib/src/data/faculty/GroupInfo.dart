@@ -1,4 +1,6 @@
+import '../../domain/faculty/Faculty.dart';
 import '../../domain/faculty/Group.dart';
+import '../../domain/faculty/Year.dart';
 import '../common/IPersistableEntity.dart';
 
 class GroupInfo implements IPersistableEntity {
@@ -8,8 +10,8 @@ class GroupInfo implements IPersistableEntity {
     _group = new Group(
       map["id"].toString(),
       map["name"],
-      map["yearId"],
-      map["facultyId"],
+      new Year(id: map["yearId"].toString()),
+      new Faculty(id: map["facultyId"].toString()),
     );
   }
 
@@ -34,3 +36,5 @@ class GroupInfo implements IPersistableEntity {
     };
   }
 }
+
+// TODO: unit-tests for -Info entities

@@ -14,33 +14,39 @@ typedef Future<Faculty> FacultyLoader(String id);
 abstract class FacultyProviderMixin {
   Future<Group> makeGroup(
       GroupInfo groupInfo, FacultyLoader facultyLoader) async {
-    if (groupInfo == null)
-      throw new ArgumentError("GroupInfo is null.");
+    if (groupInfo == null) throw new ArgumentError("GroupInfo is null.");
 
     var faculty = await facultyLoader(groupInfo.facultyId);
-    var year = new Year(groupInfo.yearId, groupInfo.yearId);
+    var year = new Year(
+      id: groupInfo.yearId,
+      name: groupInfo.yearId,
+    );
     return new Group(groupInfo.id, groupInfo.name, year, faculty);
   }
 
   Year makeYear(YearInfo yearInfo) {
-    if (yearInfo == null)
-      throw new ArgumentError("YearInfo is null.");
+    if (yearInfo == null) throw new ArgumentError("YearInfo is null.");
 
-    return new Year(yearInfo.id, yearInfo.name);
+    return new Year(
+      id: yearInfo.id,
+      name: yearInfo.name,
+    );
   }
 
   Chair makeChair(ChairInfo chairInfo) {
-    if (chairInfo == null)
-      throw new ArgumentError("ChairInfo is null.");
+    if (chairInfo == null) throw new ArgumentError("ChairInfo is null.");
 
     return new Chair(chairInfo.id, chairInfo.name);
   }
 
   Faculty makeFaculty(FacultyInfo facultyInfo) {
-    if (facultyInfo == null)
-      throw new ArgumentError("FacultyInfo is null.");
+    if (facultyInfo == null) throw new ArgumentError("FacultyInfo is null.");
 
     return new Faculty(
-        facultyInfo.id, facultyInfo.name, facultyInfo.abbr, facultyInfo.image);
+      id: facultyInfo.id,
+      name: facultyInfo.name,
+      abbr: facultyInfo.abbr,
+      image: facultyInfo.image,
+    );
   }
 }

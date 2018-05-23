@@ -4,10 +4,10 @@ import '../common/IPersistableEntity.dart';
 class FacultyInfo implements IPersistableEntity {
   FacultyInfo.fromMap(Map map) {
     _faculty = new Faculty(
-      map["id"].toString(),
-      map["name"],
-      map["abbr"],
-      map["image"],
+      id: map["id"].toString(),
+      name: map["name"],
+      abbr: map["abbr"],
+      image: map["image"],
     );
   }
 

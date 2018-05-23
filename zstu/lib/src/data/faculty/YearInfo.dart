@@ -2,31 +2,29 @@ import '../../domain/faculty/Year.dart';
 import '../common/IPersistableEntity.dart';
 
 class YearInfo implements IPersistableEntity {
-  YearInfo(this.id, this.name);
+  YearInfo.fromMap(Map<String, dynamic> map) {
+    if (map == null) throw new ArgumentError("Map is null.");
 
-  String id;
-  String name;
+    _year = new Year(
+      map["id"].toString(),
+      map["name"],
+    );
+  }
+
+  YearInfo.fromYear(Year year) {
+    if (year == null) throw new ArgumentError("Year is null.");
+    this._year = _year;
+  }
+
+  Year _year;
+
+  String get id => _year.id;
+  String get name => _year.name;
 
   Map<String, dynamic> toMap() {
     return {
       "id": id,
       "name": name,
     };
-  }
-
-  YearInfo.fromMap(Map<String, dynamic> map) {
-    if (map == null)
-      throw new ArgumentError("Map is null.");
-
-    id = map["id"].toString();
-    name = map["name"];
-  }
-
-  YearInfo.fromYear(Year year) {
-    if (year == null)
-      throw new ArgumentError("Year is null.");
-
-    id = year.id;
-    name = year.name;
   }
 }

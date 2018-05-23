@@ -2,10 +2,26 @@ import '../../domain/faculty/Faculty.dart';
 import '../common/IPersistableEntity.dart';
 
 class FacultyInfo implements IPersistableEntity {
-  String id;
-  String name;
-  String abbr;
-  String image;
+  FacultyInfo.fromMap(Map map) {
+    _faculty = new Faculty(
+      map["id"].toString(),
+      map["name"],
+      map["abbr"],
+      map["image"],
+    );
+  }
+
+  FacultyInfo.fromFaculty(Faculty faculty) {
+    if (faculty == null) throw new ArgumentError("Faculty is null.");
+    this._faculty = faculty;
+  }
+
+  Faculty _faculty;
+
+  String get id => _faculty.id;
+  String get name => _faculty.name;
+  String get abbr => _faculty.abbr;
+  String get image => _faculty.image;
 
   Map<String, dynamic> toMap() {
     return {
@@ -15,23 +31,4 @@ class FacultyInfo implements IPersistableEntity {
       "image": image,
     };
   }
-
-  FacultyInfo.fromMap(Map map) {
-    id = map["id"].toString();
-    name = map["name"];
-    abbr = map["abbr"];
-    image = map["image"];
-  }
-
-  FacultyInfo.fromFaculty(Faculty faculty) {
-    if (faculty == null)
-      throw new ArgumentError("Faculty is null.");
-
-    id = faculty.id;
-    abbr = faculty.abbr;
-    name = faculty.name;
-    image = faculty.image;
-  }
 }
-
-// TODO: info entities' properties accessors similarly to view-model

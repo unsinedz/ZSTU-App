@@ -84,22 +84,29 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   Widget _buildContent(BuildContext context) {
-    return new Center(
-      child: new Padding(
-        padding: new EdgeInsets.symmetric(
-          horizontal: Sizes.GroupSelectionHeadingPadding,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _buildImage(),
-            _buildHeading(),
-            _buildYearDropdown(),
-            _buildGroupDropdown(),
-            _buildSubmitButton(),
-          ],
-        ),
-      ),
+    return new ListView(
+      shrinkWrap: true,
+      controller: _scrollController,
+      children: <Widget>[
+        new Container(
+          margin: new EdgeInsets.only(
+            top: Sizes.GroupSelectionHeadingPadding,
+          ),
+          padding: new EdgeInsets.symmetric(
+            horizontal: Sizes.GroupSelectionHeadingPadding,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildImage(),
+              _buildHeading(),
+              _buildYearDropdown(),
+              _buildGroupDropdown(),
+              _buildSubmitButton(),
+            ],
+          ),
+        )
+      ],
     );
   }
 

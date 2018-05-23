@@ -2,7 +2,10 @@ import '../../domain/schedule/Pair.dart';
 import '../common/IPersistableEntity.dart';
 
 class PairInfo implements IPersistableEntity {
-  PairInfo.fromPair(this._pair);
+  PairInfo.fromPair(Pair pair) {
+    if (pair == null) throw new ArgumentError('Pair is null.');
+    this._pair = pair;
+  }
 
   PairInfo.fromMap(Map<String, dynamic> map) {
     _pair = new Pair(
@@ -20,17 +23,11 @@ class PairInfo implements IPersistableEntity {
   Pair _pair;
 
   String get id => _pair.id;
-
   String get name => _pair.name;
-
   String get teacher => _pair.teacher;
-
   String get room => _pair.room;
-
   String get type => _pair.type;
-
   String get time => _pair.time;
-
   int get number => _pair.number;
 
   @override

@@ -2,30 +2,28 @@ import '../../domain/faculty/Group.dart';
 import '../common/IPersistableEntity.dart';
 
 class GroupInfo implements IPersistableEntity {
-  String id;
-  String name;
-  String yearId;
-  String facultyId;
-
   GroupInfo.fromMap(Map<String, dynamic> map) {
-    if (map == null)
-      throw new ArgumentError("Map is null.");
+    if (map == null) throw new ArgumentError("Map is null.");
 
-    id = map["id"].toString();
-    name = map["name"];
-    yearId = map["yearId"].toString();
-    facultyId = map["facultyId"].toString();
+    _group = new Group(
+      map["id"].toString(),
+      map["name"],
+      map["yearId"],
+      map["facultyId"],
+    );
   }
 
   GroupInfo.fromGroup(Group group) {
-    if (group == null)
-      throw new ArgumentError("Group is null.");
-
-    id = group.id;
-    name = group.name;
-    yearId = group.year.id;
-    facultyId = group.faculty.id;
+    if (group == null) throw new ArgumentError("Group is null.");
+    this._group = group;
   }
+
+  Group _group;
+
+  String get id => _group.id;
+  String get name => _group.name;
+  String get yearId => _group.year.id;
+  String get facultyId => _group.faculty.id;
 
   Map<String, dynamic> toMap() {
     return {

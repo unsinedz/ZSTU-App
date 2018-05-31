@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../App.dart';
@@ -33,6 +34,7 @@ class _GroupScreenState extends State<GroupScreen>
 
   ScheduleSelectionProcess _scheduleSelectionProcess;
   ScrollController _scrollController;
+  double _scrollOffset;
 
   GroupScreenViewModel _model;
   YearViewModel _selectedYear;
@@ -45,22 +47,39 @@ class _GroupScreenState extends State<GroupScreen>
 
     _app = new App();
     _connectivityChangeListener =
-        new Connectivity().onConnectivityChanged.listen((r) {
-      if (r != ConnectivityResult.none && (_model?.years?.length ?? -1) == 0) {
-        setState(() => _model = null);
-      }
-    });
-    _scrollController = new ScrollController();
+        new Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
+
+    _initializeScrollController();
     _scheduleSelectionProcess = _app.processes.scheduleSelection;
     if (!_scheduleSelectionProcess.canExecuteStep(widget))
       throw new StateError("Step can not be executed.");
   }
 
+  void _initializeScrollController() {
+    _scrollController = new ScrollController(initialScrollOffset: _scrollOffset ?? 0.0);
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _disposeScrollController() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+  }
+
   @override
   void dispose() {
     _connectivityChangeListener?.cancel();
-    _scrollController.dispose();
+    _disposeScrollController();
     super.dispose();
+  }
+
+  void _onScroll() {
+    _scrollOffset = _scrollController?.offset;
+  }
+
+  void _onConnectivityChanged(ConnectivityResult result) {
+    if (result != ConnectivityResult.none && _model?.years?.length == 0) {
+      setState(() => _model = null);
+    }
   }
 
   @override
@@ -175,15 +194,16 @@ class _GroupScreenState extends State<GroupScreen>
   void _handleYearSelected(YearViewModel selectedYear) {
     assert(selectedYear != null);
 
-    setState(() {
-      if (selectedYear != _selectedYear) {
+    if (selectedYear != _selectedYear) {
+      setState(() {
         _model.groups?.clear();
         _model.groups = null;
         _scheduleSelectionProcess.group = null;
-      }
-
-      _selectedYear = selectedYear;
-    });
+        _selectedYear = selectedYear;
+        _disposeScrollController();
+        _initializeScrollController();
+      });
+    }
   }
 
   List<DropdownMenuItem> _buildYearDropdownItems() {

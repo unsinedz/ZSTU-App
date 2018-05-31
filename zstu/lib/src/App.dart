@@ -1,4 +1,4 @@
-import 'Settings.dart';
+import 'core/Settings.dart';
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
 import 'domain/common/process/IProcess.dart';

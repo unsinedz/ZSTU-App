@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
 import '../../domain/schedule/ScheduleSelectionProcess.dart';
-import '../../resources/Colors.dart';
 import '../../resources/sizes.dart';
 import '../common/BaseScreenMixin.dart';
 import '../common/TextLocalizations.dart';
@@ -32,6 +31,8 @@ class _FacultiesState extends State<FacultiesScreen>
 
   @override
   void initState() {
+    super.initState();
+
     _gridScrollController = new ScrollController();
     _app = new App();
     _connectivityChangeListener =
@@ -43,8 +44,6 @@ class _FacultiesState extends State<FacultiesScreen>
     _scheduleSelectionProcess = _app.processes.scheduleSelection;
     if (!_scheduleSelectionProcess.canExecuteStep(widget))
       throw new StateError("Step can not be executed.");
-
-    super.initState();
   }
 
   @override
@@ -118,6 +117,7 @@ class _FacultiesState extends State<FacultiesScreen>
   }
 
   void _handleFacultyTap(BuildContext context, FacultyViewModel item) {
+    _scheduleSelectionProcess.clear();
     _scheduleSelectionProcess.faculty = item.toFaculty();
     Navigator.of(context).pushNamed("/group");
   }

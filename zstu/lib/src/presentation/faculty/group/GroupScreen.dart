@@ -53,10 +53,22 @@ class _GroupScreenState extends State<GroupScreen>
     _scheduleSelectionProcess = _app.processes.scheduleSelection;
     if (!_scheduleSelectionProcess.canExecuteStep(widget))
       throw new StateError("Step can not be executed.");
+
+    _initializeProcessData();
+  }
+
+  void _initializeProcessData() {
+    var group = _scheduleSelectionProcess?.group;
+    if (group != null &&
+        group.faculty?.id == _scheduleSelectionProcess.faculty.id) {
+      var year = group?.year;
+      if (year != null) _selectedYear = new YearViewModel.fromYear(year);
+    }
   }
 
   void _initializeScrollController() {
-    _scrollController = new ScrollController(initialScrollOffset: _scrollOffset ?? 0.0);
+    _scrollController =
+        new ScrollController(initialScrollOffset: _scrollOffset ?? 0.0);
     _scrollController.addListener(_onScroll);
   }
 
@@ -152,7 +164,6 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   void _handleSubmitPressed(BuildContext context) {
-    _scheduleSelectionProcess.clear();
     Navigator.of(context).pushReplacement(new MaterialPageRoute(
           builder: (ctx) => new ScheduleScreen(),
         ));
@@ -303,11 +314,13 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   Widget _buildImage() {
+    var image = _scheduleSelectionProcess.faculty?.image;
     return new CircleAvatar(
       radius: Sizes.GroupSelectionImageRadius,
       backgroundColor: Colors.blue[100],
-      backgroundImage: new AssetImage(
-          _app.assets.getAssetPath(_scheduleSelectionProcess.faculty.image)),
+      backgroundImage: image == null
+          ? null
+          : new AssetImage(_app.assets.getAssetPath(image)),
     );
   }
 }

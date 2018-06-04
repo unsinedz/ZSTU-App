@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
+import '../../domain/faculty/Group.dart';
 import '../../domain/schedule/PerWeekScheduleLoadOptions.dart';
 import '../../domain/schedule/ScheduleSelectionProcess.dart';
 import '../../resources/colors.dart';
@@ -49,6 +50,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   Animation<double> _weekSelectionAlphaAnimation;
 
   ScheduleSelectionProcess _scheduleSelectionProcess;
+  Group _selectedGroup;
 
   ScheduleViewModel _model;
 
@@ -80,6 +82,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     _scheduleSelectionProcess = new App().processes.scheduleSelection;
     if (!_scheduleSelectionProcess.canExecuteStep(this.widget))
       throw new StateError("Step can not be executed.");
+
+    _selectedGroup = _scheduleSelectionProcess.group;
+    _scheduleSelectionProcess.clear();
   }
 
   @override
@@ -116,7 +121,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     var instance = new ScheduleViewModel();
     await instance
         .loadSchedule(new PerWeekScheduleLoadOptions(
-          group: _scheduleSelectionProcess.group,
+          group: _selectedGroup,
           weekNo: _selectedWeek,
         ))
         .catchError((e) => print('Error: $e'))

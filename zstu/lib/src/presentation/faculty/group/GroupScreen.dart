@@ -59,10 +59,8 @@ class _GroupScreenState extends State<GroupScreen>
 
   void _initializeProcessData() {
     var group = _scheduleSelectionProcess?.group;
-    if (group != null &&
-        group.faculty?.id == _scheduleSelectionProcess.faculty.id) {
-      var year = group?.year;
-      if (year != null) _selectedYear = new YearViewModel.fromYear(year);
+    if (group != null) {
+      _scheduleSelectionProcess.group = null;
     }
   }
 

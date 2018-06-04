@@ -152,6 +152,7 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   void _handleSubmitPressed(BuildContext context) {
+    _scheduleSelectionProcess.clear();
     Navigator.of(context).pushReplacement(new MaterialPageRoute(
           builder: (ctx) => new ScheduleScreen(),
         ));

@@ -36,7 +36,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     DateTime.thursday,
     DateTime.friday,
     DateTime.saturday,
-    DateTime.sunday,
+    //DateTime.sunday,
   ];
   static get TabsCount => PairDays.length;
 

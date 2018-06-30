@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:zstu/src/core/BuildSettings.dart';
-
-import '../../App.dart';
 import '../../domain/common/IAssetManager.dart';
 import '../../domain/faculty/ChairLoadOptions.dart';
 import '../../domain/faculty/IFacultyProvider.dart';

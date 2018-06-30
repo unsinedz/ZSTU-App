@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'package:zstu/src/App.dart';
 import 'package:zstu/src/core/BuildSettings.dart';
 import 'package:zstu/src/core/event/Event.dart';
 import 'package:zstu/src/core/event/EventListener.dart';

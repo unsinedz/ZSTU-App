@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 import 'package:zstu/src/core/BuildSettings.dart';
 
-import '../../../App.dart';
-
 class GeneralStorageProvider {
   GeneralStorageProvider(this._db) : assert(_db != null);
 

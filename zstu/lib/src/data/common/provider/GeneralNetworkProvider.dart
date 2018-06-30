@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:zstu/src/core/BuildSettings.dart';
-
-import '../../../App.dart';
 
 class GeneralNetworkProvider {
   GeneralNetworkProvider({HttpClient client}) {

@@ -2,22 +2,6 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:zstu/src/domain/common/serialization/ValueSerializerFactory.dart';
 
-class ApplicationSettings extends SettingsBase {
-  SystemSettings system;
-
-  @override
-  String get type => "General";
-}
-
-class SystemSettings extends SettingsBase {
-  bool get isDeviceBlocked => getSetting("isDeviceBlocked");
-  set isDeviceBlocked(bool isDeviceBlocked) =>
-      setSetting("isDeviceBlocked", isDeviceBlocked);
-
-  @override
-  String get type => "System";
-}
-
 abstract class SettingsBase {
   final Map<String, String> _values = new LinkedHashMap<String, String>();
 
@@ -38,15 +22,30 @@ abstract class SettingsBase {
     if (key == null || key.isEmpty) throw new ArgumentError("Key is null.");
 
     var rawValue = _values[key];
-    if (rawValue?.isEmpty ?? true)
-      return null;
+    if (rawValue?.isEmpty ?? true) return null;
 
     return ValueSerializerFactory.instance
         .getSerializerForType<T>()
         .deserialize(rawValue);
   }
 
+  static SettingsBase newInstance() {
+    return new _Settings();
+  }
+
+  void initialize(Map<String, String> values) {
+    if (values == null) throw new ArgumentError("Values are null.");
+
+    _values.clear();
+    _values.addAll(values);
+  }
+
   Map<String, String> getValues() {
     return _values;
   }
+}
+
+class _Settings extends SettingsBase {
+  @override
+  String get type => null;
 }

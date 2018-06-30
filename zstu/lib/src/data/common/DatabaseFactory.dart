@@ -81,6 +81,13 @@ class DatabaseFactory {
           FOREIGN KEY(facultyId) REFERENCES Faculties(id)
           )
       """);
+
+      db.execute("""
+        CREATE TABLE Settings (
+          Id varchar(50) PRIMARY KEY,
+          Values varchar(max) not null
+        )
+      """);
     });
   }
 

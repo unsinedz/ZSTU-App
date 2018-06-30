@@ -1,8 +1,7 @@
-import 'package:zstu/src/core/BuildSettings.dart';
 import 'package:zstu/src/core/event/EventBus.dart';
 import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
 import 'package:zstu/src/core/locale/ILocaleProvider.dart';
-import 'package:zstu/src/domain/common/ApplicationSettings.dart';
+import 'package:zstu/src/domain/common/serialization/ValueSerializerFactory.dart';
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
 import 'domain/common/process/IProcess.dart';
@@ -10,7 +9,6 @@ import 'domain/common/text/ITextProcessor.dart';
 import 'domain/faculty/IFacultyManager.dart';
 import 'domain/schedule/IScheduleManager.dart';
 import 'domain/schedule/ScheduleSelectionProcess.dart';
-import 'domain/teacher/ITeacherManager.dart';
 
 class App {
   static App _instance;
@@ -29,6 +27,8 @@ class App {
   ITextProcessor get textProcessor => _IOC.provideTextProcessor();
 
   ILocaleProvider get locale => _IOC.provideLocale();
+
+  ValueSerializerFactory get valueSerializers => ValueSerializerFactory.instance;
 
   Processes get processes => Processes._instance = Processes._instance ?? new Processes._();
 }

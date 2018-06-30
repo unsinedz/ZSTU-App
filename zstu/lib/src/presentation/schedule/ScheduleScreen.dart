@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
@@ -27,7 +28,8 @@ class ScheduleScreen extends StatefulWidget
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen>
-    with TickerProviderStateMixin, BaseScreenMixin, TextLocalizations {
+    with TickerProviderStateMixin, BaseScreenMixin, TextLocalizations
+    implements ILocaleSensitive {
   TabController _tabController;
 
   static const List<int> PairDays = [
@@ -39,7 +41,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     DateTime.saturday,
     //DateTime.sunday,
   ];
-  static get TabsCount => PairDays.length;
+  static get tabsCount => PairDays.length;
 
   String get title => texts?.scheduleTitle;
 
@@ -59,13 +61,10 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   @override
   void initState() {
     super.initState();
-    var currentDate = new DateTime.now();
     _tabController = new TabController(
       vsync: this,
-      length: TabsCount,
-      initialIndex: currentDate.hour >= PreselectedWeekdayHourThreshold
-          ? currentDate.add(new Duration(days: 1)).weekday - 1
-          : currentDate.weekday - 1,
+      length: tabsCount,
+      initialIndex: _getNextWorkingDay(new DateTime.now()),
     );
 
     _weekChangeAnimationController = new AnimationController(
@@ -94,6 +93,18 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     super.dispose();
   }
 
+  int _getNextWorkingDay(DateTime date) {
+    var weekDay = date.hour >= PreselectedWeekdayHourThreshold
+        ? date.add(new Duration(days: 1)).weekday
+        : date.weekday;
+    while (!PairDays.contains(weekDay)) {
+      weekDay++;
+      if (weekDay > 7) weekDay -= 7;
+    }
+
+    return weekDay - 1;
+  }
+
   void _handleWeekClick(int weekNo) {
     if (_selectedWeek == weekNo) return;
 
@@ -108,7 +119,6 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   @override
   Widget build(BuildContext context) {
-    initTexts(context);
     return new FutureBuilder(
       future: _loadModel(),
       builder: _buildInFuture,
@@ -201,7 +211,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           new Tab(
             text: texts.sundayShort,
           ),
-        ].take(TabsCount).toList(),
+        ].take(tabsCount).toList(),
       ),
     );
   }
@@ -247,6 +257,11 @@ class _ScheduleScreenState extends State<ScheduleScreen>
         ),
       ),
     );
+  }
+
+  @override
+  void initializeForLocale(Locale locale) {
+    setState(() {});
   }
 }
 

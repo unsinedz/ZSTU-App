@@ -1,14 +1,12 @@
 import 'dart:ui';
-
-import '../../../domain/common/text/ITextSensitive.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import '../../../domain/faculty/Year.dart';
 import '../../../resources/Texts.dart';
 import '../../common/BaseViewModel.dart';
 
-class YearViewModel extends BaseViewModel implements ITextSensitive {
+class YearViewModel extends BaseViewModel implements ILocaleSensitive {
   YearViewModel.fromYear(Year year) {
-    if (year == null)
-      throw new ArgumentError("Year is null.");
+    if (year == null) throw new ArgumentError("Year is null.");
 
     _year = year;
   }
@@ -27,15 +25,15 @@ class YearViewModel extends BaseViewModel implements ITextSensitive {
     return _year;
   }
 
-  @override
-  void translateTexts(Locale locale) {
-    name = Texts.getText(_getTextKey(name), locale.languageCode,
-        '$name ${Texts.getText("year", locale.languageCode)}');
-  }
-
   String _getTextKey(String simpleText) {
     assert(simpleText != null);
 
     return _YearLocalizationKeyPrefix + simpleText;
+  }
+
+  @override
+  void initializeForLocale(Locale locale) {
+    name = Texts.getText(_getTextKey(name), locale.languageCode,
+        '$name ${Texts.getText("year", locale.languageCode)}');
   }
 }

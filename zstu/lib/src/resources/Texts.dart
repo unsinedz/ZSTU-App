@@ -1,27 +1,34 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:zstu/src/core/locale/ILocaleProvider.dart';
 
 class Texts {
-  Texts(this._locale);
+  Texts(this._localeProvider);
 
   static Texts of(BuildContext context) {
     return Localizations.of<Texts>(context, Texts);
   }
 
-  final Locale _locale;
+  final ILocaleProvider _localeProvider;
+  Locale get _locale => _localeProvider.getApplicationLocale();
 
   String get appName => _texts["appName"][_locale.languageCode];
 
   String get scheduleTitle => _screens["scheduleTitle"][_locale.languageCode];
-  String get myScheduleTitle => _screens["myScheduleTitle"][_locale.languageCode];
+  String get myScheduleTitle =>
+      _screens["myScheduleTitle"][_locale.languageCode];
   String get facultiesTitle => _screens["facultiesTitle"][_locale.languageCode];
   String get groupTitle => _screens["groupTitle"][_locale.languageCode];
   String get teachersTitle => _screens["teachersTitle"][_locale.languageCode];
   String get newsTitle => _screens["newsTitle"][_locale.languageCode];
-  String get learnPortalTitle => _screens["learnPortalTitle"][_locale.languageCode];
+  String get learnPortalTitle =>
+      _screens["learnPortalTitle"][_locale.languageCode];
   String get settingsTitle => _screens["settingsTitle"][_locale.languageCode];
   String get aboutTitle => _screens["aboutTitle"][_locale.languageCode];
 
+  /*
+    Screen texts
+   */
   static final Map<String, Map<String, String>> _screens = {
     "facultiesTitle": {
       "en": "Faculties",
@@ -76,6 +83,9 @@ class Texts {
   String get faf => _faculties["faf"][_locale.languageCode];
   String get fme => _faculties["fme"][_locale.languageCode];
 
+  /*
+    Faculty texts
+   */
   static final Map<String, Map<String, String>> _faculties = {
     "ФІКТ": {
       "en": "FICT",
@@ -129,7 +139,8 @@ class Texts {
     },
   };
 
-  String get facultiesGridTitle => _texts["facultiesGridTitle"][_locale.languageCode];
+  String get facultiesGridTitle =>
+      _texts["facultiesGridTitle"][_locale.languageCode];
 
   String get mondayShort => _texts["mondayShort"][_locale.languageCode];
   String get tuesdayShort => _texts["tuesdayShort"][_locale.languageCode];
@@ -139,24 +150,33 @@ class Texts {
   String get saturdayShort => _texts["saturdayShort"][_locale.languageCode];
   String get sundayShort => _texts["sundayShort"][_locale.languageCode];
 
-  String get selectGroupAndYear => _texts["selectGroupAndYear"][_locale.languageCode];
-  String get yearSelectorPlaceholder => _texts["yearSelectorPlaceholder"][_locale.languageCode];
-  String get yearSelectorLabel => _texts["yearSelectorPlaceholder"][_locale.languageCode];
-  String get groupSelectorPlaceholder => _texts["groupSelectorPlaceholder"][_locale.languageCode];
-  String get groupSelectorLabel => _texts["groupSelectorLabel"][_locale.languageCode];
+  String get selectGroupAndYear =>
+      _texts["selectGroupAndYear"][_locale.languageCode];
+  String get yearSelectorPlaceholder =>
+      _texts["yearSelectorPlaceholder"][_locale.languageCode];
+  String get yearSelectorLabel =>
+      _texts["yearSelectorPlaceholder"][_locale.languageCode];
+  String get groupSelectorPlaceholder =>
+      _texts["groupSelectorPlaceholder"][_locale.languageCode];
+  String get groupSelectorLabel =>
+      _texts["groupSelectorLabel"][_locale.languageCode];
   String get selectYearFirst => _texts["selectYearFirst"][_locale.languageCode];
 
   String get year => _texts["year"][_locale.languageCode];
 
   String get findSchedule => _texts["findSchedule"][_locale.languageCode];
-  
+
   String get scheduleDayOff => _texts["scheduleDayOff"][_locale.languageCode];
-  
-  String get featureNotAvailable => _texts["featureNotAvailable"][_locale.languageCode];
+
+  String get featureNotAvailable =>
+      _texts["featureNotAvailable"][_locale.languageCode];
   String get noConnection => _texts["noConnection"][_locale.languageCode];
-  
+
   String get dataLoadError => _texts["dataLoadError"][_locale.languageCode];
 
+  /*
+    General texts
+   */
   static final Map<String, Map<String, String>> _texts = {
     "appName": {
       "en": "ZSTU",
@@ -206,10 +226,8 @@ class Texts {
     "dataLoadError": {
       "en":
           "Data was not loaded. Are you sure you have an active Internet connection?",
-      "ru":
-          "Данные не были получены. Вы точно подключены к Интернету?",
-      "uk":
-          "Дані не будо отримано. Ви точно підключені до Інтернету?",
+      "ru": "Данные не были получены. Вы точно подключены к Интернету?",
+      "uk": "Дані не будо отримано. Ви точно підключені до Інтернету?",
     },
     "selectGroupAndYear": {
       "en": "Choose your course and group",
@@ -281,17 +299,16 @@ class Texts {
 }
 
 class TextsDelegate extends LocalizationsDelegate<Texts> {
-  const TextsDelegate();
+  TextsDelegate(this._localeProvider);
 
-  static final List<String> _supportedLocales = ["en", "ru", "uk"];
+  final ILocaleProvider _localeProvider;
 
   @override
-  bool isSupported(Locale locale) =>
-      _supportedLocales.contains(locale.languageCode);
+  bool isSupported(Locale locale) => _localeProvider.isLocaleSupported(locale);
 
   @override
   Future<Texts> load(Locale locale) =>
-      new Future<Texts>.value(new Texts(locale));
+      new Future<Texts>.value(new Texts(_localeProvider));
 
   @override
   bool shouldReload(LocalizationsDelegate<Texts> old) => false;

@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:zstu/src/core/locale/ILocaleProvider.dart';
 import 'dart:async';
 import 'dart:io';
 import '../domain/common/IAssetManager.dart';
@@ -93,8 +94,8 @@ class DataModule {
   }
 
   static ITextProcessor _textProcessor;
-  static ITextProcessor provideTextProcessor() {
-    return _textProcessor = _textProcessor ?? new TextProcessor();
+  static ITextProcessor provideTextProcessor(ILocaleProvider localeProvider) {
+    return _textProcessor = _textProcessor ?? new TextProcessor(localeProvider);
   }
 
   static bool configured = false;

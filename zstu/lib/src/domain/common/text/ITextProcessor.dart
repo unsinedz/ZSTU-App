@@ -1,8 +1,5 @@
-import 'package:flutter/widgets.dart';
-
-import 'ITextSensitive.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 
 abstract class ITextProcessor {
-  void process(ITextSensitive object);
-  void initialize(Locale locale);
+  void process(ILocaleSensitive object);
 }

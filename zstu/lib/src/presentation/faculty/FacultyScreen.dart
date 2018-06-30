@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:zstu/src/core/event/EventBus.dart';
+import 'package:zstu/src/core/event/EventListener.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
+import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
 import '../../domain/schedule/ScheduleSelectionProcess.dart';
@@ -22,7 +26,8 @@ class FacultiesScreen extends StatefulWidget
 }
 
 class _FacultiesState extends State<FacultiesScreen>
-    with TextLocalizations, BaseScreenMixin {
+    with TextLocalizations, BaseScreenMixin
+    implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
   FacultyScreenViewModel _model;
   ScrollController _gridScrollController;
   StreamSubscription _connectivityChangeListener;
@@ -31,8 +36,6 @@ class _FacultiesState extends State<FacultiesScreen>
 
   @override
   void initState() {
-    super.initState();
-
     _gridScrollController = new ScrollController();
     _app = new App();
     _connectivityChangeListener =
@@ -44,10 +47,14 @@ class _FacultiesState extends State<FacultiesScreen>
     _scheduleSelectionProcess = _app.processes.scheduleSelection;
     if (!_scheduleSelectionProcess.canExecuteStep(widget))
       throw new StateError("Step can not be executed.");
+
+    EventBus.instance.registerListener(this);
+    super.initState();
   }
 
   @override
   void dispose() {
+    EventBus.instance.removeListener(this);
     _gridScrollController.dispose();
     _connectivityChangeListener.cancel();
 
@@ -64,8 +71,6 @@ class _FacultiesState extends State<FacultiesScreen>
 
   @override
   Widget build(BuildContext context) {
-    initTexts(context);
-
     return wrapMaterialLayout(
       new FutureBuilder(
         future: _loadModel(),
@@ -159,5 +164,15 @@ class _FacultiesState extends State<FacultiesScreen>
           ? null
           : new AssetImage(_app.assets.getAssetPath(item.image)),
     );
+  }
+
+  @override
+  void initializeForLocale(Locale locale) {
+    setState(() => _model = null);
+  }
+
+  @override
+  void handleEvent(LocalizationChangeEvent event, Object sender) {
+    initializeForLocale(event.locale);
   }
 }

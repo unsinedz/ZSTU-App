@@ -1,9 +1,11 @@
 import 'dart:async';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:zstu/src/core/event/EventBus.dart';
+import 'package:zstu/src/core/event/EventListener.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
+import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import '../../../App.dart';
 import '../../../domain/common/process/IStep.dart';
 import '../../../domain/schedule/ScheduleSelectionProcess.dart';
@@ -29,7 +31,8 @@ class GroupScreen extends StatefulWidget
 }
 
 class _GroupScreenState extends State<GroupScreen>
-    with TextLocalizations, BaseScreenMixin {
+    with TextLocalizations, BaseScreenMixin
+    implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
   App _app;
 
   ScheduleSelectionProcess _scheduleSelectionProcess;
@@ -54,6 +57,7 @@ class _GroupScreenState extends State<GroupScreen>
     if (!_scheduleSelectionProcess.canExecuteStep(widget))
       throw new StateError("Step can not be executed.");
 
+    EventBus.instance.registerListener(this);
     _initializeProcessData();
   }
 
@@ -77,6 +81,7 @@ class _GroupScreenState extends State<GroupScreen>
 
   @override
   void dispose() {
+    EventBus.instance.removeListener(this);
     _connectivityChangeListener?.cancel();
     _disposeScrollController();
     super.dispose();
@@ -94,8 +99,6 @@ class _GroupScreenState extends State<GroupScreen>
 
   @override
   Widget build(BuildContext context) {
-    initTexts(context);
-
     Future modelLoader = _model == null
         ? _loadModel()
         : _selectedYear == null
@@ -320,5 +323,15 @@ class _GroupScreenState extends State<GroupScreen>
           ? null
           : new AssetImage(_app.assets.getAssetPath(image)),
     );
+  }
+
+  @override
+  void initializeForLocale(Locale locale) {
+    setState(() => _model = null);
+  }
+
+  @override
+  void handleEvent(LocalizationChangeEvent event, Object sender) {
+    initializeForLocale(event.locale);
   }
 }

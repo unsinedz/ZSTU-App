@@ -1,3 +1,7 @@
+import 'package:zstu/src/core/event/EventBus.dart';
+import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
+import 'package:zstu/src/core/locale/ILocaleProvider.dart';
+
 import 'core/Settings.dart';
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
@@ -14,6 +18,8 @@ class App {
 
   App._();
 
+  EventBus get eventBus => _IOC.provideEventBus();
+
   Settings get settings => new Settings();
 
   IFacultyManager get faculties => _IOC.provideFaculty();
@@ -25,6 +31,8 @@ class App {
   IAssetManager get assets => _IOC.provideAsset();
 
   ITextProcessor get textProcessor => _IOC.provideTextProcessor();
+
+  ILocaleProvider get locale => _IOC.provideLocale();
 
   Processes get processes => Processes._instance = Processes._instance ?? new Processes._();
 }
@@ -52,6 +60,13 @@ class Processes {
 }
 
 class _IOC {
+  static EventBus provideEventBus() {
+    return EventBus.instance;
+  }
+
+  static ILocaleProvider provideLocale() {
+    return DefaultLocaleProvider.instance;
+  }
 
   static IFacultyManager provideFaculty() {
     return DataModule.provideFaculty();
@@ -69,7 +84,7 @@ class _IOC {
     return DataModule.provideAsset();
   }
 
-  static provideTextProcessor() {
-    return DataModule.provideTextProcessor();
+  static ITextProcessor provideTextProcessor() {
+    return DataModule.provideTextProcessor(provideLocale());
   }
 }

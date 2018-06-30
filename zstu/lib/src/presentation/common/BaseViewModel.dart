@@ -1,7 +1,6 @@
 import 'dart:async';
-
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import '../../App.dart';
-import '../../domain/common/text/ITextSensitive.dart';
 
 abstract class BaseViewModel {
   Future initialize() {
@@ -9,7 +8,7 @@ abstract class BaseViewModel {
   }
 
   void _onLoad() {
-    var textSensitiveModel = this as ITextSensitive;
+    var textSensitiveModel = this as ILocaleSensitive;
     if (textSensitiveModel != null)
       new App().textProcessor.process(textSensitiveModel);
   }

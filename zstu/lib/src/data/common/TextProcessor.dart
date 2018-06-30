@@ -1,16 +1,15 @@
-import 'package:flutter/widgets.dart';
-
+import 'package:zstu/src/core/locale/ILocaleProvider.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import '../../domain/common/text/ITextProcessor.dart';
-import '../../domain/common/text/ITextSensitive.dart';
 
 class TextProcessor implements ITextProcessor {
-  Locale _locale;
+  TextProcessor(this._localeProvider);
 
-  void initialize(Locale locale) => _locale = locale;
+  final ILocaleProvider _localeProvider;
 
   @override
-  void process(ITextSensitive object) {
+  void process(ILocaleSensitive object) {
     assert(object != null);
-    object.translateTexts(_locale);
+    object.initializeForLocale(_localeProvider.getApplicationLocale());
   }
 }

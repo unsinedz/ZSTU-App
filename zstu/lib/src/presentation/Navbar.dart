@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 
 import '../App.dart';
 import '../data/Constants.dart';
@@ -30,6 +31,8 @@ class NavbarItem {
 
   bool get hasIcon => icon != null;
 
+  bool get hasImage => assetImage != null;
+
   final bool hasDividerBefore;
 
   final bool hasDividerAfter;
@@ -38,9 +41,9 @@ class NavbarItem {
 }
 
 class _NavbarState extends State<Navbar> with TextLocalizations {
-  static List<NavbarItem> _MenuItems;
+  static List<NavbarItem> _menuItems;
 
-  static String get NavbarAssets => Constants.NAVBAR_ASSETS;
+  static String get navbarAssets => Constants.NAVBAR_ASSETS;
 
   IAssetManager _assets;
   ScrollController _scrollController;
@@ -59,49 +62,53 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
   }
 
   void _initMenuItems(BuildContext context) {
-    _MenuItems = <NavbarItem>[
+    _menuItems = <NavbarItem>[
       new NavbarItem(
         text: texts.myScheduleTitle,
-        assetImage: '${NavbarAssets}mySchedule.png',
+        assetImage: '${navbarAssets}mySchedule.png',
         hasDividerAfter: true,
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
       new NavbarItem(
         text: texts.facultiesTitle,
-        assetImage: '${NavbarAssets}faculties.png',
+        assetImage: '${navbarAssets}faculties.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
       new NavbarItem(
         text: texts.scheduleTitle,
-        assetImage: '${NavbarAssets}schedule.png',
+        assetImage: '${navbarAssets}schedule.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
       new NavbarItem(
         text: texts.teachersTitle,
-        assetImage: '${NavbarAssets}teachers.png',
+        assetImage: '${navbarAssets}teachers.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
       new NavbarItem(
         text: texts.newsTitle,
-        assetImage: '${NavbarAssets}news.png',
+        assetImage: '${navbarAssets}news.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
       new NavbarItem(
         text: texts.learnPortalTitle,
-        assetImage: '${NavbarAssets}learnPortal.png',
+        assetImage: '${navbarAssets}learnPortal.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
       new NavbarItem(
         text: texts.settingsTitle,
-        assetImage: '${NavbarAssets}settings.png',
+        assetImage: '${navbarAssets}settings.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
         hasDividerBefore: true,
       ),
       new NavbarItem(
         text: texts.aboutTitle,
-        assetImage: '${NavbarAssets}about.png',
+        assetImage: '${navbarAssets}about.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
+      new NavbarItem(
+          text: 'Change to russian',
+          onTap: () => new App().eventBus.postEvent(
+              new LocalizationChangeEvent(new Locale('ru', '')), this)),
     ];
   }
 
@@ -116,7 +123,6 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
 
   @override
   Widget build(BuildContext context) {
-    initTexts(context);
     _initMenuItems(context);
 
     return new Drawer(
@@ -134,7 +140,7 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
       decoration: new BoxDecoration(
         image: new DecorationImage(
           image: new AssetImage(
-            _assets.getAssetPath('${NavbarAssets}header.png'),
+            _assets.getAssetPath('${navbarAssets}header.png'),
           ),
           fit: BoxFit.fitHeight,
         ),
@@ -146,7 +152,7 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
     var iconSize = IconTheme.of(context).size;
     List<Widget> result = <Widget>[];
 
-    _MenuItems.forEach((x) {
+    _menuItems.forEach((x) {
       if (x.hasDividerBefore) result.add(new Divider());
 
       result.add(
@@ -156,13 +162,16 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
             title: new Text(x.text),
             leading: x.hasIcon
                 ? new Icon(x.icon)
-                : new Image(
-                    image: new AssetImage(_assets.getAssetPath(x.assetImage)),
-                    width: iconSize,
-                    height: iconSize,
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.center,
-                  ),
+                : x.hasImage
+                    ? new Image(
+                        image:
+                            new AssetImage(_assets.getAssetPath(x.assetImage)),
+                        width: iconSize,
+                        height: iconSize,
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.center,
+                      )
+                    : new Text(''),
             dense: true,
           ),
         ),

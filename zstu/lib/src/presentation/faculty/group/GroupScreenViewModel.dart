@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
-
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import '../../../App.dart';
-import '../../../domain/common/text/ITextSensitive.dart';
 import '../../../domain/faculty/Faculty.dart';
 import '../../../domain/faculty/GroupLoadOptions.dart';
 import '../../../domain/faculty/Year.dart';
@@ -10,7 +9,7 @@ import '../../common/BaseViewModel.dart';
 import 'YearViewModel.dart';
 import 'GroupViewModel.dart';
 
-class GroupScreenViewModel extends BaseViewModel implements ITextSensitive {
+class GroupScreenViewModel extends BaseViewModel implements ILocaleSensitive {
   List<YearViewModel> years;
 
   List<GroupViewModel> groups;
@@ -32,8 +31,7 @@ class GroupScreenViewModel extends BaseViewModel implements ITextSensitive {
   }
 
   @override
-  void translateTexts(Locale locale) {
-    groups?.forEach((x) => x.translateTexts(locale));
-    years.forEach((x) => x.translateTexts(locale));
+  void initializeForLocale(Locale locale) {
+    years.forEach((x) => x.initializeForLocale(locale));
   }
 }

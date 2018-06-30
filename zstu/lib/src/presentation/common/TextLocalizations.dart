@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:zstu/src/App.dart';
 import '../../resources/texts.dart';
 
 abstract class TextLocalizations {
-  Texts texts;
-
-  void initTexts(BuildContext context) {
-    texts = Localizations.of<Texts>(context, Texts);
-  }
+  final Texts texts = new Texts(new App().locale);
 }

@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
+
 import '../../App.dart';
-import '../../domain/common/text/ITextSensitive.dart';
 import '../common/BaseViewModel.dart';
 import 'FacultyViewModel.dart';
 
-class FacultyScreenViewModel extends BaseViewModel implements ITextSensitive {
+class FacultyScreenViewModel extends BaseViewModel implements ILocaleSensitive {
   List<FacultyViewModel> faculties;
 
   Future initialize() async {
@@ -18,7 +19,7 @@ class FacultyScreenViewModel extends BaseViewModel implements ITextSensitive {
   }
 
   @override
-  void translateTexts(Locale locale) {
-    faculties.forEach((x) => x.translateTexts(locale));
+  void initializeForLocale(Locale locale) {
+    faculties.forEach((x) => x.initializeForLocale(locale));
   }
 }

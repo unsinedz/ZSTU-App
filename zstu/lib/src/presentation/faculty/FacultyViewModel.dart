@@ -1,13 +1,11 @@
 import 'dart:ui';
-
-import '../../domain/common/text/ITextSensitive.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import '../../domain/faculty/Faculty.dart';
 import '../../resources/Texts.dart';
 
-class FacultyViewModel implements ITextSensitive {
+class FacultyViewModel implements ILocaleSensitive {
   FacultyViewModel.fromFaculty(Faculty faculty) {
-    if (faculty == null)
-      throw new ArgumentError("Faculty is null.");
+    if (faculty == null) throw new ArgumentError("Faculty is null.");
 
     this._faculty = faculty;
   }
@@ -27,7 +25,7 @@ class FacultyViewModel implements ITextSensitive {
   String get image => _faculty.image;
 
   @override
-  void translateTexts(Locale locale) {
+  void initializeForLocale(Locale locale) {
     abbr = Texts.getText(abbr, locale.languageCode, abbr);
   }
 }

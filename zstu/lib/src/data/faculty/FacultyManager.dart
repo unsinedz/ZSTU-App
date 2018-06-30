@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:zstu/src/core/BuildSettings.dart';
+
 import '../../App.dart';
 import '../../domain/common/IAssetManager.dart';
 import '../../domain/faculty/ChairLoadOptions.dart';
@@ -99,7 +101,7 @@ class FacultyManager implements IFacultyManager {
         result = await operation();
         break;
       } catch (e) {
-        if (new App().settings.enableLogging) print('Faculty manager: $e');
+        if (BuildSettings.instance.enableLogging) print('Faculty manager: ${e.toString()}');
       }
     }
 

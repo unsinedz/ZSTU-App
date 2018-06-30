@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:zstu/src/core/BuildSettings.dart';
+
 import '../../../App.dart';
 
 class GeneralNetworkProvider {
@@ -16,13 +18,13 @@ class GeneralNetworkProvider {
 
     var url = new Uri.http(uri, path, params);
 
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print("Request details: ${url.toString()}");
 
     var request = await _client.getUrl(url);
     var response = await request.close();
     var result = await response.transform(decoder).join();
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print('Response: $result');
 
     return result;

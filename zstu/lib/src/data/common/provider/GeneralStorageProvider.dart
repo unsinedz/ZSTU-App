@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
+import 'package:zstu/src/core/BuildSettings.dart';
 
 import '../../../App.dart';
 
@@ -15,7 +16,7 @@ class GeneralStorageProvider {
     List<dynamic> arguments,
     DatabaseExecutor executor,
   }) {
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print("SQL query: $query");
     
     executor = executor ?? _db;
@@ -35,7 +36,7 @@ class GeneralStorageProvider {
     int offset,
     DatabaseExecutor executor,
   }) {
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print("SQL query in $table where $where limit $limit offset $offset");
     
     executor = executor ?? _db;
@@ -55,7 +56,7 @@ class GeneralStorageProvider {
 
   Future<Map<String, dynamic>> getEntityMap(String table, String id,
       {DatabaseExecutor executor}) async {
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print("SQL query in $table with id $id");
 
     executor = executor ?? _db;
@@ -68,7 +69,7 @@ class GeneralStorageProvider {
 
   Future insertMap(String table, Map<String, dynamic> values,
       {DatabaseExecutor executor}) {
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print("SQL insert in $table with ${values.toString()}");
 
     executor = executor ?? _db;

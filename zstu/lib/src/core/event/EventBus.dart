@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:zstu/src/App.dart';
+import 'package:zstu/src/core/BuildSettings.dart';
 import 'package:zstu/src/core/event/Event.dart';
 import 'package:zstu/src/core/event/EventListener.dart';
 
@@ -24,7 +25,7 @@ class EventBus {
   void registerListener<T extends Event>(EventListener<T> eventListener,
       [T eventType]) {
     _addListener(eventType ?? T, eventListener);
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print(
           'Registered listener ${eventListener.toString()} for event ${(eventType ?? T).toString()}.');
   }
@@ -32,7 +33,7 @@ class EventBus {
   void removeListener<T extends Event>(EventListener<T> eventListener,
       [T eventType]) {
     _removeListener(eventType ?? T, eventListener);
-    if (new App().settings.enableLogging)
+    if (BuildSettings.instance.enableLogging)
       print(
           'Unregistered listener ${eventListener.toString()} for event ${(eventType ?? T).toString()}.');
   }

@@ -1,8 +1,8 @@
+import 'package:zstu/src/core/BuildSettings.dart';
 import 'package:zstu/src/core/event/EventBus.dart';
 import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
 import 'package:zstu/src/core/locale/ILocaleProvider.dart';
-
-import 'core/Settings.dart';
+import 'package:zstu/src/domain/common/ApplicationSettings.dart';
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
 import 'domain/common/process/IProcess.dart';
@@ -20,11 +20,7 @@ class App {
 
   EventBus get eventBus => _IOC.provideEventBus();
 
-  Settings get settings => new Settings();
-
   IFacultyManager get faculties => _IOC.provideFaculty();
-
-  ITeacherManager get teachers => _IOC.provideTeacher();
 
   IScheduleManager get schedule => _IOC.provideSchedule();
 
@@ -70,10 +66,6 @@ class _IOC {
 
   static IFacultyManager provideFaculty() {
     return DataModule.provideFaculty();
-  }
-
-  static ITeacherManager provideTeacher() {
-    throw new UnimplementedError("Not implemented.");
   }
 
   static IScheduleManager provideSchedule() {

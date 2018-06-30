@@ -1,5 +1,3 @@
-import '../ApplicationSettings.dart';
-
 class Settings {
   static Settings _instance;
   factory Settings() {
@@ -9,7 +7,4 @@ class Settings {
   Settings._();
 
   bool get enableLogging => true;
-
-  ApplicationSettings _application;
-  ApplicationSettings get application => _application = _application ?? new ApplicationSettings();
 }

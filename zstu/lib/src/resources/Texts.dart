@@ -174,6 +174,8 @@ class Texts {
 
   String get dataLoadError => _texts["dataLoadError"][_locale.languageCode];
 
+  String get somethingWentWrong => _texts["somethingWentWrong"][_locale.languageCode];
+
   /*
     General texts
    */
@@ -283,6 +285,11 @@ class Texts {
       "en": "No network connection",
       "ru": "Отсутствует подключение к сети",
       "uk": "Відсутнє підключення до мережі",
+    },
+    "somethingWentWrong": {
+      "en": "Oops, something went wrong...",
+      "ru": "Упс, что-то пошло не так...",
+      "uk": "Упс, щось пішло не так...",
     },
   };
 

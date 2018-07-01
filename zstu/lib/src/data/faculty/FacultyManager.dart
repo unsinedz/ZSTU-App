@@ -5,7 +5,7 @@ import '../../domain/faculty/ChairLoadOptions.dart';
 import '../../domain/faculty/IFacultyProvider.dart';
 import '../../domain/faculty/Year.dart';
 import '../../resources/Texts.dart';
-import '../Constants.dart';
+import '../../domain/Constants.dart';
 import '../common/AssetManager.dart';
 import '../../domain/faculty/GroupLoadOptions.dart';
 import '../../domain/faculty/Group.dart';
@@ -19,7 +19,7 @@ typedef Future EntitySaver<T>(T entity);
 class FacultyManager implements IFacultyManager {
   FacultyManager(this._storageProvider, this._networkProvider,
       {AssetManager assetManager}) {
-    _assetManager = assetManager ?? new AssetManager(Constants.ASSET_DIRECTORY);
+    _assetManager = assetManager ?? new AssetManager(Constants.AssetDirectory);
   }
 
   IFacultyProvider _storageProvider;
@@ -99,7 +99,8 @@ class FacultyManager implements IFacultyManager {
         result = await operation();
         break;
       } catch (e) {
-        if (BuildSettings.instance.enableLogging) print('Faculty manager: ${e.toString()}');
+        if (BuildSettings.instance.enableLogging)
+          print('Faculty manager: ${e.toString()}');
       }
     }
 
@@ -110,9 +111,9 @@ class FacultyManager implements IFacultyManager {
     if (faculties == null) throw new ArgumentError("Faculties are null.");
 
     for (Faculty f in faculties) {
-      for (String ext in Constants.SUPPORTED_IMAGE_EXTENSIONS) {
+      for (String ext in Constants.SupportedImageExtensions) {
         var translatedAbbr = Texts.getText(f.abbr, "en", f.abbr);
-        var name = "${Constants.FACULTY_ASSETS}$translatedAbbr$ext";
+        var name = "${Constants.FacultyAssets}$translatedAbbr$ext";
         bool exists = await _assetManager.assetExists(name);
         if (exists) {
           f.image = name;

@@ -1,7 +1,9 @@
 import 'package:zstu/src/core/event/EventBus.dart';
 import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
 import 'package:zstu/src/core/locale/ILocaleProvider.dart';
+import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
 import 'package:zstu/src/domain/common/serialization/ValueSerializerFactory.dart';
+import 'package:zstu/src/domain/settings/ISettingsManager.dart';
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
 import 'domain/common/process/IProcess.dart';
@@ -22,15 +24,22 @@ class App {
 
   IScheduleManager get schedule => _IOC.provideSchedule();
 
+  ISettingsManager get settings => _IOC.provideSettings();
+
   IAssetManager get assets => _IOC.provideAsset();
 
   ITextProcessor get textProcessor => _IOC.provideTextProcessor();
 
   ILocaleProvider get locale => _IOC.provideLocale();
 
-  ValueSerializerFactory get valueSerializers => ValueSerializerFactory.instance;
+  ValueSerializerFactory get valueSerializers =>
+      _IOC.providerValueSerializers();
 
-  Processes get processes => Processes._instance = Processes._instance ?? new Processes._();
+  ValueDescriptorFactory get valueDescriptors =>
+      _IOC.providerValueDescriptors();
+
+  Processes get processes =>
+      Processes._instance = Processes._instance ?? new Processes._();
 }
 
 class Processes {
@@ -40,11 +49,11 @@ class Processes {
 
   List<IProcess> _processes = <IProcess>[];
 
-  ScheduleSelectionProcess get scheduleSelection => _getOrAdd(new ScheduleSelectionProcess());
+  ScheduleSelectionProcess get scheduleSelection =>
+      _getOrAdd(new ScheduleSelectionProcess());
 
   T _getOrAdd<T extends IProcess>(T instanceToAdd) {
-    if (instanceToAdd == null)
-      throw new ArgumentError("Instance is null.");
+    if (instanceToAdd == null) throw new ArgumentError("Instance is null.");
 
     var processes = _processes.where((dynamic x) => (x as T) != null);
     if (processes.length == 0) {
@@ -70,6 +79,18 @@ class _IOC {
 
   static IScheduleManager provideSchedule() {
     return DataModule.provideSchedule();
+  }
+
+  static ISettingsManager provideSettings() {
+    return DataModule.provideSettings();
+  }
+
+  static ValueDescriptorFactory providerValueDescriptors() {
+    return ValueDescriptorFactory.instance;
+  }
+
+  static ValueSerializerFactory providerValueSerializers() {
+    return ValueSerializerFactory.instance;
   }
 
   static IAssetManager provideAsset() {

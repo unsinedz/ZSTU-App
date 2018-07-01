@@ -2,7 +2,7 @@ class DateFormatter {
   static const String DateStringFormat = "{year}-{month}-{day}";
 
   static String _twoDigits(int n) {
-    if (n >= 10) return "${n}";
+    if (n >= 10) return "$n";
     return "0$n";
   }
 

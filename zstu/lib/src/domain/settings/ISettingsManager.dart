@@ -1,7 +1,10 @@
 import 'dart:async';
-import 'package:zstu/src/domain/settings/SettingsBase.dart';
+import 'package:zstu/src/domain/settings/ApplicationSettings.dart';
+import 'package:zstu/src/domain/settings/BaseSettings.dart';
 
 abstract class ISettingsManager {
-  Future<SettingsBase> getSettings(String type);
-  Future saveSettings(SettingsBase settings);
+  Future<BaseSettings> getSettings(String type);
+  Future saveSettings(BaseSettings settings);
+  Future<ApplicationSettings> getApplicationSettings();
+  Future saveApplicationSettings(ApplicationSettings settings);
 }

@@ -85,7 +85,7 @@ class DatabaseFactory {
       db.execute("""
         CREATE TABLE Settings (
           Id varchar(50) PRIMARY KEY,
-          Values varchar(max) not null
+          SettingValues text NOT NULL
         )
       """);
     });

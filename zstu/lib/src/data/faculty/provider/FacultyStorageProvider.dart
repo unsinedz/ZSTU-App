@@ -11,7 +11,7 @@ import '../FacultyInfo.dart';
 import '../../common/provider/GeneralStorageProvider.dart';
 import '../YearInfo.dart';
 import '../GroupInfo.dart';
-import '../../Constants.dart';
+import '../../../domain/Constants.dart';
 import 'FacultyProviderMixin.dart';
 import 'MemoryCacheMixin.dart';
 

@@ -1,5 +1,5 @@
 import 'dart:async';
-import '../../Constants.dart';
+import '../../../domain/Constants.dart';
 import '../ApiResponse.dart';
 import 'GeneralNetworkProvider.dart';
 
@@ -24,7 +24,7 @@ abstract class NetworkProviderBase {
     assert(fromMapBuilder != null);
 
     if (params["pageSize"] == null)
-      params["pageSize"] = Constants.BATCH_SIZE.toString();
+      params["pageSize"] = Constants.BatchSize.toString();
 
     var page = 0;
     params["page"] = page.toString();

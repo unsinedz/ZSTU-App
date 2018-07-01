@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import '../../../domain/schedule/IScheduleProvider.dart';
 import '../../../domain/schedule/ScheduleLoadOptions.dart';
 import '../../../domain/schedule/Schedule.dart';
-import '../../Constants.dart';
+import '../../../domain/Constants.dart';
 import '../../common/provider/GeneralStorageProvider.dart';
 
 class ScheduleStorageProvider implements IScheduleProvider {
@@ -11,7 +10,7 @@ class ScheduleStorageProvider implements IScheduleProvider {
 
   GeneralStorageProvider _baseProvider;
 
-  static String get PairTableName => Constants.PairTableName;
+  static final String pairTableName = Constants.PairTableName;
 
   @override
   Future<Schedule> getById(String id) async {

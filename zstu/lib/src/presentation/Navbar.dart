@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 
 import '../App.dart';
-import '../data/Constants.dart';
+import '../domain/Constants.dart';
 import '../domain/common/IAssetManager.dart';
 import 'common/TextLocalizations.dart';
 
@@ -43,7 +43,7 @@ class NavbarItem {
 class _NavbarState extends State<Navbar> with TextLocalizations {
   static List<NavbarItem> _menuItems;
 
-  static String get navbarAssets => Constants.NAVBAR_ASSETS;
+  static String get navbarAssets => Constants.NavbarAssets;
 
   IAssetManager _assets;
   ScrollController _scrollController;
@@ -97,7 +97,7 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
       new NavbarItem(
         text: texts.settingsTitle,
         assetImage: '${navbarAssets}settings.png',
-        onTap: () => _showFeatureNotAvailableMessage(context),
+        onTap: () => _pushNamed(context, '/settings'),
         hasDividerBefore: true,
       ),
       new NavbarItem(
@@ -119,6 +119,10 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
     scaffold.showSnackBar(new SnackBar(
       content: new Text(texts.featureNotAvailable),
     ));
+  }
+
+  void _pushNamed(BuildContext context, String routeName) {
+    Navigator.of(context).pushNamed(routeName);
   }
 
   @override

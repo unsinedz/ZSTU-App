@@ -4,13 +4,13 @@ import '../../../domain/schedule/IScheduleProvider.dart';
 import '../../../domain/schedule/Pair.dart';
 import '../../../domain/schedule/ScheduleLoadOptions.dart';
 import '../../../domain/schedule/Schedule.dart';
-import '../../Constants.dart';
+import '../../../domain/Constants.dart';
 import '../../common/provider/NetworkProviderBase.dart';
 import '../PairInfo.dart';
 
 class ScheduleApiProvider extends NetworkProviderBase
     implements IScheduleProvider {
-  ScheduleApiProvider(baseProvider) : super(Constants.API_URI, baseProvider);
+  ScheduleApiProvider(baseProvider) : super(Constants.ApiUri, baseProvider);
 
   static const Map<String, String> _paths = const {
     "schedule": "/schedule",

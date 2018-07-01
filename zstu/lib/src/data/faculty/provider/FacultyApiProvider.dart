@@ -8,7 +8,7 @@ import '../../../domain/faculty/IFacultyProvider.dart';
 import '../../../domain/faculty/Year.dart';
 import '../ChairInfo.dart';
 import '../FacultyInfo.dart';
-import '../../Constants.dart';
+import '../../../domain/Constants.dart';
 import '../../common/provider/NetworkProviderBase.dart';
 import '../../common/provider/GeneralNetworkProvider.dart';
 import '../YearInfo.dart';
@@ -22,7 +22,7 @@ class FacultyApiProvider extends NetworkProviderBase
     with FacultyProviderMixin, MemoryCacheMixin
     implements IFacultyProvider {
   FacultyApiProvider(GeneralNetworkProvider _baseProvider)
-      : super(Constants.API_URI, _baseProvider);
+      : super(Constants.ApiUri, _baseProvider);
 
   static const Map<String, String> _paths = const {
     "faculty": "/faculty",

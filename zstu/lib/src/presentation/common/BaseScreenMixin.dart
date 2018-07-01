@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:zstu/src/presentation/common/TextLocalizations.dart';
 import '../../resources/Colors.dart';
 import '../../resources/Sizes.dart';
 import '../Navbar.dart';
 
-abstract class BaseScreenMixin {
+abstract class BaseScreenMixin extends TextLocalizations {
   Widget wrapMaterialLayout(Widget content, AppBar appBar, {Widget drawer}) {
     return new Scaffold(
       appBar: appBar,
@@ -43,6 +44,27 @@ abstract class BaseScreenMixin {
           color: AppColors.FacultyAbsenceMessageText,
         ),
       ),
+    );
+  }
+
+  Widget loadingSpinner({String text}) {
+    Widget child;
+    if (text != null) {
+      child = new Column(
+        children: <Widget>[
+          new CircularProgressIndicator(),
+          new Text(text),
+        ],
+      );
+    } else
+      child = new CircularProgressIndicator();
+
+    return new Center(child: child);
+  }
+
+  Widget error({String text}) {
+    return new Center(
+      child: new Text(text ?? texts.somethingWentWrong),
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'dart:collection';
 import 'package:flutter/foundation.dart';
+import 'package:zstu/src/domain/Constants.dart';
 import 'package:zstu/src/domain/common/serialization/ValueSerializerFactory.dart';
 
-abstract class SettingsBase {
+abstract class BaseSettings {
   final Map<String, String> _values = new LinkedHashMap<String, String>();
 
   String get type;
@@ -17,7 +18,6 @@ abstract class SettingsBase {
         .serialize(value);
   }
 
-  @protected
   T getSetting<T>(String key) {
     if (key == null || key.isEmpty) throw new ArgumentError("Key is null.");
 
@@ -29,7 +29,7 @@ abstract class SettingsBase {
         .deserialize(rawValue);
   }
 
-  static SettingsBase newInstance() {
+  static BaseSettings newInstance() {
     return new _Settings();
   }
 
@@ -43,9 +43,16 @@ abstract class SettingsBase {
   Map<String, String> getValues() {
     return _values;
   }
+
+  static String makeSettingKey(String name, {String type, String value}) {
+    return '${Constants.localizationKeyPrefixes.setting}' +
+        (type == null ? '' : '${type}_') +
+        name +
+        (value == null ? '' : '_$value');
+  }
 }
 
-class _Settings extends SettingsBase {
+class _Settings extends BaseSettings {
   @override
   String get type => null;
 }

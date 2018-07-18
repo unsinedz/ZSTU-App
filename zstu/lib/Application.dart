@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,7 +14,7 @@ import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import 'package:zstu/src/domain/settings/ApplicationSettings.dart';
-import 'package:zstu/src/domain/settings/BaseSettings.dart';
+import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
 import 'package:zstu/src/presentation/faculty/FacultyScreen.dart';
 import 'package:zstu/src/presentation/faculty/group/GroupScreen.dart';
 import 'package:zstu/src/presentation/schedule/ScheduleScreen.dart';
@@ -53,9 +52,13 @@ class ZstuApp extends StatefulWidget {
     // Application settings
     var applicationSettingsType = ApplicationSettings.Type;
     descriptorFactory.registerValueDescriptor(
-        BaseSettings.makeSettingKey('applicationLanguage',
-            type: applicationSettingsType),
+        _makeSettingKey('applicationLanguage',
+            settingType: applicationSettingsType),
         new StringDescriptor(supportedLocales));
+  }
+
+  String _makeSettingKey(String settingName, {String settingType}) {
+    return BaseSettings.makeSettingKey(settingName, type: settingType);
   }
 }
 
@@ -117,8 +120,16 @@ class _InitLocalizationsDelegate extends LocalizationsDelegate {
   bool isSupported(Locale locale) => true;
 
   @override
-  Future load(Locale locale) =>
-      new Future.sync(() => new App().locale.initialize(locale));
+  Future load(Locale locale) => new Future.sync(() {
+        new App().locale.initialize(locale);
+        new App().settings.modifySettings<ApplicationSettings>(
+            new App().settings.getApplicationSettings(), (s) {
+          if (s.applicationLanguage == locale.languageCode) return false;
+
+          s.applicationLanguage = locale.languageCode;
+          return true;
+        });
+      });
 
   @override
   bool shouldReload(LocalizationsDelegate old) => true;

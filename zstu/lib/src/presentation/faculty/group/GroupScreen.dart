@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zstu/src/core/event/EventBus.dart';
 import 'package:zstu/src/core/event/EventListener.dart';
+import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import '../../../App.dart';
@@ -31,7 +32,7 @@ class GroupScreen extends StatefulWidget
 }
 
 class _GroupScreenState extends State<GroupScreen>
-    with TextLocalizations, BaseScreenMixin
+    with TextLocalizations, BaseScreenMixin, FutureHelperMixin
     implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
   App _app;
 
@@ -295,7 +296,7 @@ class _GroupScreenState extends State<GroupScreen>
     if (_model != null) return;
 
     var instance = new GroupScreenViewModel();
-    await instance.initialize();
+    await instance.initialize().catchError(logAndRethrow);
     _model = instance;
   }
 

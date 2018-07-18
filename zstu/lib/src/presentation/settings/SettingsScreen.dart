@@ -1,7 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zstu/src/core/event/EventListener.dart';
+import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
+import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
+import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import 'package:zstu/src/presentation/common/BaseScreenMixin.dart';
 import 'package:zstu/src/presentation/common/TextLocalizations.dart';
 import 'package:zstu/src/presentation/settings/SettingViewModel.dart';
@@ -13,7 +16,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsState extends State<SettingsScreen>
-    with TextLocalizations, BaseScreenMixin {
+    with TextLocalizations, BaseScreenMixin, FutureHelperMixin
+    implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
   SettingsScreenViewModel _model;
   ScrollController _scrollController;
 
@@ -64,7 +68,7 @@ class _SettingsState extends State<SettingsScreen>
     return new FutureBuilder(
       future: new Future(() async {
         _model = new SettingsScreenViewModel();
-        await _model.initialize();
+        await _model.initialize().catchError(logAndRethrow);
       }),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState != ConnectionState.done)
@@ -75,5 +79,15 @@ class _SettingsState extends State<SettingsScreen>
         return _buildContent();
       },
     );
+  }
+
+  @override
+  void handleEvent(LocalizationChangeEvent event, Object sender) {
+    this.initializeForLocale(event.locale);
+  }
+
+  @override
+  void initializeForLocale(Locale locale) {
+    setState(() => _model = null);
   }
 }

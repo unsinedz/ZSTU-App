@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 
 import '../../App.dart';
@@ -28,7 +29,7 @@ class ScheduleScreen extends StatefulWidget
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen>
-    with TickerProviderStateMixin, BaseScreenMixin, TextLocalizations
+    with TickerProviderStateMixin, BaseScreenMixin, TextLocalizations, FutureHelperMixin
     implements ILocaleSensitive {
   TabController _tabController;
 
@@ -134,7 +135,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           group: _selectedGroup,
           weekNo: _selectedWeek,
         ))
-        .catchError((e) => print('Error: $e'))
+        .catchError(logAndRethrow)
         .whenComplete(() => _model = instance);
   }
 

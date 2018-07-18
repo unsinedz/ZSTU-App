@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:zstu/src/core/event/EventBus.dart';
 import 'package:zstu/src/core/event/EventListener.dart';
+import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import '../../App.dart';
@@ -26,7 +27,7 @@ class FacultiesScreen extends StatefulWidget
 }
 
 class _FacultiesState extends State<FacultiesScreen>
-    with TextLocalizations, BaseScreenMixin
+    with TextLocalizations, BaseScreenMixin, FutureHelperMixin
     implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
   FacultyScreenViewModel _model;
   ScrollController _gridScrollController;
@@ -65,7 +66,7 @@ class _FacultiesState extends State<FacultiesScreen>
     if (_model != null) return null;
 
     var instance = new FacultyScreenViewModel();
-    await instance.initialize();
+    await instance.initialize().catchError(logAndRethrow);
     _model = instance;
   }
 

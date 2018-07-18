@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:zstu/src/domain/settings/BaseSettings.dart';
+import 'BaseSettings.dart';
 
 abstract class ISettingsProvider {
   Future<BaseSettings> getSettings(String type);

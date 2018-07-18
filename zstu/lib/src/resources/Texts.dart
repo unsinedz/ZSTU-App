@@ -174,7 +174,8 @@ class Texts {
 
   String get dataLoadError => _texts["dataLoadError"][_locale.languageCode];
 
-  String get somethingWentWrong => _texts["somethingWentWrong"][_locale.languageCode];
+  String get somethingWentWrong =>
+      _texts["somethingWentWrong"][_locale.languageCode];
 
   /*
     General texts
@@ -293,12 +294,38 @@ class Texts {
     },
   };
 
+  String get applicationLanguage =>
+      _settings['Setting_General_applicationLanguage'][_locale.languageCode];
+
+  static final Map<String, Map<String, String>> _settings = {
+    "Setting_General_applicationLanguage": {
+      "en": "Application language",
+      "ru": "Язык приложения",
+      "uk": "Мова додатку",
+    },
+    "Setting_General": {
+      "en": "General",
+      "ru": "Общие",
+      "uk": "Загальні",
+    },
+  };
+
+  static final List<Map<String, Map<String, String>>> _textProviders = [
+    _screens,
+    _faculties,
+    _settings,
+    _texts,
+  ];
+
   static String getText(String key, String languageCode,
       [String defaultValue]) {
     assert(key != null);
     assert(languageCode != null);
 
-    var vals = _screens[key] ?? _faculties[key] ?? _texts[key];
+    Map<String, String> vals;
+    for (var provider in _textProviders)
+      if ((vals = provider[key]) != null) break;
+
     if (vals == null) return defaultValue;
 
     return vals[languageCode] ?? defaultValue;

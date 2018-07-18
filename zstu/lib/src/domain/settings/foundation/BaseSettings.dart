@@ -29,6 +29,10 @@ abstract class BaseSettings {
         .deserialize(rawValue);
   }
 
+  T getSettingOrDefault<T>(String key, [T defaultValue]) {
+    return getSetting(key) ?? defaultValue;
+  }
+
   static BaseSettings newInstance() {
     return new _Settings();
   }
@@ -44,11 +48,10 @@ abstract class BaseSettings {
     return _values;
   }
 
-  static String makeSettingKey(String name, {String type, String value}) {
+  static String makeSettingKey(String name, {String type}) {
     return '${Constants.localizationKeyPrefixes.setting}' +
-        (type == null ? '' : '${type}_') +
-        name +
-        (value == null ? '' : '_$value');
+        (type?.isEmpty ?? true ? '' : '${type}_') +
+        name;
   }
 }
 

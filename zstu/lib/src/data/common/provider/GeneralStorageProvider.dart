@@ -14,9 +14,8 @@ class GeneralStorageProvider {
     List<dynamic> arguments,
     DatabaseExecutor executor,
   }) {
-    if (BuildSettings.instance.enableLogging)
-      print("SQL query: $query");
-    
+    if (BuildSettings.instance.enableLogging) print("SQL query: $query");
+
     executor = executor ?? _db;
     return executor.rawQuery(query, arguments);
   }
@@ -36,7 +35,7 @@ class GeneralStorageProvider {
   }) {
     if (BuildSettings.instance.enableLogging)
       print("SQL query in $table where $where limit $limit offset $offset");
-    
+
     executor = executor ?? _db;
     return executor.query(
       table,
@@ -65,14 +64,21 @@ class GeneralStorageProvider {
     return data.length == 1 ? data.first : null;
   }
 
-  Future insertMap(String table, Map<String, dynamic> values,
-      {DatabaseExecutor executor}) {
+  Future insertMap(
+    String table,
+    Map<String, dynamic> values, {
+    DatabaseExecutor executor,
+    ConflictAlgorithm conflictAlgorithm = ConflictAlgorithm.fail,
+  }) {
     if (BuildSettings.instance.enableLogging)
       print("SQL insert in $table with ${values.toString()}");
 
     executor = executor ?? _db;
-    return executor.insert(table, values,
-        conflictAlgorithm: ConflictAlgorithm.fail);
+    return executor.insert(
+      table,
+      values,
+      conflictAlgorithm: conflictAlgorithm,
+    );
   }
 
   void batchInsertMap(String table, Batch batch, Map<String, dynamic> values) {

@@ -3,7 +3,7 @@ import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
 import 'package:zstu/src/core/locale/ILocaleProvider.dart';
 import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
 import 'package:zstu/src/domain/common/serialization/ValueSerializerFactory.dart';
-import 'package:zstu/src/domain/settings/ISettingsManager.dart';
+import 'package:zstu/src/domain/settings/foundation/ISettingsManager.dart';
 import 'data/DataModule.dart';
 import 'domain/common/IAssetManager.dart';
 import 'domain/common/process/IProcess.dart';

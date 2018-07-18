@@ -1,9 +1,9 @@
-import 'package:zstu/src/domain/settings/BaseSettings.dart';
+import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
 
 class SystemSettings extends BaseSettings {
-  bool get isDeviceBlocked => getSetting("isDeviceBlocked");
+  bool get isDeviceBlocked => getSettingOrDefault("isDeviceBlocked", false);
   set isDeviceBlocked(bool isDeviceBlocked) =>
-      setSetting("isDeviceBlocked", isDeviceBlocked);
+      setSetting<bool>("isDeviceBlocked", isDeviceBlocked);
 
   static const String Type = "System";
 

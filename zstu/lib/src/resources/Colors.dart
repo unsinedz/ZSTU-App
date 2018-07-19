@@ -49,4 +49,7 @@ class AppColors {
       const Color.fromARGB(170, 186, 186, 186);
   static const Color FacultyAbsenceMessageText = Colors.grey;
   static const Color FacultyThumbBackground = const Color(0xffbbdefb);
+  static const Color SettingGroupText = const Color(0xff3d3f3e);
+  static const Color SettingItemText = const Color(0xff9f9f9f);
+  static const Color SettingDivider = const Color(0xff9f9f9f);
 }

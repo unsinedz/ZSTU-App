@@ -3,27 +3,37 @@ import 'dart:ui';
 import 'package:zstu/src/App.dart';
 import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
+import 'package:zstu/src/domain/settings/foundation/AdditionalSettingListItemsStorage.dart';
 import 'package:zstu/src/presentation/common/BaseViewModel.dart';
+import 'package:zstu/src/presentation/settings/AdditionalSettingItemViewModel.dart';
+import 'package:zstu/src/presentation/settings/ISettingListItemModel.dart';
 import 'package:zstu/src/presentation/settings/SettingViewModel.dart';
 
 class SettingsScreenViewModel extends BaseViewModel
     with FutureHelperMixin
     implements ILocaleSensitive {
-  List<SettingViewModel> settingValues;
+  List<ISettingListItemModel> settingValues = [];
 
   @override
   Future initialize() async {
-    var editableSettings =
-        await new App().settings.getEditableSettings();
-    settingValues = editableSettings
+    settingValues.addAll(AdditionalSettingListItemsStorage.instance
+        .getItems()
+        .map((x) => new AdditionalSettingItemViewModel(x))
+        .toList());
+
+    var editableSettings = await new App().settings.getEditableSettings();
+    settingValues.addAll(editableSettings
         .map((x) => new SettingViewModel.fromEditableSetting(x))
-        .toList();
+        .toList());
 
     await super.initialize();
   }
 
   @override
   void initializeForLocale(Locale locale) {
-    settingValues?.forEach((x) => x.initializeForLocale(locale));
+    settingValues
+        ?.where((x) => x is ILocaleSensitive)
+        ?.cast<ILocaleSensitive>()
+        ?.forEach((x) => x.initializeForLocale(locale));
   }
 }

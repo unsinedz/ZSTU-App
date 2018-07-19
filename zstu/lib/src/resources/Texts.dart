@@ -298,15 +298,35 @@ class Texts {
       _settings['Setting_General_applicationLanguage'][_locale.languageCode];
 
   static final Map<String, Map<String, String>> _settings = {
+    "Setting_General": {
+      "en": "General",
+      "ru": "Общие",
+      "uk": "Загальні",
+    },
+    "Setting_Support": {
+      "en": "Support",
+      "ru": "Поддержка",
+      "uk": "Підтримка",
+    },
     "Setting_General_applicationLanguage": {
       "en": "Application language",
       "ru": "Язык приложения",
       "uk": "Мова додатку",
     },
-    "Setting_General": {
-      "en": "General",
-      "ru": "Общие",
-      "uk": "Загальні",
+    "Setting_Support_AskQuestion": {
+      "en": "Ask a question",
+      "ru": "Задать вопрос",
+      "uk": "Задати питання",
+    },
+    "Setting_Support_SuggestFeature": {
+      "en": "Suggest a feature",
+      "ru": "Предложить улучшение",
+      "uk": "Запропонувати покращення",
+    },
+    "Setting_Support_NoticedProblem": {
+      "en": "Noticed a problem?",
+      "ru": "Заметили ошибку?",
+      "uk": "Помітили помилку?",
     },
   };
 

@@ -14,6 +14,8 @@ import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import 'package:zstu/src/domain/settings/ApplicationSettings.dart';
+import 'package:zstu/src/domain/settings/foundation/AdditionalSettingItem.dart';
+import 'package:zstu/src/domain/settings/foundation/AdditionalSettingListItemsStorage.dart';
 import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
 import 'package:zstu/src/presentation/faculty/FacultyScreen.dart';
 import 'package:zstu/src/presentation/faculty/group/GroupScreen.dart';
@@ -33,6 +35,7 @@ class ZstuApp extends StatefulWidget {
   Future initialize() async {
     await DataModule.configure();
     registerValueDescriptors();
+    initializeSettingListItems();
   }
 
   void registerValueDescriptors() {
@@ -55,6 +58,24 @@ class ZstuApp extends StatefulWidget {
         _makeSettingKey('applicationLanguage',
             settingType: applicationSettingsType),
         new StringDescriptor(supportedLocales));
+  }
+
+  void initializeSettingListItems() {
+    var storage = AdditionalSettingListItemsStorage.instance;
+
+    final String suportType = "Support";
+    storage.addItem(new AdditionalSettingItem(
+      name: "AskQuestion",
+      type: suportType,
+    ));
+    storage.addItem(new AdditionalSettingItem(
+      name: "SuggestFeature",
+      type: suportType,
+    ));
+    storage.addItem(new AdditionalSettingItem(
+      name: "NoticedProblem",
+      type: suportType,
+    ));
   }
 
   String _makeSettingKey(String settingName, {String settingType}) {

@@ -7,8 +7,9 @@ import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import 'package:zstu/src/presentation/common/BaseScreenMixin.dart';
 import 'package:zstu/src/presentation/common/TextLocalizations.dart';
-import 'package:zstu/src/presentation/settings/SettingViewModel.dart';
+import 'package:zstu/src/presentation/settings/ISettingListItemModel.dart';
 import 'package:zstu/src/presentation/settings/SettingsScreenViewModel.dart';
+import 'package:zstu/src/resources/Colors.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -40,7 +41,7 @@ class _SettingsState extends State<SettingsScreen>
     );
   }
 
-  List<Widget> _createSettingList(List<SettingViewModel> settingValues) {
+  List<Widget> _createSettingList(List<ISettingListItemModel> settingValues) {
     if (settingValues.length == 0) return <Widget>[];
 
     var widgets = <Widget>[];
@@ -50,12 +51,24 @@ class _SettingsState extends State<SettingsScreen>
         groupName = setting.type;
         widgets.add(new ListTile(
           enabled: false,
-          title: new Text(setting.type),
+          title: new Text(
+            setting.type,
+            style: new TextStyle(
+              color: AppColors.SettingGroupText,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ));
+        widgets.add(new Divider(
+          color: AppColors.SettingDivider,
         ));
       }
 
       widgets.add(new ListTile(
-        title: new Text(setting.name),
+        title: new Text(
+          setting.name,
+          style: new TextStyle(color: AppColors.SettingItemText),
+        ),
       ));
     }
 

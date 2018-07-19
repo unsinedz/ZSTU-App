@@ -1,32 +1,24 @@
 import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
-import 'package:zstu/src/domain/settings/NotificationSettings.dart';
 import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
-import 'package:zstu/src/domain/settings/SystemSettings.dart';
 import 'package:zstu/src/domain/settings/foundation/EditableSetting.dart';
 import 'package:zstu/src/domain/settings/foundation/EditableSettingsMixin.dart';
 import 'package:zstu/src/domain/settings/foundation/IHasEditableSettings.dart';
 
-class ApplicationSettings extends BaseSettings
+class NotificationSettings extends BaseSettings
     with EditableSettingsMixin
     implements IHasEditableSettings {
-  SystemSettings system;
-  NotificationSettings notifications;
-
-  String get applicationLanguage => getSetting("applicationLanguage");
-
-  set applicationLanguage(String value) =>
-      setSetting<String>("applicationLanguage", value);
-
-  static const String Type = "General";
+  static const String Type = "Notification";
 
   @override
-  String get type => ApplicationSettings.Type;
+  String get type => NotificationSettings.Type;
+
+  bool get scheduleChange => getSettingOrDefault("scheduleChange", false);
 
   @override
   List<EditableSetting> getEditableSettings() {
     var descriptorFactory = ValueDescriptorFactory.instance;
     return [
-      makeSettingEntry("applicationLanguage", applicationLanguage),
+      makeSettingEntry("scheduleChange", scheduleChange),
     ]
         .map((x) => createEditableSetting(
               descriptorFactory,

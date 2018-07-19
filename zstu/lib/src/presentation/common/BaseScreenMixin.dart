@@ -5,11 +5,17 @@ import '../../resources/Sizes.dart';
 import '../Navbar.dart';
 
 abstract class BaseScreenMixin extends TextLocalizations {
-  Widget wrapMaterialLayout(Widget content, AppBar appBar, {Widget drawer}) {
+  Widget wrapMaterialLayout(
+    Widget content,
+    AppBar appBar, {
+    Widget drawer,
+    FloatingActionButton floatingActionButton,
+  }) {
     return new Scaffold(
       appBar: appBar,
       drawer: drawer,
       body: content,
+      floatingActionButton: floatingActionButton,
     );
   }
 

@@ -13,27 +13,7 @@ class ScheduleStorageProvider implements IScheduleProvider {
   static final String pairTableName = Constants.PairTableName;
 
   @override
-  Future<Schedule> getById(String id) async {
-    throw new UnimplementedError();
-  }
-
-  @override
-  Future<List<Schedule>> getList() {
-    throw new UnimplementedError();
-  }
-
-  @override
-  Future<Schedule> getSchedule(ScheduleLoadOptions loadOptions) async {
-    throw new UnimplementedError();
-  }
-
-  @override
-  Future insert(Schedule obj) {
-    throw new UnimplementedError();
-  }
-
-  @override
-  Future insertAll(List<Schedule> objList) {
+  Future<Schedule> getSchedule(ScheduleLoadOptions loadOptions) {
     throw new UnimplementedError();
   }
 }

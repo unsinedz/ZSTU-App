@@ -31,7 +31,10 @@ class _SettingsState extends State<SettingsScreen>
   @override
   Widget build(BuildContext context) {
     return wrapMaterialLayout(
-        _buildInFuture(), buildAppBar(texts.settingsTitle));
+        _buildInFuture(), buildAppBar(texts.settingsTitle),
+        floatingActionButton: new FloatingActionButton(
+          onPressed: debugDumpRenderTree,
+        ));
   }
 
   Widget _buildContent() {
@@ -49,18 +52,22 @@ class _SettingsState extends State<SettingsScreen>
     for (var setting in settingValues) {
       if (groupName != setting.type) {
         groupName = setting.type;
-        widgets.add(new ListTile(
-          enabled: false,
-          title: new Text(
-            setting.type,
-            style: new TextStyle(
-              color: AppColors.SettingGroupText,
-              fontWeight: FontWeight.bold,
+        widgets.add(new Container(
+          child: new ListTile(
+            enabled: false,
+            title: new Text(
+              setting.type,
+              style: new TextStyle(
+                color: AppColors.SettingGroupText,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
+          height: 45.0,
         ));
         widgets.add(new Divider(
           color: AppColors.SettingDivider,
+          height: 0.0,
         ));
       }
 
@@ -69,6 +76,7 @@ class _SettingsState extends State<SettingsScreen>
           setting.name,
           style: new TextStyle(color: AppColors.SettingItemText),
         ),
+        onTap: () {},
       ));
     }
 

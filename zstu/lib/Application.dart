@@ -14,8 +14,9 @@ import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
 import 'package:zstu/src/domain/settings/ApplicationSettings.dart';
+import 'package:zstu/src/domain/settings/NotificationSettings.dart';
 import 'package:zstu/src/domain/settings/foundation/AdditionalSettingItem.dart';
-import 'package:zstu/src/domain/settings/foundation/AdditionalSettingListItemsStorage.dart';
+import 'package:zstu/src/domain/settings/foundation/SettingListItemsStorage.dart';
 import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
 import 'package:zstu/src/presentation/faculty/FacultyScreen.dart';
 import 'package:zstu/src/presentation/faculty/group/GroupScreen.dart';
@@ -35,7 +36,7 @@ class ZstuApp extends StatefulWidget {
   Future initialize() async {
     await DataModule.configure();
     registerValueDescriptors();
-    initializeSettingListItems();
+    await initializeSettingListItems();
   }
 
   void registerValueDescriptors() {
@@ -55,13 +56,23 @@ class ZstuApp extends StatefulWidget {
     // Application settings
     var applicationSettingsType = ApplicationSettings.Type;
     descriptorFactory.registerValueDescriptor(
-        _makeSettingKey('applicationLanguage',
-            settingType: applicationSettingsType),
+        _makeSettingKey(
+          'applicationLanguage',
+          settingType: applicationSettingsType,
+        ),
         new StringDescriptor(supportedLocales));
+
+    var notificationSettingsType = NotificationSettings.Type;
+    descriptorFactory.registerValueDescriptor(
+        _makeSettingKey(
+          'scheduleChange',
+          settingType: notificationSettingsType,
+        ),
+        new BoolDescriptor());
   }
 
-  void initializeSettingListItems() {
-    var storage = AdditionalSettingListItemsStorage.instance;
+  Future initializeSettingListItems() async {
+    var storage = SettingListItemsStorage.instance;
 
     final String suportType = "Support";
     storage.addItem(new AdditionalSettingItem(
@@ -76,6 +87,10 @@ class ZstuApp extends StatefulWidget {
       name: "NoticedProblem",
       type: suportType,
     ));
+
+    var applicationSettings = await new App().settings.getApplicationSettings(loadInner: true);
+    storage.addItems(applicationSettings.getEditableSettings());
+    storage.addItems(applicationSettings.notifications.getEditableSettings());
   }
 
   String _makeSettingKey(String settingName, {String settingType}) {

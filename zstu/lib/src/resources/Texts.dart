@@ -308,6 +308,11 @@ class Texts {
       "ru": "Поддержка",
       "uk": "Підтримка",
     },
+    "Setting_Notification": {
+      "en": "Notifications",
+      "ru": "Уведомления",
+      "uk": "Повідомлення",
+    },
     "Setting_General_applicationLanguage": {
       "en": "Application language",
       "ru": "Язык приложения",
@@ -327,6 +332,11 @@ class Texts {
       "en": "Noticed a problem?",
       "ru": "Заметили ошибку?",
       "uk": "Помітили помилку?",
+    },
+    "Setting_Notification_scheduleChange": {
+      "en": "Schedule changes",
+      "ru": "Изменения в расписании",
+      "uk": "Зміни в розкладі",
     },
   };
 

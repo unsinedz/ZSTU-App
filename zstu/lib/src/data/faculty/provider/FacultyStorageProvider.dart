@@ -24,11 +24,11 @@ class FacultyStorageProvider extends FacultyProviderMixin
 
   GeneralStorageProvider _baseProvider;
 
-  String get FacultyTableName => Constants.FacultyTableName;
-  String get GroupTableName => Constants.GroupTableName;
-  String get YearTableName => Constants.YearTableName;
-  String get ChairTableName => Constants.ChairTableName;
-  String get TeacherTableName => Constants.TeacherTableName;
+  String get facultyTableName => Constants.FacultyTableName;
+  String get groupTableName => Constants.GroupTableName;
+  String get yearTableName => Constants.YearTableName;
+  String get chairTableName => Constants.ChairTableName;
+  String get teacherTableName => Constants.TeacherTableName;
 
   @override
   Future insert(Faculty faculty) async {
@@ -39,7 +39,7 @@ class FacultyStorageProvider extends FacultyProviderMixin
 
   @override
   Future insertAll(List<Faculty> faculties) {
-    return _insertAllEntities(FacultyTableName, faculties,
+    return _insertAllEntities(facultyTableName, faculties,
         (Faculty x) => new FacultyInfo.fromFaculty(x).toMap());
   }
 
@@ -47,13 +47,13 @@ class FacultyStorageProvider extends FacultyProviderMixin
   Future<Faculty> getById(String id) async {
     assert(id != null && id.isNotEmpty);
 
-    var map = await _baseProvider.getEntityMap(FacultyTableName, id);
+    var map = await _baseProvider.getEntityMap(facultyTableName, id);
     return makeFaculty(new FacultyInfo.fromMap(map));
   }
 
   @override
   Future<List<Faculty>> getList() async {
-    var data = await _baseProvider.getMapList(FacultyTableName);
+    var data = await _baseProvider.getMapList(facultyTableName);
     return data.map((x) => makeFaculty(new FacultyInfo.fromMap(x))).toList();
   }
 
@@ -62,7 +62,7 @@ class FacultyStorageProvider extends FacultyProviderMixin
     assert(loadOptions != null);
 
     var data = await _baseProvider.getMapList(
-      GroupTableName,
+      groupTableName,
       where: 'facultyId LIKE ? AND yearId LIKE ?',
       whereArgs: [
         loadOptions.faculty?.id ?? '%',
@@ -81,19 +81,19 @@ class FacultyStorageProvider extends FacultyProviderMixin
   @override
   Future insertAllGroups(List<Group> groups) {
     return _insertAllEntities(
-        GroupTableName, groups, (x) => new GroupInfo.fromGroup(x).toMap());
+        groupTableName, groups, (x) => new GroupInfo.fromGroup(x).toMap());
   }
 
   @override
   Future<List<Year>> getYears() async {
-    var data = await _baseProvider.getMapList(YearTableName);
+    var data = await _baseProvider.getMapList(yearTableName);
     return data.map((x) => makeYear(new YearInfo.fromMap(x))).toList();
   }
 
   @override
   Future insertAllYears(List<Year> years) {
     return _insertAllEntities(
-        YearTableName, years, (Year x) => new YearInfo.fromYear(x).toMap());
+        yearTableName, years, (Year x) => new YearInfo.fromYear(x).toMap());
   }
 
   @override
@@ -107,8 +107,8 @@ class FacultyStorageProvider extends FacultyProviderMixin
       WHERE F.id LIKE ?
         and T.id like ?
     ''', arguments: [
-      ChairTableName,
-      TeacherTableName,
+      chairTableName,
+      teacherTableName,
       loadOptions.faculty?.id ?? '%',
       loadOptions.teacher?.chair?.id ?? '%',
     ]);
@@ -117,7 +117,7 @@ class FacultyStorageProvider extends FacultyProviderMixin
 
   @override
   Future insertAllChairs(List<Chair> chairs) {
-    return _insertAllEntities(ChairTableName, chairs,
+    return _insertAllEntities(chairTableName, chairs,
         (Chair x) => new ChairInfo.fromChair(x).toMap());
   }
 
@@ -134,7 +134,7 @@ class FacultyStorageProvider extends FacultyProviderMixin
       for (T entity in entities)
         _baseProvider.batchInsertMap(tableName, batch, mapSelector(entity));
 
-      await t.applyBatch(batch, noResult: true);
+      await batch.commit(noResult: true);
       return t;
     });
   }

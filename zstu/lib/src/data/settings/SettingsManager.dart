@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:zstu/src/domain/settings/ApplicationSettings.dart';
-import 'package:zstu/src/domain/settings/foundation/EditableSetting.dart';
-import 'package:zstu/src/domain/settings/foundation/IHasEditableSettings.dart';
+import 'package:zstu/src/domain/settings/NotificationSettings.dart';
+import 'package:zstu/src/domain/settings/foundation/ISettingListItem.dart';
 import 'package:zstu/src/domain/settings/foundation/ISettingsManager.dart';
 import 'package:zstu/src/domain/settings/foundation/ISettingsProvider.dart';
 import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
 import 'package:zstu/src/domain/settings/SystemSettings.dart';
+import 'package:zstu/src/domain/settings/foundation/SettingListItemsStorage.dart';
 
 class SettingsManager implements ISettingsManager {
   SettingsManager(this._settingsProvider);
@@ -29,7 +30,8 @@ class SettingsManager implements ISettingsManager {
   @override
   Future<bool> modifySettings<T extends BaseSettings>(
       FutureOr<T> valueProvider, SettingsModifier<T> modifier) async {
-    if (valueProvider == null) throw new ArgumentError('Value provider is null.');
+    if (valueProvider == null)
+      throw new ArgumentError('Value provider is null.');
     if (modifier == null) throw new ArgumentError('Modifier is null.');
 
     T settings;
@@ -47,33 +49,52 @@ class SettingsManager implements ISettingsManager {
   }
 
   @override
-  Future<ApplicationSettings> getApplicationSettings() async {
+  Future<ApplicationSettings> getApplicationSettings(
+      {bool loadInner = false}) async {
     var applicationSettings = new ApplicationSettings();
     applicationSettings
         .initialize(await _getSettingValues(applicationSettings.type));
-    applicationSettings.system = new SystemSettings();
-    applicationSettings.system
-        .initialize(await _getSettingValues(applicationSettings.system.type));
+    if (loadInner) await _fillInnerSettings(applicationSettings);
 
     return applicationSettings;
   }
 
-  @override
-  Future saveApplicationSettings(ApplicationSettings settings) async {
-    if (settings == null) throw new ArgumentError('No settings are specified.');
+  Future _fillInnerSettings(ApplicationSettings applicationSettings) async {
+    if (applicationSettings == null)
+      throw new ArgumentError('Settings are null.');
 
-    await _settingsProvider.saveSettings(settings.system);
-    await _settingsProvider.saveSettings(settings);
+    applicationSettings.system = new SystemSettings();
+    applicationSettings.notifications = new NotificationSettings();
+    var settingValues = await Future.wait([
+      _getSettingValues(applicationSettings.system.type),
+      _getSettingValues(applicationSettings.notifications.type),
+    ]);
+    applicationSettings.system.initialize(settingValues[0]);
+    applicationSettings.notifications.initialize(settingValues[1]);
   }
 
   @override
-  Future<List<EditableSetting>> getEditableSettings() async {
-    var result = <EditableSetting>[];
-    var editableSettingContainers = <IHasEditableSettings>[
-      await getApplicationSettings(),
-    ];
-    editableSettingContainers
-        .forEach((x) => result.addAll(x.getEditableSettings()));
-    return result;
+  Future saveApplicationSettings(ApplicationSettings settings) {
+    if (settings == null) throw new ArgumentError('No settings are specified.');
+
+    return Future.wait([
+      _settingsProvider.saveSettings(settings),
+      _saveInnerSettings(settings),
+    ]);
+  }
+
+  Future _saveInnerSettings(ApplicationSettings applicationSettings) {
+    if (applicationSettings == null)
+      throw new ArgumentError('Settings are null.');
+
+    return Future.wait([
+      _settingsProvider.saveSettings(applicationSettings.system),
+      _settingsProvider.saveSettings(applicationSettings.notifications),
+    ]);
+  }
+
+  @override
+  Future<List<ISettingListItem>> getSettingListItems() {
+    return new Future.value(SettingListItemsStorage.instance.getItems());
   }
 }

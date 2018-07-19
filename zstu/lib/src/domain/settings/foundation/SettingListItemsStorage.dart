@@ -1,9 +1,9 @@
 import 'ISettingListItem.dart';
 
-class AdditionalSettingListItemsStorage {
-  static AdditionalSettingListItemsStorage _instance;
-  static AdditionalSettingListItemsStorage get instance =>
-      _instance = _instance ?? new AdditionalSettingListItemsStorage();
+class SettingListItemsStorage {
+  static SettingListItemsStorage _instance;
+  static SettingListItemsStorage get instance =>
+      _instance = _instance ?? new SettingListItemsStorage();
 
   List<ISettingListItem> _itemsStorage;
   List<ISettingListItem> get _items => _itemsStorage = _itemsStorage ?? [];
@@ -23,6 +23,12 @@ class AdditionalSettingListItemsStorage {
       throw new StateError('Similar item has already been added.');
 
     _items.add(item);
+  }
+
+  void addItems(List<ISettingListItem> items) {
+    if (items == null) throw new ArgumentError('Items collection is null.');
+
+    items.forEach(addItem);
   }
 
   void removeItem(ISettingListItem item) {

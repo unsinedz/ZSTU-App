@@ -25,14 +25,10 @@ class ValueDescriptorFactory {
   }
 
   IValueDescriptor getValueDescriptor(String type) {
-    var result = safeGetValueDescriptor(type);
+    var result = _namedDescriptors[type];
     if (result == null)
-      throw new StateError('Editor was not registered for the type "$type".');
+      throw new StateError('Descriptor was not registered for the type "$type".');
 
     return result;
-  }
-
-  IValueDescriptor safeGetValueDescriptor(String type) {
-    return _namedDescriptors[type];
   }
 }

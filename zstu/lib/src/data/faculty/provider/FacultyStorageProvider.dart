@@ -31,10 +31,9 @@ class FacultyStorageProvider extends FacultyProviderMixin
   String get teacherTableName => Constants.TeacherTableName;
 
   @override
-  Future insert(Faculty faculty) async {
+  Future insert(Faculty faculty) {
     assert(faculty != null);
-
-    await insertAll(<Faculty>[faculty]);
+    return insertAll(<Faculty>[faculty]);
   }
 
   @override
@@ -134,8 +133,7 @@ class FacultyStorageProvider extends FacultyProviderMixin
       for (T entity in entities)
         _baseProvider.batchInsertMap(tableName, batch, mapSelector(entity));
 
-      await batch.commit(noResult: true);
-      return t;
+      await t.applyBatch(batch, noResult: true);
     });
   }
 }

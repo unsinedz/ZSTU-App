@@ -70,16 +70,20 @@ class _SettingsState extends State<SettingsScreen>
         ));
       }
 
-      widgets.add(new ListTile(
-        title: new Text(
-          setting.name,
-          style: new TextStyle(color: AppColors.SettingItemText),
-        ),
-        onTap: () {},
-      ));
+      widgets.add(_buildSettingListItem(setting));
     }
 
     return widgets;
+  }
+
+  Widget _buildSettingListItem(ISettingListItemModel setting) {
+    return new ListTile(
+      title: new Text(
+        setting.name,
+        style: new TextStyle(color: AppColors.SettingItemText),
+      ),
+      onTap: () {},
+    );
   }
 
   Widget _buildInFuture() {

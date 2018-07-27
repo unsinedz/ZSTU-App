@@ -19,14 +19,14 @@ class ValueDescriptorFactory {
 
     if (_namedDescriptors.containsKey(type))
       throw new ArgumentError(
-          'Editor was already registered for the type "$type".');
+          'Descriptor was already registered for the type "$type".');
 
     _namedDescriptors[type] = valueDescriptor;
   }
 
   IValueDescriptor getValueDescriptor(String type) {
     if (!_namedDescriptors.containsKey(type))
-      throw new StateError('Editor was not registered for the type "$type".');
+      throw new StateError('Descriptor was not registered for the type "$type".');
 
     return _namedDescriptors[type];
   }

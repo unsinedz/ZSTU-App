@@ -88,7 +88,8 @@ class ZstuApp extends StatefulWidget {
       type: suportType,
     ));
 
-    var applicationSettings = await new App().settings.getApplicationSettings(loadInner: true);
+    var applicationSettings =
+        await new App().settings.getApplicationSettings(loadInner: true);
     storage.addItems(applicationSettings.getEditableSettings());
     storage.addItems(applicationSettings.notifications.getEditableSettings());
   }
@@ -122,6 +123,7 @@ class _ZstuAppState extends State<ZstuApp>
       theme: new ThemeData(
         primaryColor: AppColors.Primary,
       ),
+      onGenerateTitle: (BuildContext ctx) => new Texts.withProvider(new App().locale).appName,
       home: new FacultiesScreen(),
       routes: <String, WidgetBuilder>{
         '/group': (ctx) => new GroupScreen(),

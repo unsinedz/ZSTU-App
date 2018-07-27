@@ -4,10 +4,7 @@ import 'package:zstu/src/core/locale/ILocaleProvider.dart';
 
 class Texts {
   Texts(this._localeProvider);
-
-  static Texts of(BuildContext context) {
-    return Localizations.of<Texts>(context, Texts);
-  }
+  Texts.withProvider(this._localeProvider);
 
   final ILocaleProvider _localeProvider;
   Locale get _locale => _localeProvider.getApplicationLocale();

@@ -31,10 +31,9 @@ class _SettingsState extends State<SettingsScreen>
   @override
   Widget build(BuildContext context) {
     return wrapMaterialLayout(
-        _buildInFuture(), buildAppBar(texts.settingsTitle),
-        floatingActionButton: new FloatingActionButton(
-          onPressed: debugDumpRenderTree,
-        ));
+      content: _buildInFuture(),
+      appBar: buildAppBar(texts.settingsTitle),
+    );
   }
 
   Widget _buildContent() {

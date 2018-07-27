@@ -340,11 +340,30 @@ class Texts {
     },
   };
 
+  static final Map<String, Map<String, String>> _valueTranslations = {
+    "Locale_en": {
+      "en": "English",
+      "ru": "English",
+      "uk": "English",
+    },
+    "Locale_ru": {
+      "en": "Русский",
+      "ru": "Русский",
+      "uk": "Русский",
+    },
+    "Locale_uk": {
+      "en": "Українська",
+      "ru": "Українська",
+      "uk": "Українська",
+    },
+  };
+
   static final List<Map<String, Map<String, String>>> _textProviders = [
     _screens,
     _faculties,
     _settings,
     _texts,
+    _valueTranslations
   ];
 
   static String getText(String key, String languageCode,

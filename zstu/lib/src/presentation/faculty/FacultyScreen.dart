@@ -6,6 +6,7 @@ import 'package:zstu/src/core/event/EventListener.dart';
 import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
+import 'package:zstu/src/presentation/common/LocalizableScreen.dart';
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
 import '../../domain/schedule/ScheduleSelectionProcess.dart';
@@ -26,7 +27,7 @@ class FacultiesScreen extends StatefulWidget
   }
 }
 
-class _FacultiesState extends State<FacultiesScreen>
+class _FacultiesState extends LocalizableState<FacultiesScreen>
     with TextLocalizations, BaseScreenMixin, FutureHelperMixin
     implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
   FacultyScreenViewModel _model;

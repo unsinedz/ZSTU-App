@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:zstu/src/core/event/Event.dart';
 
 class LocalizationChangeEvent extends Event {

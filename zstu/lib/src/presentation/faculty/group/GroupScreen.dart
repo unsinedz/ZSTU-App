@@ -7,6 +7,7 @@ import 'package:zstu/src/core/event/EventListener.dart';
 import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
+import 'package:zstu/src/presentation/common/LocalizableScreen.dart';
 import '../../../App.dart';
 import '../../../domain/common/process/IStep.dart';
 import '../../../domain/schedule/ScheduleSelectionProcess.dart';
@@ -31,7 +32,7 @@ class GroupScreen extends StatefulWidget
   }
 }
 
-class _GroupScreenState extends State<GroupScreen>
+class _GroupScreenState extends LocalizableState<GroupScreen>
     with TextLocalizations, BaseScreenMixin, FutureHelperMixin
     implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
   App _app;

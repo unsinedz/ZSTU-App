@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
+import 'package:zstu/src/presentation/common/LocalizableScreen.dart';
 
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
@@ -28,8 +29,12 @@ class ScheduleScreen extends StatefulWidget
   }
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen>
-    with TickerProviderStateMixin, BaseScreenMixin, TextLocalizations, FutureHelperMixin
+class _ScheduleScreenState extends LocalizableState<ScheduleScreen>
+    with
+        TickerProviderStateMixin,
+        BaseScreenMixin,
+        TextLocalizations,
+        FutureHelperMixin
     implements ILocaleSensitive {
   TabController _tabController;
 
@@ -262,7 +267,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   @override
   void initializeForLocale(Locale locale) {
-    setState(() {});
+    setState(() => _model = null);
   }
 }
 

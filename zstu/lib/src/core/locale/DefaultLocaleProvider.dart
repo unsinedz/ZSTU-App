@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:zstu/src/core/locale/ILocaleProvider.dart';
 import 'package:zstu/src/core/locale/ISupportsLocaleOverride.dart';
 
@@ -9,6 +10,10 @@ class DefaultLocaleProvider
   static ILocaleProvider _instance;
   static ILocaleProvider get instance =>
       _instance = _instance ?? new DefaultLocaleProvider();
+
+  static String buildLocaleKey({@required String localeCode}) {
+    return "Locale_" + localeCode;
+  }
 
   Locale _applicationLocale;
   Locale _overridenLocale;

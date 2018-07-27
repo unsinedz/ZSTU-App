@@ -4,11 +4,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:zstu/src/App.dart';
 import 'package:zstu/src/core/event/EventListener.dart';
-import 'package:zstu/src/core/lang/Lazy.dart';
 import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
 import 'package:zstu/src/core/locale/ISupportsLocaleOverride.dart';
 import 'package:zstu/src/data/DataModule.dart';
 import 'package:zstu/src/domain/common/descriptors/BoolDescriptor.dart';
+import 'package:zstu/src/domain/common/descriptors/NamedValue.dart';
 import 'package:zstu/src/domain/common/descriptors/NumberDescriptor.dart';
 import 'package:zstu/src/domain/common/descriptors/StringDescriptor.dart';
 import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
@@ -19,6 +19,8 @@ import 'package:zstu/src/domain/settings/NotificationSettings.dart';
 import 'package:zstu/src/domain/settings/foundation/AdditionalSettingItem.dart';
 import 'package:zstu/src/domain/settings/foundation/SettingListItemsStorage.dart';
 import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
+import 'package:zstu/src/presentation/editor/DefaultEditor.dart';
+import 'package:zstu/src/presentation/editor/ValueEditorFactory.dart';
 import 'package:zstu/src/presentation/faculty/FacultyScreen.dart';
 import 'package:zstu/src/presentation/faculty/group/GroupScreen.dart';
 import 'package:zstu/src/presentation/schedule/ScheduleScreen.dart';
@@ -29,11 +31,6 @@ import 'package:zstu/src/resources/Texts.dart';
 class ZstuApp extends StatefulWidget {
   final List<String> supportedLocales = DefaultLocaleProvider.supportedLocales;
 
-  final Lazy<ApplicationSettings> appSettings = new Lazy(
-    valueProvider: () =>
-        new App().settings.getApplicationSettings(loadInner: true),
-  );
-
   @override
   State<StatefulWidget> createState() {
     return new _ZstuAppState();
@@ -42,12 +39,29 @@ class ZstuApp extends StatefulWidget {
   Future initialize() async {
     await DataModule.configure();
     registerValueDescriptors();
-    await registerValueEditors();
+    registerValueEditors();
     await initializeSettingListItems();
   }
 
-  Future registerValueEditors() {
-    return null;
+  void registerValueEditors() {
+    var editorFactory = ValueEditorFactory.instance;
+    var descriptorFactory = ValueDescriptorFactory.instance;
+    var applicationLanguageKey = _makeSettingKey(
+      settingName: 'applicationLanguage',
+      settingType: ApplicationSettings.Type,
+    );
+    editorFactory.registerValueEditor(
+        applicationLanguageKey,
+        new DefaultEditor<String>(
+          title: applicationLanguageKey,
+          valueDescriptor:
+              descriptorFactory.getValueDescriptor(applicationLanguageKey),
+          onChange: (languageCode) {
+            new App().eventBus.postEvent(
+                new LocalizationChangeEvent(new Locale(languageCode, '')),
+                this);
+          },
+        ));
   }
 
   void registerValueDescriptors() {
@@ -67,11 +81,15 @@ class ZstuApp extends StatefulWidget {
     // Application settings
     var applicationSettingsType = ApplicationSettings.Type;
     descriptorFactory.registerValueDescriptor(
-        _makeSettingKey(
-          settingName: 'applicationLanguage',
-          settingType: applicationSettingsType,
-        ),
-        new StringDescriptor(supportedLocales));
+      _makeSettingKey(
+        settingName: 'applicationLanguage',
+        settingType: applicationSettingsType,
+      ),
+      new StringDescriptor(supportedLocales
+          .map((x) => new NamedValue<String>(
+              DefaultLocaleProvider.buildLocaleKey(localeCode: x), x))
+          .toList()),
+    );
 
     var notificationSettingsType = NotificationSettings.Type;
     descriptorFactory.registerValueDescriptor(
@@ -117,7 +135,7 @@ class _ZstuAppState extends State<ZstuApp>
   @override
   void initState() {
     _overrideLocalizationsDelegate = new _OverrideLocalizationsDelegate(null);
-    new App()?.eventBus?.registerListener(this);
+    new App().eventBus.registerDefaultListener<LocalizationChangeEvent>(this);
     super.initState();
   }
 
@@ -157,7 +175,7 @@ class _ZstuAppState extends State<ZstuApp>
 
   @override
   void dispose() {
-    new App()?.eventBus?.removeListener(this);
+    new App().eventBus.removeListener(this);
     super.dispose();
   }
 }
@@ -169,14 +187,14 @@ class _InitLocalizationsDelegate extends LocalizationsDelegate {
   bool isSupported(Locale locale) => true;
 
   @override
-  Future load(Locale locale) => new Future.sync(() {
-        new App().locale.initialize(locale);
-        new App().settings.modifySettings<ApplicationSettings>(
+  Future load(Locale locale) => new Future(() async {
+        await new App().settings.modifySettings<ApplicationSettings>(
             new App().settings.getApplicationSettings(), (s) {
-          if (s.applicationLanguage == locale.languageCode) return false;
+          var settingShouldChange = s.applicationLanguage?.isEmpty ?? true;
+          if (settingShouldChange) s.applicationLanguage = locale.languageCode;
 
-          s.applicationLanguage = locale.languageCode;
-          return true;
+          new App().locale.initialize(new Locale(s.applicationLanguage, ''));
+          return settingShouldChange;
         });
       });
 

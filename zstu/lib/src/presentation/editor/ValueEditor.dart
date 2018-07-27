@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:zstu/src/domain/common/descriptors/IValueDescriptor.dart';
+import 'package:zstu/src/presentation/editor/IEmbeddableEditor.dart';
 
 abstract class ValueEditor<T> {
-  @protected
-  T value;
+  ValueEditor(this.valueDescriptor, this.title);
 
   @protected
   IValueDescriptor<T> valueDescriptor;
@@ -11,12 +11,9 @@ abstract class ValueEditor<T> {
   @protected
   String title;
 
-  bool get embaddable;
+  bool get embaddable => this is IEmbeddableEditor;
 
-  ValueEditor(T value, IValueDescriptor<T> valueDescriptor, String title)
-      : this.value = value,
-        this.valueDescriptor = valueDescriptor,
-        this.title = title;
+  Widget build(BuildContext context);
 
-  Widget construct(BuildContext context);
+  void onChange(T newValue);
 }

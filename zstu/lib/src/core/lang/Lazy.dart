@@ -2,12 +2,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 typedef Future<T> ValueProvider<T>();
+typedef T SyncValueProvider<T>();
 
 class Lazy<T> {
   Lazy({@required this.valueProvider}) : assert(valueProvider != null);
 
-  final ValueProvider<T> valueProvider;
+  final SyncValueProvider<T> valueProvider;
 
   T _value;
-  Future<T> getValue() async => _value = _value ?? await valueProvider();
+  T getValue() => _value = _value ?? valueProvider();
 }

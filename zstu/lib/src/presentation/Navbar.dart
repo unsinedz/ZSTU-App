@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
-
 import '../App.dart';
 import '../domain/Constants.dart';
 import '../domain/common/IAssetManager.dart';
@@ -105,10 +103,6 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
         assetImage: '${navbarAssets}about.png',
         onTap: () => _showFeatureNotAvailableMessage(context),
       ),
-      new NavbarItem(
-          text: 'Change to russian',
-          onTap: () => new App().eventBus.postEvent(
-              new LocalizationChangeEvent(new Locale('ru', '')), this)),
     ];
   }
 
@@ -122,7 +116,9 @@ class _NavbarState extends State<Navbar> with TextLocalizations {
   }
 
   void _pushNamed(BuildContext context, String routeName) {
-    Navigator.of(context).pushNamed(routeName);
+    var navigator = Navigator.of(context);
+    navigator.pop();
+    navigator.pushNamed(routeName);
   }
 
   @override

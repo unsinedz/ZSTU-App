@@ -133,7 +133,7 @@ class FacultyStorageProvider extends FacultyProviderMixin
       for (T entity in entities)
         _baseProvider.batchInsertMap(tableName, batch, mapSelector(entity));
 
-      await t.applyBatch(batch, noResult: true);
+      await batch.commit(noResult: true);
     });
   }
 }

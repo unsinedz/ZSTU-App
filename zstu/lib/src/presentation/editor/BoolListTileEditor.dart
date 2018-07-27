@@ -10,15 +10,13 @@ class BoolListTileEditor extends ValueEditor<bool> implements ILocaleSensitive {
     @required bool value,
     @required IValueDescriptor<bool> valueDescriptor,
     @required String title,
-    @required ValueChanged<bool> onChanged,
-  })  : this._onChanged = onChanged,
-        super(
-          value: value,
-          valueDescriptor: valueDescriptor,
-          title: title,
-        );
+    @required ValueChanged<bool> onChange,
+  })  : this._onChange = onChange,
+        this._value = value,
+        super(valueDescriptor, title);
+  bool _value;
 
-  ValueChanged<bool> _onChanged;
+  ValueChanged<bool> _onChange;
 
   String _translatedTitle;
 
@@ -26,10 +24,10 @@ class BoolListTileEditor extends ValueEditor<bool> implements ILocaleSensitive {
   bool get embaddable => true;
 
   @override
-  Widget construct(BuildContext context) {
+  Widget build(BuildContext context) {
     return new SwitchListTile(
-      value: value,
-      onChanged: _onChanged,
+      value: _value,
+      onChanged: onChange,
       title: new Text(_translatedTitle),
     );
   }
@@ -38,4 +36,7 @@ class BoolListTileEditor extends ValueEditor<bool> implements ILocaleSensitive {
   void initializeForLocale(Locale locale) {
     _translatedTitle = Texts.getText(title, locale.languageCode, title);
   }
+
+  @override
+  void onChange(bool newValue) => _onChange(newValue);
 }

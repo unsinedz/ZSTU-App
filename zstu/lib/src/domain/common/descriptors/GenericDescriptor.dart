@@ -1,12 +1,13 @@
 import 'package:zstu/src/domain/common/descriptors/IValueDescriptor.dart';
+import 'package:zstu/src/domain/common/descriptors/NamedValue.dart';
 
 class GenericDescriptor<T extends Object> implements IValueDescriptor<T> {
   GenericDescriptor(this._possibleValues);
 
-  List<T> _possibleValues;
+  List<NamedValue<T>> _possibleValues;
 
   @override
-  List<T> getPossibleValues() {
+  List<NamedValue<T>> getPossibleValues() {
     return _possibleValues;
   }
 

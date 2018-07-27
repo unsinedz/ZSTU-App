@@ -29,17 +29,14 @@ class SettingsManager implements ISettingsManager {
 
   @override
   Future<bool> modifySettings<T extends BaseSettings>(
-      FutureOr<T> valueProvider, SettingsModifier<T> modifier) async {
+      Future<T> valueProvider, SettingsModifier<T> modifier) async {
     if (valueProvider == null)
       throw new ArgumentError('Value provider is null.');
+
     if (modifier == null) throw new ArgumentError('Modifier is null.');
 
     T settings;
-    if (valueProvider is Future<T>)
-      settings = await valueProvider;
-    else
-      settings = valueProvider;
-
+    settings = await valueProvider;
     if (settings == null) throw new StateError('Settings instance is null.');
 
     var modificationResult = modifier(settings);

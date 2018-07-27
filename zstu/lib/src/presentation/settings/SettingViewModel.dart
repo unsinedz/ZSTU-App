@@ -11,7 +11,9 @@ class SettingViewModel<T> extends BaseViewModel
     implements ISettingListItemModel, ILocaleSensitive {
   SettingViewModel.fromEditableSetting(EditableSetting setting) {
     this.name = setting.name;
+    this.translatedName = setting.name;
     this.type = setting.type;
+    this.translatedType = setting.type;
     this.value = setting.value;
     this.valueDescriptor = setting.valueDescriptor;
   }
@@ -20,7 +22,13 @@ class SettingViewModel<T> extends BaseViewModel
   String name;
 
   @override
+  String translatedName;
+
+  @override
   String type;
+
+  @override
+  String translatedType;
 
   T value;
 
@@ -32,10 +40,10 @@ class SettingViewModel<T> extends BaseViewModel
 
   @override
   void initializeForLocale(Locale locale) {
-    name = Texts.getText(
+    translatedName = Texts.getText(
         _makeLocalizationKey(name, type), locale.languageCode, name);
     if (type?.isNotEmpty ?? false)
-      type =
+      translatedType =
           Texts.getText(_makeLocalizationKey(type), locale.languageCode, type);
   }
 

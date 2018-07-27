@@ -31,10 +31,9 @@ class _SettingsState extends State<SettingsScreen>
   @override
   Widget build(BuildContext context) {
     return wrapMaterialLayout(
-        _buildInFuture(), buildAppBar(texts.settingsTitle),
-        floatingActionButton: new FloatingActionButton(
-          onPressed: debugDumpRenderTree,
-        ));
+      content: _buildInFuture(),
+      appBar: buildAppBar(texts.settingsTitle),
+    );
   }
 
   Widget _buildContent() {
@@ -52,11 +51,23 @@ class _SettingsState extends State<SettingsScreen>
     for (var setting in settingValues) {
       if (groupName != setting.type) {
         groupName = setting.type;
-        widgets.add(new Container(
+        widgets.add(_buildGroupNameListItem(setting));
+      }
+
+      widgets.add(_buildSettingListItem(setting));
+    }
+
+    return widgets;
+  }
+
+  Widget _buildGroupNameListItem(ISettingListItemModel setting) {
+    return new Column(
+      children: [
+        Container(
           child: new ListTile(
             enabled: false,
             title: new Text(
-              setting.type,
+              setting.translatedType,
               style: new TextStyle(
                 color: AppColors.SettingGroupText,
                 fontWeight: FontWeight.bold,
@@ -64,23 +75,23 @@ class _SettingsState extends State<SettingsScreen>
             ),
           ),
           height: 45.0,
-        ));
-        widgets.add(new Divider(
+        ),
+        new Divider(
           color: AppColors.SettingDivider,
           height: 0.0,
-        ));
-      }
-
-      widgets.add(new ListTile(
-        title: new Text(
-          setting.name,
-          style: new TextStyle(color: AppColors.SettingItemText),
         ),
-        onTap: () {},
-      ));
-    }
+      ],
+    );
+  }
 
-    return widgets;
+  Widget _buildSettingListItem(ISettingListItemModel setting) {
+    return new ListTile(
+      title: new Text(
+        setting.translatedName,
+        style: new TextStyle(color: AppColors.SettingItemText),
+      ),
+      onTap: () {},
+    );
   }
 
   Widget _buildInFuture() {

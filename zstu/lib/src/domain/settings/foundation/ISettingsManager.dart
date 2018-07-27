@@ -9,7 +9,7 @@ abstract class ISettingsManager {
   Future<T> getSettings<T extends BaseSettings>(String type);
   Future saveSettings(BaseSettings settings);
   Future<bool> modifySettings<T extends BaseSettings>(
-      FutureOr<T> settingsLoader, SettingsModifier<T> modifier);
+      Future<T> settingsLoader, SettingsModifier<T> modifier);
   Future<ApplicationSettings> getApplicationSettings({bool loadInner = false});
   Future saveApplicationSettings(ApplicationSettings settings);
   Future<List<ISettingListItem>> getSettingListItems();

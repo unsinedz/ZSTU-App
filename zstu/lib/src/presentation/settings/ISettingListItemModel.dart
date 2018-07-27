@@ -5,7 +5,9 @@ typedef void TapHandler(BuildContext context);
 
 abstract class ISettingListItemModel {
   String get name;
+  String get translatedName;
   String get type;
+  String get translatedType;
   IValueDescriptor get valueDescriptor;
   TapHandler get onTap;
 }

@@ -73,11 +73,11 @@ class _FacultiesState extends State<FacultiesScreen>
   @override
   Widget build(BuildContext context) {
     return wrapMaterialLayout(
-      new FutureBuilder(
+      content: new FutureBuilder(
         future: _loadModel(),
         builder: _buildInFuture,
       ),
-      buildAppBar(texts.facultiesTitle),
+      appBar: buildAppBar(texts.facultiesTitle),
       drawer: buildNavigationDrawer(),
     );
   }

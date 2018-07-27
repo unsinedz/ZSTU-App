@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:zstu/src/App.dart';
 import 'package:zstu/src/core/event/EventListener.dart';
+import 'package:zstu/src/core/lang/Lazy.dart';
 import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
 import 'package:zstu/src/core/locale/ISupportsLocaleOverride.dart';
 import 'package:zstu/src/data/DataModule.dart';
@@ -28,6 +29,11 @@ import 'package:zstu/src/resources/Texts.dart';
 class ZstuApp extends StatefulWidget {
   final List<String> supportedLocales = DefaultLocaleProvider.supportedLocales;
 
+  final Lazy<ApplicationSettings> appSettings = new Lazy(
+    valueProvider: () =>
+        new App().settings.getApplicationSettings(loadInner: true),
+  );
+
   @override
   State<StatefulWidget> createState() {
     return new _ZstuAppState();
@@ -36,7 +42,12 @@ class ZstuApp extends StatefulWidget {
   Future initialize() async {
     await DataModule.configure();
     registerValueDescriptors();
+    await registerValueEditors();
     await initializeSettingListItems();
+  }
+
+  Future registerValueEditors() {
+    return null;
   }
 
   void registerValueDescriptors() {
@@ -57,7 +68,7 @@ class ZstuApp extends StatefulWidget {
     var applicationSettingsType = ApplicationSettings.Type;
     descriptorFactory.registerValueDescriptor(
         _makeSettingKey(
-          'applicationLanguage',
+          settingName: 'applicationLanguage',
           settingType: applicationSettingsType,
         ),
         new StringDescriptor(supportedLocales));
@@ -65,7 +76,7 @@ class ZstuApp extends StatefulWidget {
     var notificationSettingsType = NotificationSettings.Type;
     descriptorFactory.registerValueDescriptor(
         _makeSettingKey(
-          'scheduleChange',
+          settingName: 'scheduleChange',
           settingType: notificationSettingsType,
         ),
         new BoolDescriptor());
@@ -88,12 +99,13 @@ class ZstuApp extends StatefulWidget {
       type: suportType,
     ));
 
-    var applicationSettings = await new App().settings.getApplicationSettings(loadInner: true);
+    var applicationSettings =
+        await new App().settings.getApplicationSettings(loadInner: true);
     storage.addItems(applicationSettings.getEditableSettings());
     storage.addItems(applicationSettings.notifications.getEditableSettings());
   }
 
-  String _makeSettingKey(String settingName, {String settingType}) {
+  String _makeSettingKey({@required String settingName, String settingType}) {
     return BaseSettings.makeSettingKey(settingName, type: settingType);
   }
 }
@@ -122,6 +134,7 @@ class _ZstuAppState extends State<ZstuApp>
       theme: new ThemeData(
         primaryColor: AppColors.Primary,
       ),
+      onGenerateTitle: (BuildContext ctx) => Texts.of(ctx).appName,
       home: new FacultiesScreen(),
       routes: <String, WidgetBuilder>{
         '/group': (ctx) => new GroupScreen(),

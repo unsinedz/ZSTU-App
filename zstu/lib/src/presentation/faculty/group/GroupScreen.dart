@@ -108,11 +108,11 @@ class _GroupScreenState extends State<GroupScreen>
                 _scheduleSelectionProcess.faculty, _selectedYear.toYear());
 
     return wrapMaterialLayout(
-      new FutureBuilder(
+      content: new FutureBuilder(
         future: modelLoader,
         builder: _buildInFuture,
       ),
-      buildAppBar(texts.groupTitle),
+      appBar: buildAppBar(texts.groupTitle),
     );
   }
 

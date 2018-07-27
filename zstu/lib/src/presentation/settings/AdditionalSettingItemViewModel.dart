@@ -9,8 +9,10 @@ import 'package:zstu/src/resources/Texts.dart';
 class AdditionalSettingItemViewModel
     implements ISettingListItemModel, ILocaleSensitive {
   AdditionalSettingItemViewModel(ISettingListItem item) {
-    name = item.name;
-    type = item.type;
+    this.name = item.name;
+    this.translatedName = item.name;
+    this.type = item.type;
+    this.translatedType = item.type;
   }
 
   TapHandler onTap;
@@ -19,16 +21,24 @@ class AdditionalSettingItemViewModel
   String name;
 
   @override
+  String translatedName;
+
+  @override
   String type;
+
+  @override
+  String translatedType;
 
   @override
   IValueDescriptor valueDescriptor;
 
   @override
   void initializeForLocale(Locale locale) {
-    name = Texts.getText(
+    translatedName = Texts.getText(
         _makeLocalizationKey(name, type), locale.languageCode, name);
-    type = Texts.getText(_makeLocalizationKey(type), locale.languageCode, type);
+    if (type?.isNotEmpty ?? false)
+      translatedType =
+          Texts.getText(_makeLocalizationKey(type), locale.languageCode, type);
   }
 
   String _makeLocalizationKey(String name, [String type]) {

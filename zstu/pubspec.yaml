@@ -12,6 +12,7 @@ dependencies:
   connectivity: any
   path_provider: any
   mockito: any
+  quiver: any
 
   cupertino_icons: ^0.1.0
 

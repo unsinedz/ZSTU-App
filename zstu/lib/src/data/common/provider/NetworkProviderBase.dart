@@ -1,18 +1,19 @@
 import 'dart:async';
+import 'package:zstu/src/data/common/INetworkExecutor.dart';
+
 import '../../../domain/Constants.dart';
 import '../ApiResponse.dart';
 import 'GeneralNetworkProvider.dart';
 
 typedef T FromMapBuilder<T>(dynamic map);
 
-abstract class NetworkProviderBase {
+abstract class NetworkProviderBase implements INetworkExecutor {
   NetworkProviderBase(this._uri, this._baseProvider);
 
   GeneralNetworkProvider _baseProvider;
   String _uri;
 
-  Future<ApiResponse> getJson(String path,
-      {Map<String, String> params}) async {
+  Future<ApiResponse> getJson(String path, {Map<String, String> params}) async {
     var map = await _baseProvider.getJson(_uri, path, params);
     return new ApiResponse.fromMap(map);
   }
@@ -38,5 +39,9 @@ abstract class NetworkProviderBase {
     }
 
     return result;
+  }
+
+  Future handleStatusCode(String code) {
+    return new Future.value(null);
   }
 }

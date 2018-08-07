@@ -96,7 +96,7 @@ class GeneralStorageProvider {
     return _db.transaction(action, exclusive: exclusive);
   }
 
-  Batch batch() {
-    return _db.batch();
+  Batch batch({DatabaseExecutor databaseExecutor}) {
+    return (databaseExecutor ?? _db).batch();
   }
 }

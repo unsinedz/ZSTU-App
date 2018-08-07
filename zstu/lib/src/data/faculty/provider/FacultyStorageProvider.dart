@@ -129,7 +129,7 @@ class FacultyStorageProvider extends FacultyProviderMixin
     if (entities.length == 0) return;
 
     await _baseProvider.transaction((t) async {
-      var batch = _baseProvider.batch();
+      var batch = t.batch();
       for (T entity in entities)
         _baseProvider.batchInsertMap(tableName, batch, mapSelector(entity));
 

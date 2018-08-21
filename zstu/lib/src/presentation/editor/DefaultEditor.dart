@@ -7,29 +7,23 @@ import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/presentation/common/BaseScreenMixin.dart';
 import 'package:zstu/src/presentation/common/TextLocalizations.dart';
 import 'package:zstu/src/presentation/editor/GenericEditor.dart';
-import 'package:zstu/src/presentation/editor/IDynamicallyChangableEditor.dart';
-import 'package:zstu/src/presentation/editor/IEmbeddableEditor.dart';
+import 'package:zstu/src/presentation/editor/IDynamicallyChangeableEditor.dart';
+import 'package:zstu/src/presentation/editor/MultipleChangeSubscriptionEditorMixin.dart';
+import 'package:zstu/src/presentation/editor/ValueEditor.dart';
 import 'package:zstu/src/resources/Texts.dart';
 
 class DefaultEditor<T> extends GenericEditor<T>
-    with BaseScreenMixin, TextLocalizations
-    implements
-        ILocaleSensitive,
-        IEmbeddableEditor,
-        IDynamicallyChangableEditor {
+    with
+        BaseScreenMixin,
+        TextLocalizations,
+        MultipleChangeSubscriptionEditorMixin<T>
+    implements ILocaleSensitive, IDynamicallyChangeableEditor {
   DefaultEditor({
     @required IValueDescriptor<T> valueDescriptor,
     @required String title,
     ValueChanged<T> onChange,
   }) : super(valueDescriptor, title) {
-    addOnChange(onChange);
-  }
-
-  Widget _embeddable;
-
-  List<ValueChanged<T>> _onChange = [];
-  addOnChange(ValueChanged<T> onChange) {
-    _onChange.add(onChange);
+    setDefaultOnChange(onChange);
   }
 
   String _translatedTitle;
@@ -38,11 +32,6 @@ class DefaultEditor<T> extends GenericEditor<T>
 
   @override
   Widget build(BuildContext context) {
-    return _embeddable;
-  }
-
-  @override
-  Widget buildEditor(BuildContext context) {
     initializeForLocale(new App().locale.getApplicationLocale());
     return wrapMaterialLayout(
       appBar: buildAppBar(_translatedTitle),
@@ -65,10 +54,17 @@ class DefaultEditor<T> extends GenericEditor<T>
   }
 
   @override
-  void onChange(T newValue) => _onChange.forEach((x) => x(newValue));
+  void onChange(T newValue) => this.handleChange(newValue);
 
   @override
-  void setEmbeddableWidget(Widget widget) {
-    _embeddable = widget;
+  ValueEditor<T> clone() {
+    var clone = new DefaultEditor(
+        title: this.title, valueDescriptor: this.valueDescriptor);
+    cloneHandlers(clone);
+    if (this._possibleValues != null)
+      clone._possibleValues = []..addAll(this._possibleValues);
+
+    clone._translatedTitle = this._translatedTitle;
+    return clone;
   }
 }

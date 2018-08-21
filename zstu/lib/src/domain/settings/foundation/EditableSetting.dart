@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:zstu/src/domain/common/descriptors/IValueDescriptor.dart';
 import 'package:zstu/src/domain/settings/foundation/ISettingListItem.dart';
+import 'package:zstu/src/presentation/settings/ITypedSettingItem.dart';
 
-class EditableSetting<T> implements ISettingListItem {
+class EditableSetting<T> implements ISettingListItem, ITypedSettingItem {
   EditableSetting({
     @required this.valueDescriptor,
     @required this.name,
@@ -17,4 +18,6 @@ class EditableSetting<T> implements ISettingListItem {
   final String type;
 
   final T value;
+
+  Type get valueType => T;
 }

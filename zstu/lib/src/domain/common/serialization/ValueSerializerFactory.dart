@@ -6,8 +6,12 @@ class ValueSerializerFactory {
   static ValueSerializerFactory _instance;
   static ValueSerializerFactory get instance => _instance = _instance ?? new ValueSerializerFactory();
 
-  IValueSerializer getSerializerForType<T>() {
-    switch (T)
+  IValueSerializer getSerializerForGenericType<T>() {
+    return getSerializerForType(T);
+  }
+
+  IValueSerializer getSerializerForType(Type type) {
+    switch (type)
     {
       case String:
         return new StringSerializer((x) => x);
@@ -15,7 +19,7 @@ class ValueSerializerFactory {
       case num:
       case int:
       case double:
-        return new StringSerializer((x) => num.parse(x) as T);
+        return new StringSerializer((x) => num.parse(x) as double);
 
       case bool:
         return new StringSerializer((x) => x == 'true');

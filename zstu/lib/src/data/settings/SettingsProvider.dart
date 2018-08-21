@@ -15,8 +15,8 @@ class SettingsProvider implements ISettingsProvider {
 
   @override
   Future<BaseSettings> getSettings(String type) {
-    return _baseProvider.getEntityMap(settingsTableName, type).then(
-        (x) => new SettingsInfo.fromMap(x ?? <String, dynamic>{}).toSettings());
+    return _baseProvider.getEntityMap(settingsTableName, type).then((x) =>
+        new SettingsInfo.fromMap(x ?? <String, dynamic>{}, type).toSettings());
   }
 
   @override

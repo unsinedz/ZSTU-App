@@ -19,12 +19,13 @@ import 'package:zstu/src/domain/settings/NotificationSettings.dart';
 import 'package:zstu/src/domain/settings/foundation/AdditionalSettingItem.dart';
 import 'package:zstu/src/domain/settings/foundation/SettingListItemsStorage.dart';
 import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
+import 'package:zstu/src/presentation/editor/BoolListTileEditor.dart';
 import 'package:zstu/src/presentation/editor/DefaultEditor.dart';
 import 'package:zstu/src/presentation/editor/ValueEditorFactory.dart';
 import 'package:zstu/src/presentation/faculty/FacultyScreen.dart';
 import 'package:zstu/src/presentation/faculty/group/GroupScreen.dart';
 import 'package:zstu/src/presentation/schedule/ScheduleScreen.dart';
-import 'package:zstu/src/presentation/settings/SettingsScreen.dart';
+import 'package:zstu/src/presentation/settings/widgets/SettingsScreen.dart';
 import 'package:zstu/src/resources/Colors.dart';
 import 'package:zstu/src/resources/Texts.dart';
 
@@ -61,6 +62,18 @@ class ZstuApp extends StatefulWidget {
                 new LocalizationChangeEvent(new Locale(languageCode, '')),
                 this);
           },
+        ));
+
+    var scheduleChangeKey = _makeSettingKey(
+      settingName: 'scheduleChange',
+      settingType: NotificationSettings.Type,
+    );
+    editorFactory.registerValueEditor(
+        scheduleChangeKey,
+        new BoolListTileEditor(
+          title: scheduleChangeKey,
+          valueDescriptor:
+              descriptorFactory.getValueDescriptor(scheduleChangeKey),
         ));
   }
 
@@ -143,8 +156,8 @@ class _ZstuAppState extends State<ZstuApp>
   Widget build(BuildContext context) {
     return new MaterialApp(
       localizationsDelegates: [
-        _overrideLocalizationsDelegate,
         const _InitLocalizationsDelegate(),
+        _overrideLocalizationsDelegate,
         new TextsDelegate(new App().locale),
       ]..addAll(GlobalMaterialLocalizations.delegates),
       supportedLocales:
@@ -187,16 +200,8 @@ class _InitLocalizationsDelegate extends LocalizationsDelegate {
   bool isSupported(Locale locale) => true;
 
   @override
-  Future load(Locale locale) => new Future(() async {
-        await new App().settings.modifySettings<ApplicationSettings>(
-            new App().settings.getApplicationSettings(), (s) {
-          var settingShouldChange = s.applicationLanguage?.isEmpty ?? true;
-          if (settingShouldChange) s.applicationLanguage = locale.languageCode;
-
-          new App().locale.initialize(new Locale(s.applicationLanguage, ''));
-          return settingShouldChange;
-        });
-      });
+  Future load(Locale locale) =>
+      new App().settings.getApplicationSettings().then((x) => new App().locale.initialize(new Locale(x.applicationLanguage ?? locale.languageCode, '')));
 
   @override
   bool shouldReload(LocalizationsDelegate old) => true;

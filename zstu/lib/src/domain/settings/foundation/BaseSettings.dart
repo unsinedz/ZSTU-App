@@ -9,32 +9,41 @@ abstract class BaseSettings {
   String get type;
 
   @protected
-  void setSetting<T>(String key, T value) {
+  void setTypedSetting<T>(String key, T value) {
+    setSetting(key, value, T);
+  }
+
+  void setSetting(String key, dynamic value, Type valueType) {
     if (key == null || key.isEmpty || value == null)
       throw new ArgumentError("Null key or value.");
 
     _values[key] = ValueSerializerFactory.instance
-        .getSerializerForType<T>()
+        .getSerializerForType(valueType)
         .serialize(value);
   }
 
-  T getSetting<T>(String key) {
+  @protected
+  T getTypedSetting<T>(String key) {
+    return getSetting(key, T) as T;
+  }
+
+  dynamic getSetting(String key, Type type) {
     if (key == null || key.isEmpty) throw new ArgumentError("Key is null.");
 
     var rawValue = _values[key];
     if (rawValue?.isEmpty ?? true) return null;
 
     return ValueSerializerFactory.instance
-        .getSerializerForType<T>()
+        .getSerializerForType(type)
         .deserialize(rawValue);
   }
 
   T getSettingOrDefault<T>(String key, [T defaultValue]) {
-    return getSetting(key) ?? defaultValue;
+    return getTypedSetting(key) ?? defaultValue;
   }
 
-  static BaseSettings newInstance() {
-    return new _Settings();
+  static BaseSettings newInstance([String type]) {
+    return new _Settings(type);
   }
 
   void initialize(Map<String, String> values) {
@@ -56,6 +65,10 @@ abstract class BaseSettings {
 }
 
 class _Settings extends BaseSettings {
+  _Settings(this._type);
+
+  String _type;
+
   @override
-  String get type => null;
+  String get type => _type;
 }

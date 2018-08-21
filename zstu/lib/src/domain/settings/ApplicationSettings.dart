@@ -12,10 +12,10 @@ class ApplicationSettings extends BaseSettings
   SystemSettings system;
   NotificationSettings notifications;
 
-  String get applicationLanguage => getSetting("applicationLanguage");
+  String get applicationLanguage => getTypedSetting("applicationLanguage");
 
   set applicationLanguage(String value) =>
-      setSetting<String>("applicationLanguage", value);
+      setTypedSetting<String>("applicationLanguage", value);
 
   static const String Type = "General";
 

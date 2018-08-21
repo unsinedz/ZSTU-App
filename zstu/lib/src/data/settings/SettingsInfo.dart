@@ -5,8 +5,8 @@ import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
 
 class SettingsInfo implements IPersistableEntity {
   SettingsInfo.fromSettings(this._settings);
-  SettingsInfo.fromMap(Map<String, dynamic> map) {
-    _settings = BaseSettings.newInstance();
+  SettingsInfo.fromMap(Map<String, dynamic> map, [String type]) {
+    _settings = BaseSettings.newInstance(type);
     var settingValues = map['SettingValues'] as String;
     if (settingValues?.isNotEmpty ?? false) {
       var valueMap = _getMapSerializer().deserialize(settingValues)
@@ -21,7 +21,7 @@ class SettingsInfo implements IPersistableEntity {
   IValueSerializer _getMapSerializer() {
     return new App()
         .valueSerializers
-        .getSerializerForType<Map<String, String>>();
+        .getSerializerForGenericType<Map<String, String>>();
   }
 
   String get type => _settings.type;

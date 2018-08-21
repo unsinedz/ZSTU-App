@@ -22,7 +22,7 @@ class ValueEditorFactory {
       throw new StateError(
           'Value editor with the name $type has not been registered yet.');
 
-    return result;
+    return result.clone();
   }
 
   bool isEditorRegistered(String type) {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-abstract class IDynamicallyChangableEditor<T> {
+abstract class IDynamicallyChangeableEditor<T> {
   void addOnChange(ValueChanged<T> onChange);
 }

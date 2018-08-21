@@ -5,10 +5,16 @@ import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
 import 'package:zstu/src/domain/settings/foundation/EditableSetting.dart';
 import 'package:zstu/src/presentation/common/BaseViewModel.dart';
 import 'package:zstu/src/presentation/settings/ISettingListItemModel.dart';
+import 'package:zstu/src/presentation/settings/ISettingValueItem.dart';
+import 'package:zstu/src/presentation/settings/ITypedSettingItem.dart';
 import 'package:zstu/src/resources/Texts.dart';
 
 class SettingViewModel<T> extends BaseViewModel
-    implements ISettingListItemModel, ILocaleSensitive {
+    implements
+        ISettingListItemModel,
+        ILocaleSensitive,
+        ISettingValueItem<T>,
+        ITypedSettingItem {
   SettingViewModel.fromEditableSetting(EditableSetting setting) {
     this.name = setting.name;
     this.translatedName = setting.name;
@@ -16,6 +22,7 @@ class SettingViewModel<T> extends BaseViewModel
     this.translatedType = setting.type;
     this.value = setting.value;
     this.valueDescriptor = setting.valueDescriptor;
+    this.valueType = setting.valueType;
   }
 
   @override
@@ -30,7 +37,11 @@ class SettingViewModel<T> extends BaseViewModel
   @override
   String translatedType;
 
+  @override
   T value;
+
+  @override
+  Type valueType;
 
   @override
   IValueDescriptor valueDescriptor;

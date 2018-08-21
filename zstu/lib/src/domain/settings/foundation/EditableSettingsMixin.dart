@@ -15,7 +15,7 @@ abstract class EditableSettingsMixin {
       {String settingType}) {
     var key = BaseSettings.makeSettingKey(settingName, type: settingType);
     var descriptor = descriptorFactory.getValueDescriptor(key);
-    return new EditableSetting(
+    return new EditableSetting<T>(
       valueDescriptor: descriptor,
       name: settingName,
       type: settingType,

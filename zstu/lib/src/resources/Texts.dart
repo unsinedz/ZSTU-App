@@ -366,6 +366,8 @@ class Texts {
     _valueTranslations
   ];
 
+  operator [](String key) => getText(key, this._locale.languageCode, key);
+
   static String getText(String key, String languageCode,
       [String defaultValue]) {
     assert(key != null);

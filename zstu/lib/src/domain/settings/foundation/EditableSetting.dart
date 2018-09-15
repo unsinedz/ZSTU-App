@@ -1,23 +1,22 @@
 import 'package:flutter/foundation.dart';
 import 'package:zstu/src/domain/common/descriptors/IValueDescriptor.dart';
-import 'package:zstu/src/domain/settings/foundation/ISettingListItem.dart';
-import 'package:zstu/src/presentation/settings/ITypedSettingItem.dart';
 
-class EditableSetting<T> implements ISettingListItem, ITypedSettingItem {
+class EditableSetting<T> {
   EditableSetting({
-    @required this.valueDescriptor,
     @required this.name,
-    this.type,
+    @required this.previewValue,
     this.value,
+    this.valueChanged,
+    this.valueDescriptor,
   });
-
-  final IValueDescriptor<T> valueDescriptor;
 
   final String name;
 
-  final String type;
+  final String previewValue;
 
   final T value;
 
-  Type get valueType => T;
+  final ValueChanged<T> valueChanged;
+
+  final IValueDescriptor<T> valueDescriptor;
 }

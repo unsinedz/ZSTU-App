@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/presentation/common/LocalizableScreen.dart';
-
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
 import '../../domain/faculty/Group.dart';
@@ -231,8 +230,8 @@ class _ScheduleScreenState extends LocalizableState<ScheduleScreen>
             ? (1 - _weekSelectionAlphaAnimation.value) * 255
             : 0;
 
-    return AppColors.WeekSelectionDecorationSelected
-        .withAlpha(max(alpha.round(), Values.WeekChangeIconMinimumAlpha));
+    return AppColors.WeekSelectionDecorationSelected.withAlpha(
+        max(alpha.round(), Values.WeekChangeIconMinimumAlpha));
   }
 
   Widget _buildWeekSelector(int weekNo, bool selected) {

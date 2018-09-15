@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:zstu/src/App.dart';
+import 'package:zstu/src/core/event/Event.dart';
 import 'package:zstu/src/core/event/EventListener.dart';
 import 'package:zstu/src/core/locale/DefaultLocaleProvider.dart';
 import 'package:zstu/src/core/locale/ISupportsLocaleOverride.dart';
@@ -14,14 +15,12 @@ import 'package:zstu/src/domain/common/descriptors/StringDescriptor.dart';
 import 'package:zstu/src/domain/common/descriptors/ValueDescriptorFactory.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
+import 'package:zstu/src/domain/event/ReloadAppEvent.dart';
 import 'package:zstu/src/domain/settings/ApplicationSettings.dart';
 import 'package:zstu/src/domain/settings/NotificationSettings.dart';
 import 'package:zstu/src/domain/settings/foundation/AdditionalSettingItem.dart';
 import 'package:zstu/src/domain/settings/foundation/SettingListItemsStorage.dart';
 import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
-import 'package:zstu/src/presentation/editor/BoolListTileEditor.dart';
-import 'package:zstu/src/presentation/editor/DefaultEditor.dart';
-import 'package:zstu/src/presentation/editor/ValueEditorFactory.dart';
 import 'package:zstu/src/presentation/faculty/FacultyScreen.dart';
 import 'package:zstu/src/presentation/faculty/group/GroupScreen.dart';
 import 'package:zstu/src/presentation/schedule/ScheduleScreen.dart';
@@ -40,41 +39,7 @@ class ZstuApp extends StatefulWidget {
   Future initialize() async {
     await DataModule.configure();
     registerValueDescriptors();
-    registerValueEditors();
     await initializeSettingListItems();
-  }
-
-  void registerValueEditors() {
-    var editorFactory = ValueEditorFactory.instance;
-    var descriptorFactory = ValueDescriptorFactory.instance;
-    var applicationLanguageKey = _makeSettingKey(
-      settingName: 'applicationLanguage',
-      settingType: ApplicationSettings.Type,
-    );
-    editorFactory.registerValueEditor(
-        applicationLanguageKey,
-        new DefaultEditor<String>(
-          title: applicationLanguageKey,
-          valueDescriptor:
-              descriptorFactory.getValueDescriptor(applicationLanguageKey),
-          onChange: (languageCode) {
-            new App().eventBus.postEvent(
-                new LocalizationChangeEvent(new Locale(languageCode, '')),
-                this);
-          },
-        ));
-
-    var scheduleChangeKey = _makeSettingKey(
-      settingName: 'scheduleChange',
-      settingType: NotificationSettings.Type,
-    );
-    editorFactory.registerValueEditor(
-        scheduleChangeKey,
-        new BoolListTileEditor(
-          title: scheduleChangeKey,
-          valueDescriptor:
-              descriptorFactory.getValueDescriptor(scheduleChangeKey),
-        ));
   }
 
   void registerValueDescriptors() {
@@ -113,6 +78,7 @@ class ZstuApp extends StatefulWidget {
         new BoolDescriptor());
   }
 
+  //TODO: remove this storage
   Future initializeSettingListItems() async {
     var storage = SettingListItemsStorage.instance;
 
@@ -129,11 +95,6 @@ class ZstuApp extends StatefulWidget {
       name: "NoticedProblem",
       type: suportType,
     ));
-
-    var applicationSettings =
-        await new App().settings.getApplicationSettings(loadInner: true);
-    storage.addItems(applicationSettings.getEditableSettings());
-    storage.addItems(applicationSettings.notifications.getEditableSettings());
   }
 
   String _makeSettingKey({@required String settingName, String settingType}) {
@@ -142,13 +103,14 @@ class ZstuApp extends StatefulWidget {
 }
 
 class _ZstuAppState extends State<ZstuApp>
-    implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
+    implements ILocaleSensitive, EventListener {
   _OverrideLocalizationsDelegate _overrideLocalizationsDelegate;
 
   @override
   void initState() {
     _overrideLocalizationsDelegate = new _OverrideLocalizationsDelegate(null);
-    new App().eventBus.registerDefaultListener<LocalizationChangeEvent>(this);
+    new App().eventBus.registerListener(this, ReloadAppEvent);
+    new App().eventBus.registerListener(this, LocalizationChangeEvent);
     super.initState();
   }
 
@@ -177,12 +139,26 @@ class _ZstuAppState extends State<ZstuApp>
 
   @override
   void initializeForLocale(Locale newLocale) {
+    (new App().locale as ISupportsLocaleOverride)?.overrideLocale(newLocale);
     setState(() => _overrideLocalizationsDelegate =
         new _OverrideLocalizationsDelegate(newLocale));
   }
 
   @override
-  void handleEvent(LocalizationChangeEvent event, Object sender) {
+  void handleEvent(Event event, Object sender) {
+    if (event is ReloadAppEvent) this.handlerReloadEvent(event, sender);
+
+    if (event is LocalizationChangeEvent)
+      this.handleLocalizationEvent(event, sender);
+  }
+
+  void handlerReloadEvent(ReloadAppEvent event, Object sender) {
+    setState(() {
+      if (event.onReloaded != null) event.onReloaded();
+    });
+  }
+
+  void handleLocalizationEvent(LocalizationChangeEvent event, Object sender) {
     if (event?.locale != null) initializeForLocale(event.locale);
   }
 
@@ -200,8 +176,11 @@ class _InitLocalizationsDelegate extends LocalizationsDelegate {
   bool isSupported(Locale locale) => true;
 
   @override
-  Future load(Locale locale) =>
-      new App().settings.getApplicationSettings().then((x) => new App().locale.initialize(new Locale(x.applicationLanguage ?? locale.languageCode, '')));
+  Future load(Locale locale) => new App()
+      .settings
+      .getApplicationSettings()
+      .then((x) => new App().locale.initialize(
+          new Locale(x.applicationLanguage ?? locale.languageCode, '')));
 
   @override
   bool shouldReload(LocalizationsDelegate old) => true;
@@ -215,7 +194,7 @@ class _OverrideLocalizationsDelegate extends LocalizationsDelegate {
   @override
   bool isSupported(Locale locale) =>
       _overridenLocale != null &&
-      (new App().locale as ISupportsLocaleOverride) != null &&
+      new App().locale is ISupportsLocaleOverride &&
       new App().locale.isLocaleSupported(_overridenLocale);
 
   @override

@@ -1,41 +1,47 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:zstu/src/core/lang/Lazy.dart';
-import 'package:zstu/src/domain/settings/foundation/BaseSettings.dart';
-import 'package:zstu/src/presentation/editor/EditorConstructor.dart';
-import 'package:zstu/src/presentation/editor/ValueEditorFactory.dart';
-import 'package:zstu/src/presentation/settings/ISettingListItemModel.dart';
-import 'package:zstu/src/presentation/settings/ISettingValueItem.dart';
-import 'package:zstu/src/presentation/settings/SettingViewModel.dart';
+import 'package:zstu/src/domain/common/descriptors/IValueDescriptor.dart';
+import 'package:zstu/src/presentation/editor/ListValueEditor.dart';
 import 'package:zstu/src/resources/Colors.dart';
 
-typedef Future<bool> SettingUpdater<TValue>(
-    ISettingListItemModel setting, TValue newValue);
-
-class SettingListItem extends StatefulWidget {
+class SettingListItem<T> extends StatefulWidget {
   SettingListItem.caption({
-    @required ISettingListItemModel setting,
-  })  : this._setting = setting,
+    @required String name,
+    String previewValue,
+  })  : this._name = name,
+        this._previewValue = previewValue,
         this._itemType = _ItemType.Caption,
-        this._settingUpdater = null;
+        this._settingUpdater = null,
+        this._value = null,
+        this._valueDescriptor = null;
 
   SettingListItem.setting({
-    @required ISettingListItemModel setting,
-    @required SettingUpdater settingUpdater,
-  })  : this._setting = setting,
+    @required String name,
+    @required T value,
+    @required IValueDescriptor<T> valueDescriptor,
+    @required ValueChanged<T> settingUpdater,
+    String previewValue,
+  })  : this._name = name,
+        this._previewValue = previewValue,
         this._itemType = _ItemType.Setting,
-        this._settingUpdater = settingUpdater;
+        this._settingUpdater = settingUpdater,
+        this._value = value,
+        this._valueDescriptor = valueDescriptor;
 
-  final ISettingListItemModel _setting;
+  final String _name;
+  final String _previewValue;
+  final T _value;
+  final IValueDescriptor<T> _valueDescriptor;
   final _ItemType _itemType;
-  final SettingUpdater _settingUpdater;
+  final ValueChanged<T> _settingUpdater;
 
   @override
   State<StatefulWidget> createState() {
     return new _SettingListItemState(
-      setting: _setting,
+      name: _name,
+      previewValue: _previewValue,
+      value: _value,
+      valueDescriptor: _valueDescriptor,
       itemType: _itemType,
       settingUpdater: _settingUpdater,
     );
@@ -44,22 +50,27 @@ class SettingListItem extends StatefulWidget {
 
 enum _ItemType { Caption, Setting }
 
-class _SettingListItemState extends State<SettingListItem> {
+class _SettingListItemState<T> extends State<SettingListItem> {
   _SettingListItemState({
-    @required ISettingListItemModel setting,
+    @required String name,
     @required _ItemType itemType,
-    @required SettingUpdater settingUpdater,
-  })  : this._setting = setting,
+    @required T value,
+    @required IValueDescriptor<T> valueDescriptor,
+    @required ValueChanged<T> settingUpdater,
+    String previewValue,
+  })  : this._name = name,
+        this._previewValue = previewValue,
         this._itemType = itemType,
         this._settingUpdater = settingUpdater,
-        assert(setting != null);
+        this._value = value,
+        this._valueDescriptor = valueDescriptor;
 
-  final ISettingListItemModel _setting;
+  final String _name;
+  final String _previewValue;
+  final T _value;
+  final IValueDescriptor<T> _valueDescriptor;
   final _ItemType _itemType;
-  SettingUpdater _settingUpdater;
-
-  final Lazy<ValueEditorFactory> _valueEditors =
-      new Lazy(valueProvider: () => ValueEditorFactory.instance);
+  final ValueChanged<T> _settingUpdater;
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +87,11 @@ class _SettingListItemState extends State<SettingListItem> {
   Widget _buildCaption(BuildContext context) {
     return new Column(
       children: [
-        Container(
+        new Container(
           child: new ListTile(
             enabled: false,
             title: new Text(
-              _setting.translatedType,
+              _name,
               style: new TextStyle(
                 color: AppColors.SettingGroupText,
                 fontWeight: FontWeight.bold,
@@ -101,50 +112,35 @@ class _SettingListItemState extends State<SettingListItem> {
     const textStyle = const TextStyle(color: AppColors.SettingItemText);
     var tileBuilder = (GestureTapCallback onTap) => new ListTile(
           title: new Text(
-            _setting.translatedName,
+            _name,
             style: textStyle,
           ),
-          trailing: _setting.valueDescriptor != null && _setting.valueDescriptor.canBeStringified() && _setting is ISettingValueItem
-              ? new Text(_setting.valueDescriptor.stringify((_setting as ISettingValueItem).value))
-              : null,
+          trailing: _previewValue == null
+              ? null
+              : new Text(
+                  _previewValue,
+                  style: textStyle,
+                ),
           onTap: onTap,
         );
 
-    var settingKey =
-        BaseSettings.makeSettingKey(_setting.name, type: _setting.type);
-    if (_valueEditors.getValue().isEditorRegistered(settingKey)) {
-      var editor = _valueEditors.getValue().getValueEditor(settingKey);
-      var onValueChange = (x, [VoidCallback cb]) =>
-          _settingUpdater(_setting, x).whenComplete(cb);
-      var constructor = new EditorConstructor(editor)
-          .setStateUpdater(this.setState)
-          .addOnChange((newValue) => onValueChange(
-              newValue,
-              editor.embeddable
-                  ? () => setState(() {
-                        if (_setting is ISettingValueItem)
-                          (_setting as ISettingValueItem).value = newValue;
-                      })
-                  : () {}))
-          .setTextStyle(textStyle);
-      if (editor.embeddable) {
-        return constructor
-            .setValueMask(_extractSettingValue(_setting))
-            .construct()
-            .build(context);
-      }
+    if (_valueDescriptor == null) return tileBuilder(() {});
 
-      return tileBuilder(() => Navigator
-          .of(context)
-          .push(new MaterialPageRoute(builder: constructor.construct().build)));
-    }
+    return tileBuilder(() {
+      Navigator.of(context)
+          .push(new MaterialPageRoute(builder: (BuildContext context) {
+        return new ListValueEditor(
+          title: _name,
+          value: _value,
+          valueDescriptor: _valueDescriptor,
+          valueSelected: (BuildContext context, dynamic newValue) {
+            var navigator = Navigator.of(context);
+            if (navigator.canPop()) navigator.pop();
 
-    return tileBuilder(() {});
-  }
-
-  T _extractSettingValue<T>(ISettingListItemModel model) {
-    if (model is SettingViewModel<T>) return model.value;
-
-    return null;
+            _settingUpdater(newValue);
+          },
+        );
+      }));
+    });
   }
 }

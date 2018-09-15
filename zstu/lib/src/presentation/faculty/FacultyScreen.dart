@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:zstu/src/core/event/EventBus.dart';
-import 'package:zstu/src/core/event/EventListener.dart';
 import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
@@ -29,7 +28,7 @@ class FacultiesScreen extends StatefulWidget
 
 class _FacultiesState extends LocalizableState<FacultiesScreen>
     with TextLocalizations, BaseScreenMixin, FutureHelperMixin
-    implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
+    implements ILocaleSensitive {
   FacultyScreenViewModel _model;
   ScrollController _gridScrollController;
   StreamSubscription _connectivityChangeListener;
@@ -84,6 +83,9 @@ class _FacultiesState extends LocalizableState<FacultiesScreen>
   }
 
   Widget _buildInFuture(BuildContext context, AsyncSnapshot snapshot) {
+    if (snapshot.hasError)
+      return error();
+
     if (snapshot.connectionState != ConnectionState.done) {
       return new Center(
         child: new CircularProgressIndicator(),

@@ -3,7 +3,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zstu/src/core/event/EventBus.dart';
-import 'package:zstu/src/core/event/EventListener.dart';
 import 'package:zstu/src/domain/common/FutureHelperMixin.dart';
 import 'package:zstu/src/domain/common/text/ILocaleSensitive.dart';
 import 'package:zstu/src/domain/event/LocalizationChangeEvent.dart';
@@ -34,7 +33,7 @@ class GroupScreen extends StatefulWidget
 
 class _GroupScreenState extends LocalizableState<GroupScreen>
     with TextLocalizations, BaseScreenMixin, FutureHelperMixin
-    implements ILocaleSensitive, EventListener<LocalizationChangeEvent> {
+    implements ILocaleSensitive {
   App _app;
 
   ScheduleSelectionProcess _scheduleSelectionProcess;
@@ -101,6 +100,13 @@ class _GroupScreenState extends LocalizableState<GroupScreen>
 
   @override
   Widget build(BuildContext context) {
+    return wrapMaterialLayout(
+      content: _buildWrapper(),
+      appBar: buildAppBar(texts.groupTitle),
+    );
+  }
+
+  Widget _buildWrapper() {
     Future modelLoader = _model == null
         ? _loadModel()
         : _selectedYear == null
@@ -108,12 +114,9 @@ class _GroupScreenState extends LocalizableState<GroupScreen>
             : _model.loadGroups(
                 _scheduleSelectionProcess.faculty, _selectedYear.toYear());
 
-    return wrapMaterialLayout(
-      content: new FutureBuilder(
-        future: modelLoader,
-        builder: _buildInFuture,
-      ),
-      appBar: buildAppBar(texts.groupTitle),
+    return new FutureBuilder(
+      future: modelLoader,
+      builder: _buildInFuture,
     );
   }
 
@@ -168,8 +171,8 @@ class _GroupScreenState extends LocalizableState<GroupScreen>
 
   void _handleSubmitPressed(BuildContext context) {
     Navigator.of(context).pushReplacement(new MaterialPageRoute(
-          builder: (ctx) => new ScheduleScreen(),
-        ));
+      builder: (ctx) => new ScheduleScreen(),
+    ));
   }
 
   Widget _buildHeading() {

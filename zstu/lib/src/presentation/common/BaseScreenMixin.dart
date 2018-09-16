@@ -41,20 +41,24 @@ abstract class BaseScreenMixin extends TextLocalizations {
   }
 
   Widget noConnection(String text) {
-    return new Center(
-      child: new Column(
-        children: <Widget>[
-          new Icon(Icons.signal_cellular_connected_no_internet_4_bar),
-          new Text(
-            text,
-            textAlign: TextAlign.center,
-            style: new TextStyle(
-              fontSize: Sizes.FacultyAbsenceMessageTextSize,
-              color: AppColors.FacultyAbsenceMessageText,
-            ),
+    return new Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        new Icon(
+          Icons.signal_cellular_connected_no_internet_4_bar,
+          size: Sizes.StandardIconSize,
+        ),
+        new Text(
+          text,
+          textAlign: TextAlign.center,
+          style: new TextStyle(
+            fontSize: Sizes.FacultyAbsenceMessageTextSize,
+            color: AppColors.FacultyAbsenceMessageText,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -74,13 +78,14 @@ abstract class BaseScreenMixin extends TextLocalizations {
   }
 
   Widget error({String text}) {
-    return new Center(
-      child: new Column(
-        children: <Widget>[
-          new Icon(Icons.error),
-          new Text(text ?? texts.somethingWentWrong),
-        ],
-      ),
+    return new Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        new Icon(Icons.error),
+        new Text(text ?? texts.somethingWentWrong),
+      ],
     );
   }
 }

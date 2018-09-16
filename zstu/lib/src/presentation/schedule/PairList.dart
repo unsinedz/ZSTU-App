@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../resources/colors.dart';
-import '../../resources/sizes.dart';
-import '../common/TextLocalizations.dart';
+import 'package:zstu/src/presentation/common/TextLocalizations.dart';
+import 'package:zstu/src/resources/Sizes.dart';
+import 'package:zstu/src/resources/Colors.dart';
 import 'PairViewModel.dart';
 
 class PairList extends StatefulWidget {
@@ -30,8 +29,10 @@ class _PairListState extends State<PairList> with TextLocalizations {
   }
 
   Widget _buildDayOff() {
-    return new Center(
-        child: new Column(
+    return new Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         new Image.asset('assets/common/day_off.png'),
         new Container(
@@ -39,7 +40,7 @@ class _PairListState extends State<PairList> with TextLocalizations {
           child: Text(texts.scheduleDayOff),
         ),
       ],
-    ));
+    );
   }
 
   Widget _buildSpecificDate(String date) {

@@ -33,4 +33,5 @@ class Sizes {
   static const double GroupSelectionImageRadius = 75.0;
   static const double GroupSelectionDropdownTextSize = 20.0;
   static const double DayOffTextMargin = 20.0;
+  static const double StandardIconSize = 45.0;
 }

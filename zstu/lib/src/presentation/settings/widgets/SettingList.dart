@@ -52,9 +52,7 @@ class _SettingListState extends State<SettingList> {
 
     var widgets = <Widget>[];
     for (var setting in _items) {
-      if (setting.value == null ||
-          setting.valueChanged == null ||
-          setting.valueDescriptor == null)
+      if (setting.valueChanged == null || setting.valueDescriptor == null)
         widgets.add(new SettingListItem.caption(
           name: setting.name,
           previewValue: setting.previewValue,

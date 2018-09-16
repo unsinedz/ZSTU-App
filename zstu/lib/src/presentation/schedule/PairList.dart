@@ -21,16 +21,25 @@ class _PairListState extends State<PairList> with TextLocalizations {
 
   @override
   Widget build(BuildContext context) {
-    if (_pairs?.length == 0 ?? true) {
-      return new Center(
-        child: new Text(texts.scheduleDayOff),
-      );
-    }
+    if (_pairs?.length == 0 ?? true) return _buildDayOff();
 
     return new AnimatedList(
       itemBuilder: _buildItem,
       initialItemCount: _pairs.length,
     );
+  }
+
+  Widget _buildDayOff() {
+    return new Center(
+        child: new Column(
+      children: <Widget>[
+        new Image.asset('assets/common/day_off.png'),
+        new Container(
+          margin: new EdgeInsets.only(top: Sizes.DayOffTextMargin),
+          child: Text(texts.scheduleDayOff),
+        ),
+      ],
+    ));
   }
 
   Widget _buildSpecificDate(String date) {

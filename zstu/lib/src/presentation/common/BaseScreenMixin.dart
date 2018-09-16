@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:zstu/src/presentation/Navbar.dart';
 import 'package:zstu/src/presentation/common/TextLocalizations.dart';
-import '../../resources/Colors.dart';
-import '../../resources/Sizes.dart';
-import '../Navbar.dart';
+import 'package:zstu/src/resources/Colors.dart';
+import 'package:zstu/src/resources/Sizes.dart';
 
 abstract class BaseScreenMixin extends TextLocalizations {
   Widget wrapMaterialLayout({
@@ -42,13 +42,18 @@ abstract class BaseScreenMixin extends TextLocalizations {
 
   Widget noConnection(String text) {
     return new Center(
-      child: new Text(
-        text,
-        textAlign: TextAlign.center,
-        style: new TextStyle(
-          fontSize: Sizes.FacultyAbsenceMessageTextSize,
-          color: AppColors.FacultyAbsenceMessageText,
-        ),
+      child: new Column(
+        children: <Widget>[
+          new Icon(Icons.signal_cellular_connected_no_internet_4_bar),
+          new Text(
+            text,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              fontSize: Sizes.FacultyAbsenceMessageTextSize,
+              color: AppColors.FacultyAbsenceMessageText,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -70,7 +75,12 @@ abstract class BaseScreenMixin extends TextLocalizations {
 
   Widget error({String text}) {
     return new Center(
-      child: new Text(text ?? texts.somethingWentWrong),
+      child: new Column(
+        children: <Widget>[
+          new Icon(Icons.error),
+          new Text(text ?? texts.somethingWentWrong),
+        ],
+      ),
     );
   }
 }

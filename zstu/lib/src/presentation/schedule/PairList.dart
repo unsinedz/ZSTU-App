@@ -29,17 +29,20 @@ class _PairListState extends State<PairList> with TextLocalizations {
   }
 
   Widget _buildDayOff() {
-    return new Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        new Image.asset('assets/common/day_off.png'),
-        new Container(
-          margin: new EdgeInsets.only(top: Sizes.DayOffTextMargin),
-          child: Text(texts.scheduleDayOff),
-        ),
-      ],
+    return new Padding(
+      padding: new EdgeInsets.symmetric(horizontal: Sizes.DayOffTextMargin),
+      child: new Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          new Image.asset('assets/common/day_off.png'),
+          new Container(
+            margin: new EdgeInsets.only(top: Sizes.DayOffTextMargin),
+            child: Text(texts.scheduleDayOff),
+          ),
+        ],
+      ),
     );
   }
 

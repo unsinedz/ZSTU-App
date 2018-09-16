@@ -27,7 +27,8 @@ class GroupScreenViewModel extends BaseViewModel implements ILocaleSensitive {
     var entities = await new App()
         .faculties
         .getGroups(new GroupLoadOptions(faculty, year));
-    groups = entities.map((x) => new GroupViewModel.fromGroup(x)).toList();
+    groups = entities.map((x) => new GroupViewModel.fromGroup(x)).toList()
+      ..sort((m1, m2) => m1.name.compareTo(m2.name));
   }
 
   @override

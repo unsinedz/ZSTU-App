@@ -1,13 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
-
-import '../lib/src/data/faculty/FacultyManager.dart';
-import '../lib/src/data/faculty/provider/FacultyApiProvider.dart';
-import '../lib/src/data/faculty/provider/FacultyStorageProvider.dart';
-import '../lib/src/domain/faculty/Faculty.dart';
+import 'package:zstu/src/data/faculty/FacultyManager.dart';
+import 'package:zstu/src/data/faculty/provider/FacultyApiProvider.dart';
+import 'package:zstu/src/data/faculty/provider/FacultyStorageProvider.dart';
+import 'package:zstu/src/domain/faculty/Faculty.dart';
 
 void main() {
   GetFaculties_NetworkOk_ApiCalledOnce();
@@ -20,8 +18,10 @@ void GetFaculties_NetworkOk_ApiCalledOnce() {
     var apiMock = new FacultyApiProviderMock();
     var manager = _getFacultyManager(storageMock, apiMock);
 
-    when(storageMock.getList()).thenAnswer((_) => new SynchronousFuture(<Faculty>[]));
-    when(apiMock.getList()).thenAnswer((_) => new SynchronousFuture(<Faculty>[]));
+    when(storageMock.getList())
+        .thenAnswer((_) => new SynchronousFuture(<Faculty>[]));
+    when(apiMock.getList())
+        .thenAnswer((_) => new SynchronousFuture(<Faculty>[]));
 
     await manager.getFaculties();
 
@@ -35,8 +35,10 @@ void GetFaculties_NetworkError_ApiCalledMoreThanOnce() {
     var apiMock = new FacultyApiProviderMock();
     var manager = _getFacultyManager(storageMock, apiMock);
 
-    when(storageMock.getList()).thenAnswer((_) => new SynchronousFuture(<Faculty>[]));
-    when(apiMock.getList()).thenAnswer((_) => new Future(() => throw new Error()));
+    when(storageMock.getList())
+        .thenAnswer((_) => new SynchronousFuture(<Faculty>[]));
+    when(apiMock.getList())
+        .thenAnswer((_) => new Future(() => throw new Error()));
 
     await manager.getFaculties();
 
@@ -44,9 +46,12 @@ void GetFaculties_NetworkError_ApiCalledMoreThanOnce() {
   });
 }
 
-FacultyManager _getFacultyManager(FacultyStorageProviderMock storage, FacultyApiProviderMock api) {
+FacultyManager _getFacultyManager(
+    FacultyStorageProviderMock storage, FacultyApiProviderMock api) {
   return new FacultyManager(storage, api);
 }
 
 class FacultyApiProviderMock extends Mock implements FacultyApiProvider {}
-class FacultyStorageProviderMock extends Mock implements FacultyStorageProvider {}
+
+class FacultyStorageProviderMock extends Mock
+    implements FacultyStorageProvider {}

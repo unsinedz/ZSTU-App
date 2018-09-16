@@ -1,20 +1,20 @@
 import 'dart:async';
-import '../../../domain/faculty/ChairLoadOptions.dart';
-import '../../../domain/faculty/Chair.dart';
-import '../../../domain/faculty/Faculty.dart';
-import '../../../domain/faculty/Group.dart';
-import '../../../domain/faculty/GroupLoadOptions.dart';
-import '../../../domain/faculty/IFacultyProvider.dart';
-import '../../../domain/faculty/Year.dart';
-import '../ChairInfo.dart';
-import '../FacultyInfo.dart';
-import '../../../domain/Constants.dart';
-import '../../common/provider/NetworkProviderBase.dart';
-import '../../common/provider/GeneralNetworkProvider.dart';
-import '../YearInfo.dart';
-import '../GroupInfo.dart';
-import 'FacultyProviderMixin.dart';
-import 'MemoryCacheMixin.dart';
+import 'package:zstu/src/data/common/provider/GeneralNetworkProvider.dart';
+import 'package:zstu/src/data/common/provider/NetworkProviderBase.dart';
+import 'package:zstu/src/data/faculty/ChairInfo.dart';
+import 'package:zstu/src/data/faculty/FacultyInfo.dart';
+import 'package:zstu/src/data/faculty/GroupInfo.dart';
+import 'package:zstu/src/data/faculty/YearInfo.dart';
+import 'package:zstu/src/data/faculty/provider/FacultyProviderMixin.dart';
+import 'package:zstu/src/data/faculty/provider/MemoryCacheMixin.dart';
+import 'package:zstu/src/domain/Constants.dart';
+import 'package:zstu/src/domain/faculty/Chair.dart';
+import 'package:zstu/src/domain/faculty/ChairLoadOptions.dart';
+import 'package:zstu/src/domain/faculty/Faculty.dart';
+import 'package:zstu/src/domain/faculty/Group.dart';
+import 'package:zstu/src/domain/faculty/GroupLoadOptions.dart';
+import 'package:zstu/src/domain/faculty/IFacultyProvider.dart';
+import 'package:zstu/src/domain/faculty/Year.dart';
 
 typedef T FromMapBuilder<T>(dynamic map);
 

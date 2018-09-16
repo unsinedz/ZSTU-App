@@ -1,9 +1,8 @@
 import 'dart:async';
+import 'package:zstu/src/data/common/ApiResponse.dart';
 import 'package:zstu/src/data/common/INetworkExecutor.dart';
-
-import '../../../domain/Constants.dart';
-import '../ApiResponse.dart';
-import 'GeneralNetworkProvider.dart';
+import 'package:zstu/src/data/common/provider/GeneralNetworkProvider.dart';
+import 'package:zstu/src/domain/Constants.dart';
 
 typedef T FromMapBuilder<T>(dynamic map);
 

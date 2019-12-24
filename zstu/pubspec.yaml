@@ -8,7 +8,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  sqflite: any
+  sqflite: ^1.2.0
   connectivity: any
   path_provider: any
   mockito: any

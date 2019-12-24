@@ -6,8 +6,8 @@ import 'src/App.dart';
 import 'src/presentation/faculty/group/GroupScreen.dart';
 import 'src/presentation/schedule/ScheduleScreen.dart';
 import 'src/presentation/faculty/FacultyScreen.dart';
-import 'src/resources/texts.dart';
 import 'src/data/DataModule.dart';
+import 'src/resources/Texts.dart';
 import 'src/resources/Colors.dart';
 
 void main() async {

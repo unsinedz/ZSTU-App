@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../resources/texts.dart';
+import '../../resources/Texts.dart';
 
 abstract class TextLocalizations {
   Texts texts;

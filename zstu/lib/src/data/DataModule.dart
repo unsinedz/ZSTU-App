@@ -5,14 +5,13 @@ import 'dart:async';
 import 'dart:io';
 import '../domain/common/IAssetManager.dart';
 import '../domain/common/text/ITextProcessor.dart';
-import '../domain/faculty/Faculty.dart';
 import '../domain/faculty/IFacultyManager.dart';
 import '../domain/faculty/IFacultyProvider.dart';
 import '../domain/schedule/IScheduleManager.dart';
 import '../domain/schedule/IScheduleProvider.dart';
 import 'Constants.dart';
 import 'common/AssetManager.dart';
-import 'common/DatabaseFactory.dart';
+import 'common/DatabaseFactory.dart' as DF;
 import 'common/TextProcessor.dart';
 import 'common/provider/GeneralNetworkProvider.dart';
 import 'common/provider/GeneralStorageProvider.dart';
@@ -27,7 +26,7 @@ class DataModule {
   static Database _database;
   static Future _initDatabase() async {
     Directory storageDir = await getApplicationDocumentsDirectory();
-    _database = await DatabaseFactory.createOrOpenDatabase(
+    _database = await DF.DatabaseFactory.createOrOpenDatabase(
         join(storageDir.path, Constants.DB_NAME), Constants.DB_VERSION);
   }
 
@@ -99,7 +98,7 @@ class DataModule {
 
   static bool configured = false;
   static Future configure() async {
-    DatabaseFactory.configureTableDelegates();
+    DF.DatabaseFactory.configureTableDelegates();
     await _initDatabase();
     configured = true;
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../resources/colors.dart';
-import '../../resources/sizes.dart';
+import '../../resources/Colors.dart';
+import '../../resources/Sizes.dart';
 import '../common/TextLocalizations.dart';
 import 'PairViewModel.dart';
 

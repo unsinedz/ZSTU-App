@@ -2,7 +2,7 @@
     "app": {
         "hostname": "localhost",
         "port": 3000,
-        "runInstancePerCore": true,
+        "runInstancePerCore": false,
         "renewWorkers": true,
         "enableLogging": true,
         "version": "0.1"
@@ -10,9 +10,9 @@
     "dbConfig": {
         "connectionLimit": 20,
         "host": "127.0.0.1",
-        "port": 3336,
-        "user": "denimum",
-        "password": "vy$Nu7?gh@6jgW8r",
+        "port": 3306,
+        "user": "zstu",
+        "password": "zstu",
         "database": "zstu_schedule"
     },
     "security": {

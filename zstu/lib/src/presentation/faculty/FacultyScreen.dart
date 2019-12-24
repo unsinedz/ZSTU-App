@@ -9,7 +9,7 @@ import 'package:zstu/src/presentation/common/LocalizableScreen.dart';
 import '../../App.dart';
 import '../../domain/common/process/IStep.dart';
 import '../../domain/schedule/ScheduleSelectionProcess.dart';
-import '../../resources/sizes.dart';
+import '../../resources/Sizes.dart';
 import '../common/BaseScreenMixin.dart';
 import '../common/TextLocalizations.dart';
 import 'FacultyScreenViewModel.dart';
